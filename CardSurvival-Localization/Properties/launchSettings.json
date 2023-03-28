@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CardSurvival-Localization": {
+      "commandName": "Project",
+      "commandLineArgs": "\"E:\\Downloads\\Games\\Card Survival\\Apocalypse-43-1-39-1679945367\\*.json\" \"c:\\work\\out.txt\""
+    }
+  }
+}

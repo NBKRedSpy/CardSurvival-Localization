@@ -1,0 +1,20 @@
+﻿{
+    "DefaultStatusName": {
+        "DefaultText": "",
+        "LocalizationKey": "",
+        "ParentObjectID": "",
+        "subTestFirst": {
+            "DefaultText": "\u51b0\u723d\u7684\u611f\u89c9",
+            "LocalizationKey": "Gs_Hail_IceCool_Descriptions"
+        },
+        "Description": {
+            "DefaultText": "\u51b0\u723d\u7684\u611f\u89c9",
+            "LocalizationKey": "Gs_Hail_IceCool_Descriptions",
+            "ParentObjectID": "577682ed932c11ed892404ea56599bd2",
+            "subTest": {
+                "DefaultText": "\u51b0\u723d\u7684\u611f\u89c9",
+                "LocalizationKey": "Gs_Hail_IceCool_Descriptions"
+            }
+        }
+    }
+}
