@@ -8,7 +8,7 @@ Run the exe, passing in the folder, using wild cards.
 For example:
 Assuming the target mod is located at `E:\Mods\Apocalypse-43-1-39-1679945367` and is not in zip format.
 
-`CardSurvival-Localization.exe "E:\Mods\Apocalypse-43-1-39-1679945367\*.json" "c:\work\SimpCn.txt"`
+`CardSurvival-Localization.exe "E:\Mods\Apocalypse-43-1-39-1679945367\*.json" "c:\work\SimpCn.csv"`
 
 |Arguments|Description|
 |--|--|
