@@ -46,6 +46,6 @@ For example, translating Chinese to English: `=GOOGLETRANSLATE(C1,"zh","en")`
 
 # Todo:
 * Maybe use tabs instead of commas since the text can have commas.  Maybe have option between CSV and TSV since tabs are easier import and manipulate.
-* It needs to remove duplicates, or at least warn about them.  There are mods which have the same key multiple times.  Usually it has the same text.  Maybe just by need of the ModLoader format?
-* Should remove the *.json glob.  They will always be .json and just needs a root directly specified.
+* It needs to remove duplicates, or at least warn about them.  There are mods which have the same key multiple times.  Usually it has the same text.  Maybe it is duped because object references are duped?
+* Should remove the *.json glob.  They will always be .json and just needs a root directory specified.
 * CSV output should support wrapping the columns in quotes and quotation escaping.
