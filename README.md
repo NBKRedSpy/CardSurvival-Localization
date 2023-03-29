@@ -1,8 +1,8 @@
 # CardSurvival-Localization
 
-A quick and dirty utility to extract localization data from ModLoader based mods.  
+A utility to extract localization data from ModLoader based mods.  
 
-Useful for creating an English translation for Chinese ModLoader mods that do not have a localization file (SimpCn.csv).
+Useful for creating an English translation for Chinese ModLoader mods that do not have a localization file (For example, SimpEn.csv).
 
 ## CSTI-ModLoader is at:
 
@@ -76,15 +76,15 @@ For example, translating Chinese to English: `=GOOGLETRANSLATE(C1,"zh","en")`
 # Version
 
 ## 1.2.0
-* Moved errors to output instead of stderr
-* Added File Name and JSON path to errors
-* Moved some code to a function
+* Moved errors to output instead of stderr.
+* Added File Name and JSON path to errors.
+* Moved some code to a function.
 * Escapes new lines as \n in the text.
-* Fixed packaging not using Release build
+* Fixed packaging not using Release build.
 
 ## 1.1.0
-* Added CSV encoding
-* Remove duplicates based on key/text
+* Added CSV encoding.
+* Remove duplicates based on key/text.
 * Warns if a key has multiple entries with different versions.
 
 ## 1.0.0
