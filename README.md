@@ -16,6 +16,8 @@ The utility goes through every .json file in a ModLoader based mod's folder and 
 The output is a CSV in the same format as SimpCn.csv
 The result can be exported to the console or a file.
 
+If there are any errors or warnings, they would be outputted to stderr.  For example, multiple entries of the same key with different text.
+
 # Usage:
 Run the exe, passing in the folder with *.json at the end.
 
@@ -44,8 +46,12 @@ Bp_Hail_IceCoolBall.LogText,,冰晶球完成了
 An easy way to translate is using Google Sheets with the translate function.
 For example, translating Chinese to English: `=GOOGLETRANSLATE(C1,"zh","en")`
 
-# Todo:
-* Maybe use tabs instead of commas since the text can have commas.  Maybe have option between CSV and TSV since tabs are easier import and manipulate.
-* It needs to remove duplicates, or at least warn about them.  There are mods which have the same key multiple times.  Usually it has the same text.  Maybe it is duped because object references are duped?
-* Should remove the *.json glob.  They will always be .json and just needs a root directory specified.
-* CSV output should support wrapping the columns in quotes and quotation escaping.
+# Version
+
+## 1.1.0
+* Added CSV encoding
+* Remove duplicates based on key/text
+* Warns if a key has multiple entries with different versions.
+
+## 1.0.0
+* Release

@@ -1,4 +1,8 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Globalization;
+using System.Net;
+using System.Runtime.CompilerServices;
+using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace CardSurvival_Localization
 {
@@ -7,7 +11,7 @@ namespace CardSurvival_Localization
         static void Main(string[] args)
         {
 
-            if(args.Length < 1)
+            if (args.Length < 1)
             {
 
                 Console.Error.WriteLine("Must be at least 1 argument:  SearchPath [OutputFile]");
@@ -15,9 +19,8 @@ namespace CardSurvival_Localization
             }
             Utilities.ThrowIfNull(args[0]);
 
+            //---Extract info from .json files
             string[] files = Directory.GetFiles(Path.GetDirectoryName(args[0])!, Path.GetFileName(args[0])!, SearchOption.AllDirectories);
-
-            //const string FilePath = @"C:\src\CardSurvival\CardSurvival-Localization\CardSurvival-Localization\TestData\Test.json";
 
             LocalizationKeyExtrator localizationKeyExtrator = new();
 
@@ -27,35 +30,66 @@ namespace CardSurvival_Localization
             {
                 List<LocalizationInfo> result = localizationKeyExtrator.Extract(File.ReadAllText(file));
 
-                localizationInfos.ForEach(x=> x.FileName = file);   
+                localizationInfos.ForEach(x => x.FileName = file);
                 localizationInfos.AddRange(result);
             }
 
-            bool isConsole = args.Length < 2;
 
-            StreamWriter outputStream = null;
-            
-            if (isConsole == false)
+            //---- Remove exact duplicates
+
+            //Remove exact key/text (case insensitive) duplicates.
+            //Group by items that have more than one text for the same key.
+            //  Note - Keys are case insensitive.  Currently CSTI-ModLoader is case sensitive.
+            List<IGrouping<string, LocalizationInfo>> groupedInfo = localizationInfos
+                .Distinct(new LocalizationGroupCompare())
+                .OrderBy(x=> x.LocalizationKey)
+                    .ThenBy(x=> x.DefaultText)
+                .GroupBy(x => x.LocalizationKey)
+                .OrderBy(x=> x.Key)
+                .ToList();
+
+            //---- Output warnings to stderr
+            var multiDefinedInfo = groupedInfo.Where(x => x.Count() > 1);
+
+            if(multiDefinedInfo.Count() > 0)
             {
-                outputStream = File.CreateText(args[1]);
+                Console.Error.WriteLine("Error: Multiple keys exist with different text");
+
+                foreach (var multiGroup in multiDefinedInfo)
+                {
+                    Console.Error.WriteLine($"Key: \"{multiGroup.Key}\"");
+
+                    foreach (var info in multiGroup)
+                    {
+                        Console.Error.WriteLine($"\t{info.DefaultText}");
+                    }
+                }
+
+                Console.Error.WriteLine("-----");
+                Console.Error.WriteLine();
             }
 
-            using (outputStream)
+            //---- Write to output
+            bool isConsole = args.Length < 2;
+
+            TextWriter outputWriter = isConsole ? Console.Out : new StreamWriter(args[1]);
+
+            using (outputWriter)
+            using (CsvWriter csvWriter = new CsvWriter(outputWriter, CultureInfo.InvariantCulture))
             {
-                foreach (var item in localizationInfos)
+                foreach (var item in groupedInfo.SelectMany(x=> x.ToList()))
                 {
+                    //CsvHelper.CsvWriter csvWriter = new CsvWriter()
                     string result = string.Join(',', item.LocalizationKey, "", item.DefaultText);
 
-                    if (isConsole)
-                    {
-                        Console.WriteLine(result);
-                    }
-                    else
-                    {
-                        outputStream!.WriteLine(result);
-                    }
+                    csvWriter.WriteField(item.LocalizationKey);
+                    csvWriter.WriteField("");
+                    csvWriter.WriteField(item.DefaultText);
+
+                    csvWriter.NextRecord();
                 }
             }
         }
+
     }
 }
