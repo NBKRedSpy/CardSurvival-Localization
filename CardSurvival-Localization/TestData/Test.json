@@ -12,16 +12,16 @@
             "LocalizationKey": "test_key",
             "ParentObjectID": "577682ed932c11ed892404ea56599bd2",
             "subTest": {
-                "DefaultText": " \"quoted test\"",
+                "DefaultText": "some \"text\"",
                 "LocalizationKey": "test_key"
             },
             "subTest1": {
-                "DefaultText": "duplicate test",
-                "LocalizationKey": "dupe_test"
+                "DefaultText": "exact duplicate test",
+                "LocalizationKey": "exact_dupe_test"
             },
             "subTest3": {
-                "DefaultText": "duplicate test",
-                "LocalizationKey": "dupe_test2"
+                "DefaultText": "exact duplicate test",
+                "LocalizationKey": "exact_dupe_test"
             }
 
 

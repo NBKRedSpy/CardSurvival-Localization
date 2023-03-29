@@ -15,6 +15,8 @@ namespace CardSurvival_Localization
         public string JsonPath { get; set; } = "";
         public string DefaultText { get; set; } = "";
         public string LocalizationKey { get; set; } = "";
+
+
     }
 
     public class LocalizationGroupCompare : IEqualityComparer<LocalizationInfo>

@@ -30,7 +30,7 @@ namespace CardSurvival_Localization
             {
                 List<LocalizationInfo> result = localizationKeyExtrator.Extract(File.ReadAllText(file));
 
-                localizationInfos.ForEach(x => x.FileName = file);
+                result.ForEach(x => x.FileName = file);
                 localizationInfos.AddRange(result);
             }
 
@@ -42,54 +42,64 @@ namespace CardSurvival_Localization
             //  Note - Keys are case insensitive.  Currently CSTI-ModLoader is case sensitive.
             List<IGrouping<string, LocalizationInfo>> groupedInfo = localizationInfos
                 .Distinct(new LocalizationGroupCompare())
-                .OrderBy(x=> x.LocalizationKey)
-                    .ThenBy(x=> x.DefaultText)
+                .OrderBy(x => x.LocalizationKey)
+                    .ThenBy(x => x.DefaultText)
                 .GroupBy(x => x.LocalizationKey)
-                .OrderBy(x=> x.Key)
+                .OrderBy(x => x.Key)
                 .ToList();
 
-            //---- Output warnings to stderr
-            var multiDefinedInfo = groupedInfo.Where(x => x.Count() > 1);
-
-            if(multiDefinedInfo.Count() > 0)
-            {
-                Console.Error.WriteLine("Error: Multiple keys exist with different text");
-
-                foreach (var multiGroup in multiDefinedInfo)
-                {
-                    Console.Error.WriteLine($"Key: \"{multiGroup.Key}\"");
-
-                    foreach (var info in multiGroup)
-                    {
-                        Console.Error.WriteLine($"\t{info.DefaultText}");
-                    }
-                }
-
-                Console.Error.WriteLine("-----");
-                Console.Error.WriteLine();
-            }
-
-            //---- Write to output
             bool isConsole = args.Length < 2;
 
             TextWriter outputWriter = isConsole ? Console.Out : new StreamWriter(args[1]);
-
             using (outputWriter)
-            using (CsvWriter csvWriter = new CsvWriter(outputWriter, CultureInfo.InvariantCulture))
             {
-                foreach (var item in groupedInfo.SelectMany(x=> x.ToList()))
+
+                //---- Output warnings to stderr
+                WriteErrors(outputWriter, groupedInfo);
+
+                //---- Write to output
+                using (CsvWriter csvWriter = new CsvWriter(outputWriter, CultureInfo.InvariantCulture))
                 {
-                    //CsvHelper.CsvWriter csvWriter = new CsvWriter()
-                    string result = string.Join(',', item.LocalizationKey, "", item.DefaultText);
+                    foreach (var item in groupedInfo.SelectMany(x => x.ToList()))
+                    {
+                        //The game's example SimpCn.csv shows new lines to be escaped.
+                        string encodedText = item.DefaultText.Replace("\n", "\\n");
 
-                    csvWriter.WriteField(item.LocalizationKey);
-                    csvWriter.WriteField("");
-                    csvWriter.WriteField(item.DefaultText);
+                        csvWriter.WriteField(item.LocalizationKey);
+                        csvWriter.WriteField("");
+                        csvWriter.WriteField(encodedText);
 
-                    csvWriter.NextRecord();
+                        csvWriter.NextRecord();
+                    }
                 }
             }
         }
 
+        private static void WriteErrors(TextWriter output,  List<IGrouping<string, LocalizationInfo>> groupedInfo)
+        {
+            var multiDefinedInfo = groupedInfo.Where(x => x.Count() > 1);
+
+            if (multiDefinedInfo.Count() > 0)
+            {
+
+                output.WriteLine("Error: Multiple keys exist with different text");
+
+                foreach (var multiGroup in multiDefinedInfo)
+                {
+                    output.WriteLine($"Key: \"{multiGroup.Key}\"");
+
+                    foreach (var info in multiGroup)
+                    {
+                        output.WriteLine($"\tText: {info.DefaultText}");
+                        output.WriteLine($"\tFile: {info.FileName}");
+                        output.WriteLine($"\tJSON Path: {info.JsonPath }");
+                        output.WriteLine();
+
+                    }
+                }
+
+                output.WriteLine("-----");
+            }
+        }
     }
 }
