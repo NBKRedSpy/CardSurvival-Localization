@@ -1,30 +1,71 @@
 # CardSurvival-Localization
 
-A utility to extract localization data from ModLoader based mods (AKA CSTI-ModLoader).  
-
-Useful for creating an English translation for Chinese ModLoader mods that do not have a localization file (For example, SimpEn.csv).
-
-# Imporant
-This is a tool for modders and is not useful otherwise.
+A utility to create English translations for mods that depend on the CSTI-ModLoader (AKA ModLoader).  Example mods are "Tea Lover" and "Greenhouse".
 
 # Overview
-This tool was made to help create localization files for Mod Loader mods that currently do not have an English translation.  This is not a replacement for a real translation or an offical translation from the mod's author.  However, it is a useable workaround and can also be used to help mod authors start a translation file.
+This tool was made to help create localization files for Mod Loader mods that currently do not have an English translation.  This is not a replacement for a real translation or an official translation from the mod's author.  However, it is a useable workaround and can also be used to help mod authors start a translation file.
 
-## Mod's Text Source
-In the Mod Loader mods, the source for the text can come from one of two places:  The card data itself (spread across many .json files), or localization files in the Mod's Localization folder.
+Users can either manually translate the text, or use a translation website.
 
-This is for mods that do not have a SimpEn* file in the Localization directory. For example SimpEn.csv or SimpEn2.csv.
+This document is focused on Chinese to English translation, but can also be used for English to Chinese.
 
-## Recommendations
-As described later in the document, use this tool to create a new .csv.  
+### Existing Translation File Note
+If the mod is in Chinese and already has a ./Localization/SimpCn* file (For example, SimpCn.csv) and the file is not empty, then this mod is not needed. 
+Simply copy the file to SimpEn.csv and put the translation in the second column. 
 
+## Need
+The challenge for creating English translations for Chinese only card packs is that often the mod does not have a SimpCn* translation file.  Without a translation file, the actual text source will be in all of the .json files, which in some cases is over 500 files.
+
+This mod parses all the .json files and extracts the card translation key and related text.  The result is outputted to a single CSV file in the ModLoader's translation file format.
+
+# Usage Summary
+To translate a mod based on CSTI-ModLoader to English, the process is as follows:
+
+* Run the tool, pointing to the mod's folder.
+	* Example:  `CardSurvival-Localization.exe "E:\Mods\Apocalypse-43-1-39-1679945367\*.json" ".\SimpEn.csv"`
+* Translate the SimpEnv.csv output file manually or with a translator such as translate.google.com or DeepL.com.
+	* Put the text translated from the third column into the second column.
+* Fix any errors listed at the top of the output.
+* Remove the error info at the top of the file.
+* Copy the file into the Mod's Localization folder as SimpEn.csv.
+
+## Example Output
+
+### Output From Tool
+```
+Error: Multiple keys exist with different text
+Key: "Bp_ConservatoriesNc_CardDescription"
+	Text: 为植物生长提供一个温馨的家园。
+	File: .\example.json
+	JSON Path: CardDescription
+
+	Text: 保护植物并加速生长
+	File: .\example.json
+	JSON Path: CardDescription2
+
+-----
+Bp_ConservatoriesNc_CardDescription,,为植物生长提供一个温馨的家园。
+Bp_ConservatoriesNc_CardDescription,,保护植物并加速生长
+Bp_ConservatoriesNc_Two_CardName,,二号温室
+```
+
+## Finished SimpEn.csv:
+```
+Bp_ConservatoriesNc_CardDescription,Provides a warm home for plant growth.,为植物生长提供一个温馨的家园。
+Bp_ConservatoriesNc_Two_CardName,Greenhouse No. 2,二号温室
+```
+
+
+# Spreadsheet Recommended Workflow
 My recommendation would be to do as follows:
-* Remove any errors at the top of the file and import the CSV part of the document into Excel or Google Sheets.  Then take the 3rd column (which will be in Chinse) and run it through a translater like translate.google.com or www.deepl.com.
-	* Alternatively Google Sheets has a function called GoogleTranslate that can translate text in the spreadsheet.  For example Chinese to English is `=GOOGLETRANSLATE(C1,"zh","en")`.
-* Copy those results to the spreadsheet's second column.
+* Run the tool to create the SimpEn.csv output.
+* Import the CSV part of the document into Excel or Google Sheets, excluding any errors at the top of the output.  
+* Copy the entirety of the third column (which will be in Chinese) and run it through a translator like translate.google.com or deepl.com.
+	* Alternatively, Google Sheets has a function called GoogleTranslate that can translate text in the spreadsheet.  For example Chinese to English is `=GOOGLETRANSLATE(C1,"zh","en")`.
+* Paste those results into the spreadsheet's second column.
 * Save the spreadsheet as SimpEn.csv.
-* With the newly created SimpEn.csv file, fix the errors that were listed at the top of the original output.  
-* Copy the result to the Mod's Localization directory.
+* With the newly created SimpEn.csv file, fix any errors that were listed at the top of the original output.  
+* Copy the SimpEn.csv file to the Mod's Localization directory.
 
 When starting the game, the Mod's text should now reflect the translated text.
 
@@ -33,76 +74,24 @@ When starting the game, the Mod's text should now reflect the translated text.
 A couple of things I've noticed in the current mods.  
 
 * There might be duplicate translations for the same key.  This is most likely an oversight.  Translate the text and pick the best one, removing the others.  They can be left in the file, but the Mod Loader will pick one and ignore the rest.  This issue will show up in the errors section of the output.
-* There might be entries that are from the base game, which can be removed.  These will often show up as having an English translation already.  They can be left in as the loader will ignore them, but it just makes the translation file cleaner to remove them.
+* There might be entries that are from the base game, which can be removed.  These will often show up as having an English translation already.  They can be left in as the loader will ignore them, but it makes the translation file cleaner if they are removed.
 
-## CSTI-ModLoader is at:
+
+# Command Line Parameters
+|Arguments|Description|
+|--|--|
+|File Pattern|The full path to the mod with *.json at the end.  For example:  "SomeModLoaderMod\\\*.json"|
+|Output File|If not provided, will output to the console.  Otherwise, it will write to the path specified.  It is recommended to use this argument since the console can corrupt Chinese characters.|
+
+## Source and Releases for this Utility
+https://github.com/NBKRedSpy/CardSurvival-Localization
+
+## CSTI-ModLoader is at
 
 https://www.nexusmods.com/cardsurvivaltropicalisland/mods/23
 
-https://github.com/dop-lm/CSTI-ModLoader  (Out of date.  The repository doesn't refelect the latest changes (2.0.1c) from 3/28/2023.  This doc will be updated when the repo is back in sync.)
+https://github.com/dop-lm/CSTI-ModLoader  (Currently the NoReflection branch has the 2.0.1c code.  The master branch is out of date.  This doc will be updated when the repo is back in sync.)
 
-## Source and Releases for this Mod
-https://github.com/NBKRedSpy/CardSurvival-Localization
-
-# Operation
-The utility goes through every .json file in a ModLoader based mod's folder and extracts every LocalizationKey and the DefaultText for that key.  
-The output will be a SimpEn.csv compatible file.  See The [Output](#output) section below.
-
-The result can be exported to the console or a file; however, it is best to supply a file name for the output file or the console might corrupt Unicode characters.
-
-If there are any errors or warnings, they will be added to the start of the output.  For example, multiple entries of the same key with different text.
-
-# Usage
-Run the exe, passing in the folder with *.json at the end.
-
-For example:
-
-Assuming the target mod is located at `E:\Mods\Apocalypse-43-1-39-1679945367` and is not in zip format.
-
-`CardSurvival-Localization.exe "E:\Mods\Apocalypse-43-1-39-1679945367\*.json" "c:\work\SimpEn.csv"`
-
-## Example Output
-
-```
-Error: Multiple keys exist with different text
-Key: "test_key"
-	Text: some "text"
-	File: <..>\TestData\Test.json
-	JSON Path: DefaultStatusName.Description.subTest
-
-	Text: test
-	File: <..>\TestData\Test.json
-	JSON Path: DefaultStatusName.Description
-
------
-exact_dupe_test,,exact duplicate test
-Gs_Hail_IceCool_Descriptions,,冰爽的感觉
-test_key,,"some ""text"""
-test_key,,test
-
-```
-
-
-|Arguments|Description|
-|--|--|
-|File Pattern|Use the full path with a search pattern at the end *.json at the end.  For example:  "SomeModLoaderMod\\\*.json"|
-|Output File|If not provided, will output to the console.  Otherwise will write to the path specified.  It is recommended to use this argument.|
-
-# Output
-Creates a CSV output text file with the following:
-
-* Any errors
-* The data in CSV format:
-	* Localization Key
-	* Empty (The space for the English translation)
-	* The DefaultText for that key.  
-
-If the output is showing unicode characters as ?'s, supply a file name as the second parameter.
-
-
-## Translation
-An easy way to translate entries is using Google Sheets with the translate function.
-For example, translating Chinese to English: `=GOOGLETRANSLATE(C1,"zh","en")`
 
 # Version
 
