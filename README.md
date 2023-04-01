@@ -2,6 +2,11 @@
 
 A utility to create English translations for mods that depend on the CSTI-ModLoader (AKA ModLoader).  Example mods are "Tea Lover" and "Greenhouse".
 
+# Update Note
+For users that have used a version of the app prior to 2.0.0, the arguments have changed.  The application now only requires the path to the target mod and will automatically create a SimpEn.csv and SimpEn_Errors.txt in the current working directory.  
+
+Errors are now in a separate file called SimpEn_Errors.txt.
+
 # Overview
 This tool was made to help create localization files for Mod Loader mods that currently do not have an English translation.  This is not a replacement for a real translation or an official translation from the mod's author.  However, it is a useable workaround and can also be used to help mod authors start a translation file.
 
@@ -13,8 +18,8 @@ This document is focused on Chinese to English translation, but can also be used
 If the mod is in Chinese and already has a ./Localization/SimpCn* file (For example, SimpCn.csv) and the file is not empty, then this mod is not needed. 
 Simply copy the file to SimpEn.csv and put the translation in the second column. 
 
-## Need
-The challenge for creating English translations for Chinese only card packs is that often the mod does not have a SimpCn* translation file.  Without a translation file, the actual text source will be in all of the .json files, which in some cases is over 500 files.
+## Purpose
+The challenge for creating English translations for Chinese only card packs is that often the mod does not have a SimpCn* translation file.  Without a translation file, the actual text source will be spread across all of the .json files, which in some cases is over 500 files.
 
 This mod parses all the .json files and extracts the card translation key and related text.  The result is outputted to a single CSV file in the ModLoader's translation file format.
 
@@ -23,7 +28,7 @@ To translate a mod based on CSTI-ModLoader to English, the process is as follows
 
 * Run the tool, pointing to the mod's folder.
 	* Example:  `CardSurvival-Localization.exe "E:\Mods\Apocalypse-43-1-39-1679945367\`
-	* If there are errors, there will be a file named SimpEn_Errors.txt.
+	* The app will create a SimpEn.csv file in the current working directory.  If there are errors, there will be a file named SimpEn_Errors.txt.
 * Translate the SimpEnv.csv output file manually or with a translator such as translate.google.com or DeepL.com.
 	* Put the text translated from the third column into the second column.
 * Fix any errors listed in the SimpEn_Errors.txt file.
@@ -62,12 +67,13 @@ Bp_ConservatoriesNc_Two_CardName,Greenhouse No. 2,二号温室
 # Spreadsheet Recommended Workflow
 My recommendation would be to do as follows:
 * Run the tool to create the SimpEn.csv output.
-* Import the CSV part of the document into Excel or Google Sheets.
-* Copy the entirety of the third column (which will be in Chinese) and run it through a translator like translate.google.com or deepl.com.
+	* The app will create a SimpEn.csv file in the current working directory.  If there are errors, there will be a file named SimpEn_Errors.txt.
+* Import the  SimpEn.csv document into Excel or Google Sheets.
+* Copy the entirety of the third column (which will be in Chinese) and run it through a translator such as translate.google.com or deepl.com.
 	* Alternatively, Google Sheets has a function called GoogleTranslate that can translate text in the spreadsheet.  For example Chinese to English is `=GOOGLETRANSLATE(C1,"zh","en")`.
 * Paste those results into the spreadsheet's second column.
 * Save the spreadsheet as SimpEn.csv.
-* With the newly created SimpEn.csv file, if there is an SimpEn_Error.txt file, fix any errors indicated in that file.
+* If a SimpEn_Error.txt file was created, fix any errors indicated in that file.
 * Copy the SimpEn.csv file to the Mod's Localization directory.
 
 When starting the game, the Mod's text should now reflect the translated text.
@@ -83,7 +89,7 @@ A couple of things I've noticed in the current mods.
 # Command Line Parameters
 |Arguments|Description|
 |--|--|
-|File Pattern|The full path to the mod|
+|File Pattern|The full path to the mod that will be translated.|
 
 ## Source and Releases for this Utility
 https://github.com/NBKRedSpy/CardSurvival-Localization
@@ -100,7 +106,7 @@ https://github.com/dop-lm/CSTI-ModLoader  (Currently the NoReflection branch has
 ## 2.0.0
 
 ### Upgrade Notes
-For users that have used a previous version of the app, the arguments have changed.  The application now only requires the path to the target mod and will automatically create a SimpEx.csv and SimpEx_Errors.txt in the current working directory.  
+For users that have used a previous version of the app, the arguments have changed.  The application now only requires the path to the target mod and will automatically create a SimpEn.csv and SimpEn_Errors.txt in the current working directory.  
 ### Changes
 * Changed arguments to only require path.
 * Changed to output errors to SimpEn_Errors.txt instead of in the translated file.
