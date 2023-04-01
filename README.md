@@ -22,16 +22,17 @@ This mod parses all the .json files and extracts the card translation key and re
 To translate a mod based on CSTI-ModLoader to English, the process is as follows:
 
 * Run the tool, pointing to the mod's folder.
-	* Example:  `CardSurvival-Localization.exe "E:\Mods\Apocalypse-43-1-39-1679945367\*.json" ".\SimpEn.csv"`
+	* Example:  `CardSurvival-Localization.exe "E:\Mods\Apocalypse-43-1-39-1679945367\`
+	* If there are errors, there will be a file named SimpEn_Errors.txt.
 * Translate the SimpEnv.csv output file manually or with a translator such as translate.google.com or DeepL.com.
 	* Put the text translated from the third column into the second column.
-* Fix any errors listed at the top of the output.
-* Remove the error info at the top of the file.
-* Copy the file into the Mod's Localization folder as SimpEn.csv.
+* Fix any errors listed in the SimpEn_Errors.txt file.
+* Copy the SimpEn.csv into the Mod's Localization folder.
 
 ## Example Output
 
 ### Output From Tool
+SimpEn_Errors.txt
 ```
 Error: Multiple keys exist with different text
 Key: "Bp_ConservatoriesNc_CardDescription"
@@ -42,8 +43,10 @@ Key: "Bp_ConservatoriesNc_CardDescription"
 	Text: 保护植物并加速生长
 	File: .\example.json
 	JSON Path: CardDescription2
+```
 
------
+SimpEn.csv
+```
 Bp_ConservatoriesNc_CardDescription,,为植物生长提供一个温馨的家园。
 Bp_ConservatoriesNc_CardDescription,,保护植物并加速生长
 Bp_ConservatoriesNc_Two_CardName,,二号温室
@@ -59,12 +62,12 @@ Bp_ConservatoriesNc_Two_CardName,Greenhouse No. 2,二号温室
 # Spreadsheet Recommended Workflow
 My recommendation would be to do as follows:
 * Run the tool to create the SimpEn.csv output.
-* Import the CSV part of the document into Excel or Google Sheets, excluding any errors at the top of the output.  
+* Import the CSV part of the document into Excel or Google Sheets.
 * Copy the entirety of the third column (which will be in Chinese) and run it through a translator like translate.google.com or deepl.com.
 	* Alternatively, Google Sheets has a function called GoogleTranslate that can translate text in the spreadsheet.  For example Chinese to English is `=GOOGLETRANSLATE(C1,"zh","en")`.
 * Paste those results into the spreadsheet's second column.
 * Save the spreadsheet as SimpEn.csv.
-* With the newly created SimpEn.csv file, fix any errors that were listed at the top of the original output.  
+* With the newly created SimpEn.csv file, if there is an SimpEn_Error.txt file, fix any errors indicated in that file.
 * Copy the SimpEn.csv file to the Mod's Localization directory.
 
 When starting the game, the Mod's text should now reflect the translated text.
@@ -80,8 +83,7 @@ A couple of things I've noticed in the current mods.
 # Command Line Parameters
 |Arguments|Description|
 |--|--|
-|File Pattern|The full path to the mod with *.json at the end.  For example:  "SomeModLoaderMod\\\*.json"|
-|Output File|If not provided, will output to the console.  Otherwise, it will write to the path specified.  It is recommended to use this argument since the console can corrupt Chinese characters.|
+|File Pattern|The full path to the mod|
 
 ## Source and Releases for this Utility
 https://github.com/NBKRedSpy/CardSurvival-Localization
@@ -94,6 +96,15 @@ https://github.com/dop-lm/CSTI-ModLoader  (Currently the NoReflection branch has
 
 
 # Version
+
+## 2.0.0
+
+### Upgrade Notes
+For users that have used a previous version of the app, the arguments have changed.  The application now only requires the path to the target mod and will automatically create a SimpEx.csv and SimpEx_Errors.txt in the current working directory.  
+### Changes
+* Changed arguments to only require path.
+* Changed to output errors to SimpEn_Errors.txt instead of in the translated file.
+* Removed second parameter.  Now always exports to SimpEn.csv in the current working folder.
 
 ## 1.2.0
 * Moved errors to output instead of stderr.

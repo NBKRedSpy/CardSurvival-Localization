@@ -9,7 +9,7 @@
         },
         "Description": {
             "DefaultText": "test",
-            "LocalizationKey": "test_key",
+            "LocalizationKey": "test_key1",
             "ParentObjectID": "577682ed932c11ed892404ea56599bd2",
             "subTest": {
                 "DefaultText": "some \"text\"",
