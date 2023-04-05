@@ -16,26 +16,9 @@ namespace CardSurvival_Localization
         public string DefaultText { get; set; } = "";
         public string LocalizationKey { get; set; } = "";
 
-
-    }
-
-    public class LocalizationGroupCompare : IEqualityComparer<LocalizationInfo>
-    {
-        public bool Equals(LocalizationInfo? x, LocalizationInfo? y)
-        {
-            StringComparer comparer = StringComparer.OrdinalIgnoreCase;
-
-            return String.Equals(x?.LocalizationKey, y?.LocalizationKey)
-                && String.Equals(x?.DefaultText, y?.DefaultText, StringComparison.OrdinalIgnoreCase);
-        }
-
-        public int GetHashCode([DisallowNull] LocalizationInfo obj)
-        {
-
-            return (
-                obj.LocalizationKey.GetHashCode(),
-                obj.DefaultText.GetHashCode(StringComparison.OrdinalIgnoreCase))
-                .GetHashCode();
-        }
+        /// <summary>
+        /// True if true, then a new key was generated for this entry.
+        /// </summary>
+        public bool KeyWasCreated { get; set; }
     }
 }
