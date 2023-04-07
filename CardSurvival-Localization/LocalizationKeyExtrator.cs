@@ -20,6 +20,7 @@ namespace CardSurvival_Localization
         /// </summary>
         public Dictionary<string, List<LocalizationInfo>> LocalizationKeys { get; private set; } = new();
 
+        private LocalizationKeyGenerator KeyGen { get;} = new LocalizationKeyGenerator();
         /// <summary>
         /// The lookup for generated keys.  
         ///     Key: The DefaultText that generated the key,
@@ -27,12 +28,6 @@ namespace CardSurvival_Localization
         /// </summary>
         public Dictionary<string, List<LocalizationInfo>> GeneratedKeys { get; private set; } = new();
 
-        private IGuidFactory GuidFactory { get; }
-
-        public LocalizationKeyExtrator(IGuidFactory guidFactory) 
-        {
-            GuidFactory = guidFactory;
-        }
 
         /// <summary>
         /// Adds the localization info into the dictionary.
@@ -111,28 +106,22 @@ namespace CardSurvival_Localization
 
             List<LocalizationInfo> generatedInfos;
 
+            string text = info.DefaultText.Trim();
+
             //Consolidate any keys
-            if (GeneratedKeys.TryGetValue(info.DefaultText, out generatedInfos!))
+            if (GeneratedKeys.TryGetValue(text, out generatedInfos!))
             {
                 info.LocalizationKey = generatedInfos[0].LocalizationKey;
                 generatedInfos.Add(info);
             }
             else
             {
-                info.LocalizationKey = CreateKeyString();
-                GeneratedKeys.Add(info.DefaultText, new() { info });
+                info.LocalizationKey = KeyGen.Create(text);
+                GeneratedKeys.Add(text, new() { info });
             }
 
             token["LocalizationKey"] = info.LocalizationKey;
         }
 
-        /// <summary>
-        /// Generates a new key.  Used for localization info that does not have a key.
-        /// </summary>
-        /// <returns></returns>
-        private string CreateKeyString()
-        {
-            return $"translate-{GuidFactory.Create().ToString()}";
-        }
     }
 }

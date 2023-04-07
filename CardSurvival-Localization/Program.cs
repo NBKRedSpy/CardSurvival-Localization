@@ -24,7 +24,7 @@ namespace CardSurvival_Localization
                 string sourceDirectory;
                 sourceDirectory = args[0];
 
-                sourceDirectory = ProcessMod(sourceDirectory, new FileSystem(), new GuidFactory());
+                sourceDirectory = ProcessMod(sourceDirectory, new FileSystem());
 
                 return 0;
             }
@@ -35,8 +35,7 @@ namespace CardSurvival_Localization
             }
         }
 
-        internal static string ProcessMod(string sourceDirectory,
-            IFileSystem fileSystem, IGuidFactory guidFactory)
+        internal static string ProcessMod(string sourceDirectory, IFileSystem fileSystem)
         {
             if (!fileSystem.Directory.Exists(sourceDirectory))
             {
@@ -54,7 +53,7 @@ namespace CardSurvival_Localization
             //---Extract info from .json files
             string[] files = fileSystem.Directory.GetFiles(sourceDirectory, "*.json", SearchOption.AllDirectories);
 
-            LocalizationKeyExtrator localizationKeyExtrator = new(guidFactory);
+            LocalizationKeyExtrator localizationKeyExtrator = new();
 
             foreach (string file in files)
             {
@@ -87,14 +86,18 @@ namespace CardSurvival_Localization
                 Console.WriteLine($"One or more translation warnings or errors occurred. See {errorFileName}");
             }
 
-            string localizationFilePath = Path.Combine(localizationFolder, "SimpEn.csv");
+            string localizationFilePath = Path.Combine(localizationFolder, "SimpEn.psv");
 
 
 
             using (TextWriter outputWriter = new StreamWriter(fileSystem.FileStream.New(localizationFilePath, FileMode.Create)))
             {
 
-                var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture);
+                //Using Pipe format since spreadsheet programs like Google Sheets gets caught up on unicode comma like characters.
+                var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+                {
+                    Delimiter = "|"
+                };
 
                 //---- Write to English translation output
                 using (CsvWriter csvWriter = new CsvWriter(outputWriter, csvConfig))
@@ -108,11 +111,6 @@ namespace CardSurvival_Localization
                         {
                             //The game's example SimpCn.csv shows new lines to be escaped.
                             string encodedText = info.DefaultText.Replace("\n", "\\n");
-                            
-                            //Google Sheets interprets some unicode characters as commas, which throws off import.
-                            //  The CSV import is confused on these items, so replacing them.
-                            encodedText = encodedText.Replace('，', ',');
-                            encodedText = encodedText.Replace('、', ',');
 
                             csvWriter.WriteField(info.LocalizationKey);
                             csvWriter.WriteField("");  //Spot for English translation
@@ -191,20 +189,6 @@ namespace CardSurvival_Localization
             return sb.ToString();
         }
 
-        //private static void GetParameters(string[] args, out string path, out bool createMissingKeys)
-        //{
-        //    if(args.Length > 1)
-        //    {
-        //        createMissingKeys = args[0]! == "--create-keys";
-        //        path = args[1]!;
-        //    }
-        //    else
-        //    {
-        //        path = args[0];
-        //        createMissingKeys = false;
-        //    }
-        //}
-
         private static bool ShowUsage(string[] args)
         {
             var firstArg = args.Length > 0 ? args[0] : "";
@@ -217,11 +201,15 @@ Usage: CardSurvival-Localization <path to mod directory>
 
 Description:  
 
-Creates a SimpEn.csv tranlsation file for a CSTI-ModLoader mod which is only in Chinese.
-see https://github.com/NBKRedSpy/CardSurvival-Localization for documentation.
+Creates a SimpEn.psv translation file which is used for a CSTI-ModLoader 
+mod which is only in Chinese.  
+
+Remember to translate the pipe delimited SimpEn.psv to a comma delimited SimpEn.csv or the mod will not use the file.
+
+See https://github.com/NBKRedSpy/CardSurvival-Localization for documentation.
 
 
-Paramters:
+Parameters:
 path to mod directory  The directory the mod is located
 ";
 

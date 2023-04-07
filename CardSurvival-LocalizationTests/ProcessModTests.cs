@@ -8,6 +8,129 @@ namespace CardSurvival_LocalizationTests
 {
     public class ProcessModTests
     {
+
+        [Fact]
+        public void TrimTest__Success__Success()
+        {
+
+            MockFileSystem fs = new MockFileSystem(new Dictionary<string, MockFileData>()
+            {
+                {@"x:\test\ModInfo.json", new MockFileData(@"{}") },
+                {@"x:\test\test.json", new MockFileData(@"
+{
+    'DefaultStatusName': {
+        'DefaultText': 'Some Text',
+        'LocalizationKey': 'SOME_KEY'
+    },
+    'DefaultStatusName1': {
+        'DefaultText': 'Some Spaced Text    ',
+        'LocalizationKey': ''
+    },
+    'DefaultStatusName2': {
+        'DefaultText': 'Some Spaced Text',
+        'LocalizationKey': ''
+    },
+    'DefaultStatusName3': {
+        'DefaultText': '   Some Spaced Text',
+        'LocalizationKey': ''
+    },
+}
+")
+                },
+
+            }, "X:\\test");
+
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
+
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
+            Assert.True(fs.FileExists(engPath));
+
+            string expected = @"SOME_KEY||Some Text
+T-VzorawrFGpoS68TyA2fy/c9JZGM=||Some Spaced Text
+";
+            string actual = fs.File.ReadAllText(engPath);
+
+            Assert.Equal(expected, actual);
+
+            List<string> expectedFiles = new()
+            {
+                @"x:\test\ModInfo.json",
+                "x:\\test\\test.json",
+                "x:\\test\\Localization\\SimpEn.psv",
+                @"x:\test\Localization\SimpEn_Errors.txt",
+
+            };
+
+            Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
+
+            expected = @"---- Warnings -----
+New Keys Created.  JSON was updated.
+
+	New Key: ""T-VzorawrFGpoS68TyA2fy/c9JZGM=""
+	Text: Some Spaced Text
+
+	File: x:\test\test.json
+	JSON Path: DefaultStatusName1
+
+	File: x:\test\test.json
+	JSON Path: DefaultStatusName2
+
+	File: x:\test\test.json
+	JSON Path: DefaultStatusName3
+
+";
+
+            actual = fs.File.ReadAllText(@"x:\test\Localization\SimpEn_Errors.txt");
+            Assert.Equal(expected, actual);
+
+
+        }
+
+        [Fact]
+        public void UnicodeComma__CommaRetained__Success()
+        {
+
+            MockFileSystem fs = new MockFileSystem(new Dictionary<string, MockFileData>()
+            {
+                {@"x:\test\ModInfo.json", new MockFileData(@"{}") },
+                {@"x:\test\test.json", new MockFileData(@"
+{
+    'DefaultStatusName': {
+        'DefaultText': 'Some，Text',
+        'LocalizationKey': 'SOME_KEY'
+    }
+}
+")
+                },
+
+            }, "X:\\test");
+
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
+
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
+            Assert.True(fs.FileExists(engPath));
+
+            //Chinese comma lookalike unicode character
+            string expected = @"SOME_KEY||Some，Text
+";
+            string actual = fs.File.ReadAllText(engPath);
+
+            Assert.Equal(expected, actual);
+
+            List<string> expectedFiles = new()
+            {
+                @"x:\test\ModInfo.json",
+                "x:\\test\\test.json",
+                "x:\\test\\Localization\\SimpEn.psv",
+            };
+
+            Assert.Equal(fs.AllFiles, expectedFiles);
+
+        }
+
+
         [Fact]
         public void EntriesExist__Single__Success()
         {
@@ -26,31 +149,28 @@ namespace CardSurvival_LocalizationTests
                 },
 
             }, "X:\\test");
+            
 
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
 
-            Mock<GuidFactoryMock> guidFactoryMock = new() { CallBase = true };
-
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, guidFactoryMock.Object);
-
-            const string engPath = "x:\\test\\Localization\\SimpEn.csv";
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
 
-            string expected = @"SOME_KEY,,Some Text
+            string expected = @"SOME_KEY||Some Text
 ";
             string actual = fs.File.ReadAllText(engPath);
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
 
             List<string> expectedFiles = new()
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\SimpEn.csv",
+                "x:\\test\\Localization\\SimpEn.psv",
             };
 
             Assert.Equal(fs.AllFiles, expectedFiles);
-            guidFactoryMock.Verify(x => x.Create(), Times.Never());
-
+            
         }
 
         [Fact]
@@ -75,37 +195,33 @@ namespace CardSurvival_LocalizationTests
 }
 ")
                 },
-                {@"x:\test\Localization\SimpEn.csv", new MockFileData(new string('1',1000))},
+                {@"x:\test\Localization\SimpEn.psv", new MockFileData(new string('1',1000))},
                 {@"x:\test\Localization\SimpEn_Errors.txt", new MockFileData(new string('2',1000))},
 
             }, "X:\\test");
 
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
 
-            Mock<GuidFactoryMock> guidFactoryMock = new() { CallBase = true };
-
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, guidFactoryMock.Object);
-
-            const string engPath = "x:\\test\\Localization\\SimpEn.csv";
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
 
-            string expected = @"SOME_KEY,,Some Text
-SOME_KEY,,Some Text2
+            string expected = @"SOME_KEY||Some Text
+SOME_KEY||Some Text2
 ";
             string actual = fs.File.ReadAllText(engPath);
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
 
             List<string> expectedFiles = new()
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\SimpEn.csv",
+                "x:\\test\\Localization\\SimpEn.psv",
                 @"x:\test\Localization\SimpEn_Errors.txt",
             };
 
             Assert.Equal(fs.AllFiles, expectedFiles);
-            guidFactoryMock.Verify(x => x.Create(), Times.Never());
-
+            
             expected = @"---- Errors -----
 Error: Multiple keys exist with different text
 
@@ -147,29 +263,28 @@ Key: ""SOME_KEY""
             }, "X:\\test");
 
 
-            Mock<GuidFactoryMock> guidFactoryMock = new() { CallBase = true };
+            
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, guidFactoryMock.Object);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
 
-            const string engPath = "x:\\test\\Localization\\SimpEn.csv";
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
 
-            string expected = @"SOME_KEY,,番茄炒蛋
+            string expected = @"SOME_KEY||番茄炒蛋
 ";
             string actual = fs.File.ReadAllText(engPath);
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
 
             List<string> expectedFiles = new()
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\SimpEn.csv",
+                "x:\\test\\Localization\\SimpEn.psv",
             };
 
             Assert.Equal(fs.AllFiles, expectedFiles);
-            guidFactoryMock.Verify(x => x.Create(), Times.Never());
-
+            
         }
 
         [Fact]
@@ -196,34 +311,33 @@ Key: ""SOME_KEY""
             }, "X:\\test");
 
 
-            Mock<GuidFactoryMock> guidFactoryMock = new() { CallBase = true };
+            
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, guidFactoryMock.Object);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
 
-            const string engPath = "x:\\test\\Localization\\SimpEn.csv";
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
 
-            string expected = @"SOME_KEY,,番茄炒蛋
-SOME_KEY2,,番茄炒蛋
+            string expected = @"SOME_KEY||番茄炒蛋
+SOME_KEY2||番茄炒蛋
 ";
             string actual = fs.File.ReadAllText(engPath);
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
 
             List<string> expectedFiles = new()
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\SimpEn.csv",
+                "x:\\test\\Localization\\SimpEn.psv",
             };
 
             Assert.Equal(fs.AllFiles, expectedFiles);
-            guidFactoryMock.Verify(x => x.Create(), Times.Never());
-
+            
         }
 
         [Fact]
-        public void EntriesExist__QuotedComma__Success()
+        public void EntriesExist__CommaIgnored__Success()
         {
 
             MockFileSystem fs = new MockFileSystem(new Dictionary<string, MockFileData>()
@@ -241,29 +355,28 @@ SOME_KEY2,,番茄炒蛋
             }, "X:\\test");
 
 
-            Mock<GuidFactoryMock> guidFactoryMock = new() { CallBase = true };
+            
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, guidFactoryMock.Object);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
 
-            const string engPath = "x:\\test\\Localization\\SimpEn.csv";
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
 
-            string expected = @"SOME_KEY,,""Some, Text""
+            string expected = @"SOME_KEY||Some, Text
 ";
             string actual = fs.File.ReadAllText(engPath);
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
 
             List<string> expectedFiles = new()
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\SimpEn.csv",
+                "x:\\test\\Localization\\SimpEn.psv",
             };
 
             Assert.Equal(fs.AllFiles, expectedFiles);
-            guidFactoryMock.Verify(x => x.Create(), Times.Never());
-
+            
         }
         
 
@@ -294,30 +407,29 @@ SOME_KEY2,,番茄炒蛋
                     }
                 }, "X:\\test");
 
-            Mock<GuidFactoryMock> guidFactoryMock = new() { CallBase = true };
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, guidFactoryMock.Object);
+            
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
 
-            const string engPath = "x:\\test\\Localization\\SimpEn.csv";
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
 
-            string expected = @"SOME_KEY,,Some Text
+            string expected = @"SOME_KEY||Some Text
 ";
             string actual = fs.File.ReadAllText(engPath);
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
 
             List<string> expectedFiles = new()
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
                 "x:\\test\\test2.json",
-                "x:\\test\\Localization\\SimpEn.csv",
+                "x:\\test\\Localization\\SimpEn.psv",
             };
 
             Assert.Equal(fs.AllFiles, expectedFiles);
 
-            guidFactoryMock.Verify(x => x.Create(), Times.Never());
-        }
+                    }
 
 
         [Fact]
@@ -349,8 +461,8 @@ SOME_KEY2,,番茄炒蛋
 
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
-            Mock<GuidFactoryMock> guidFactoryMock = new() { CallBase = true };
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, guidFactoryMock.Object);
+            
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
 
 
             var expectedFiles = new List<string>()
@@ -358,19 +470,19 @@ SOME_KEY2,,番茄炒蛋
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
                 "x:\\test\\test2.json",
-                "x:\\test\\Localization\\SimpEn.csv",
+                "x:\\test\\Localization\\SimpEn.psv",
                 "x:\\test\\Localization\\SimpEn_Errors.txt",
             };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x=> x));
 
-            const string engPath = "x:\\test\\Localization\\SimpEn.csv";
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = @"SOME_KEY,,Some Text
-SOME_KEY,,Some Text1
+            string expected = @"SOME_KEY||Some Text
+SOME_KEY||Some Text1
 ";
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
 
             actual = fs.File.ReadAllText("x:\\test\\Localization\\SimpEn_Errors.txt");
             expected = @"---- Errors -----
@@ -387,12 +499,11 @@ Key: ""SOME_KEY""
 
 ";
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
 
             AssertNoJsonChanged(fs);
 
-            guidFactoryMock.Verify(x => x.Create(), Times.Never());
-        }
+                    }
 
         [Fact]
         public void CreateNew__SingleNew__Warnings()
@@ -415,32 +526,32 @@ Key: ""SOME_KEY""
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            Mock<GuidFactoryMock> guidFactoryMock = new() { CallBase = true };
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, guidFactoryMock.Object);
+            
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
 
 
             var expectedFiles = new List<string>()
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\SimpEn.csv",
+                "x:\\test\\Localization\\SimpEn.psv",
                 "x:\\test\\Localization\\SimpEn_Errors.txt",
             };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\SimpEn.csv";
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = @"translate-01000000-0000-0000-0000-000000000000,,Some Text
+            string expected = @"T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||Some Text
 ";
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
 
             actual = fs.File.ReadAllText("x:\\test\\Localization\\SimpEn_Errors.txt");
             expected = @"---- Warnings -----
 New Keys Created.  JSON was updated.
 
-	New Key: ""translate-01000000-0000-0000-0000-000000000000""
+	New Key: ""T-zlWCFIxvDBKCM1uH317Uvkt4E5k=""
 	Text: Some Text
 
 	File: x:\test\test.json
@@ -448,22 +559,21 @@ New Keys Created.  JSON was updated.
 
 ";
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
 
             //Check for json update
             actual = fs.File.ReadAllText("x:\\test\\test.json");
             expected = @"{
   ""DefaultStatusName"": {
     ""DefaultText"": ""Some Text"",
-    ""LocalizationKey"": ""translate-01000000-0000-0000-0000-000000000000""
+    ""LocalizationKey"": ""T-zlWCFIxvDBKCM1uH317Uvkt4E5k=""
   }
 }";
 
-            Assert.Equal(actual, expected); 
+            Assert.Equal(expected, actual); 
 
 
-            guidFactoryMock.Verify(x => x.Create(), Times.Once());
-        }
+                    }
 
 
         [Fact]
@@ -491,32 +601,32 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            Mock<GuidFactoryMock> guidFactoryMock = new() { CallBase = true };
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, guidFactoryMock.Object);
+            
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
 
 
             var expectedFiles = new List<string>()
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\SimpEn.csv",
+                "x:\\test\\Localization\\SimpEn.psv",
                 "x:\\test\\Localization\\SimpEn_Errors.txt",
             };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\SimpEn.csv";
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = @"translate-01000000-0000-0000-0000-000000000000,,Some Text
+            string expected = @"T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||Some Text
 ";
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
 
             actual = fs.File.ReadAllText("x:\\test\\Localization\\SimpEn_Errors.txt");
             expected = @"---- Warnings -----
 New Keys Created.  JSON was updated.
 
-	New Key: ""translate-01000000-0000-0000-0000-000000000000""
+	New Key: ""T-zlWCFIxvDBKCM1uH317Uvkt4E5k=""
 	Text: Some Text
 
 	File: x:\test\test.json
@@ -527,26 +637,25 @@ New Keys Created.  JSON was updated.
 
 ";
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
 
             //Check for json update
             actual = fs.File.ReadAllText("x:\\test\\test.json");
             expected = @"{
   ""DefaultStatusName"": {
     ""DefaultText"": ""Some Text"",
-    ""LocalizationKey"": ""translate-01000000-0000-0000-0000-000000000000""
+    ""LocalizationKey"": ""T-zlWCFIxvDBKCM1uH317Uvkt4E5k=""
   },
   ""DefaultStatusName2"": {
     ""DefaultText"": ""Some Text"",
-    ""LocalizationKey"": ""translate-01000000-0000-0000-0000-000000000000""
+    ""LocalizationKey"": ""T-zlWCFIxvDBKCM1uH317Uvkt4E5k=""
   }
 }";
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
 
 
-            guidFactoryMock.Verify(x => x.Create(), Times.Once());
-        }
+                    }
 
         [Fact]
         public void CreateNew__TwoNoDupes__Warnings()
@@ -573,24 +682,24 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            Mock<GuidFactoryMock> guidFactoryMock = new() { CallBase = true };
+            
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, guidFactoryMock.Object);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
 
             var expectedFiles = new List<string>()
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\SimpEn.csv",
+                "x:\\test\\Localization\\SimpEn.psv",
                 "x:\\test\\Localization\\SimpEn_Errors.txt",
             };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\SimpEn.csv";
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = @"translate-01000000-0000-0000-0000-000000000000,,Some Text1
-translate-02000000-0000-0000-0000-000000000000,,Some Text2
+            string expected = @"T-MtvodPkQIAwKNWr+IDrEvoZpvJM=||Some Text1
+T-G02XAZWFpzT4hBqdzTtw+2cR+CE=||Some Text2
 ";
 
             Assert.Equal(expected, actual);
@@ -599,13 +708,13 @@ translate-02000000-0000-0000-0000-000000000000,,Some Text2
             expected = @"---- Warnings -----
 New Keys Created.  JSON was updated.
 
-	New Key: ""translate-01000000-0000-0000-0000-000000000000""
+	New Key: ""T-MtvodPkQIAwKNWr+IDrEvoZpvJM=""
 	Text: Some Text1
 
 	File: x:\test\test.json
 	JSON Path: DefaultStatusName
 
-	New Key: ""translate-02000000-0000-0000-0000-000000000000""
+	New Key: ""T-G02XAZWFpzT4hBqdzTtw+2cR+CE=""
 	Text: Some Text2
 
 	File: x:\test\test.json
@@ -613,26 +722,25 @@ New Keys Created.  JSON was updated.
 
 ";
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
 
             //Check for json update
             actual = fs.File.ReadAllText("x:\\test\\test.json");
             expected = @"{
   ""DefaultStatusName"": {
     ""DefaultText"": ""Some Text1"",
-    ""LocalizationKey"": ""translate-01000000-0000-0000-0000-000000000000""
+    ""LocalizationKey"": ""T-MtvodPkQIAwKNWr+IDrEvoZpvJM=""
   },
   ""DefaultStatusName2"": {
     ""DefaultText"": ""Some Text2"",
-    ""LocalizationKey"": ""translate-02000000-0000-0000-0000-000000000000""
+    ""LocalizationKey"": ""T-G02XAZWFpzT4hBqdzTtw+2cR+CE=""
   }
 }";
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
 
 
-            guidFactoryMock.Verify(x => x.Create(), Times.Exactly(2));
-        }
+                    }
 
         private static void SetWriteTimeToMin(MockFileSystem fs)
         {
@@ -676,33 +784,32 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            Mock<GuidFactoryMock> guidFactoryMock = new() { CallBase = true };
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, guidFactoryMock.Object);
+            
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
 
 
             var expectedFiles = new List<string>()
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\SimpEn.csv",
+                "x:\\test\\Localization\\SimpEn.psv",
             };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\SimpEn.csv";
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = @"test,,Some Text
+            string expected = @"test||Some Text
 ";
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
 
 
             //Check for json update
 
             AssertNoJsonChanged(fs);
 
-            guidFactoryMock.Verify(x => x.Create(), Times.Never());
-        }
+                    }
 
         [Fact]
         public void CreateEntry__SingleWithExisting__Success()
@@ -729,33 +836,33 @@ New Keys Created.  JSON was updated.
 
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
-            Mock<GuidFactoryMock> guidFactoryMock = new() { CallBase = true };
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, guidFactoryMock.Object);
+            
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
 
 
             var expectedFiles = new List<string>()
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\SimpEn.csv",
+                "x:\\test\\Localization\\SimpEn.psv",
                 "x:\\test\\Localization\\SimpEn_Errors.txt",
             };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\SimpEn.csv";
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = @"translate-01000000-0000-0000-0000-000000000000,,Some Text
-test,,Some Text Existing
+            string expected = @"T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||Some Text
+test||Some Text Existing
 ";
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
 
             actual = fs.File.ReadAllText("x:\\test\\Localization\\SimpEn_Errors.txt");
             expected = @"---- Warnings -----
 New Keys Created.  JSON was updated.
 
-	New Key: ""translate-01000000-0000-0000-0000-000000000000""
+	New Key: ""T-zlWCFIxvDBKCM1uH317Uvkt4E5k=""
 	Text: Some Text
 
 	File: x:\test\test.json
@@ -769,7 +876,7 @@ New Keys Created.  JSON was updated.
             expected = @"{
   ""DefaultStatusName"": {
     ""DefaultText"": ""Some Text"",
-    ""LocalizationKey"": ""translate-01000000-0000-0000-0000-000000000000""
+    ""LocalizationKey"": ""T-zlWCFIxvDBKCM1uH317Uvkt4E5k=""
   },
   ""DefaultStatusName1"": {
     ""DefaultText"": ""Some Text Existing"",
@@ -778,8 +885,7 @@ New Keys Created.  JSON was updated.
 }";
             Assert.Equal(expected, actual);
 
-            guidFactoryMock.Verify(x => x.Create(), Times.Once());
-        }
+                    }
 
         [Fact]
         public void CreateEntry__SingleNewConsolidateExisting__Warnings()
@@ -810,28 +916,28 @@ New Keys Created.  JSON was updated.
 
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
-            Mock<GuidFactoryMock> guidFactoryMock = new() { CallBase = true };
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, guidFactoryMock.Object);
+            
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
 
 
             var expectedFiles = new List<string>()
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\SimpEn.csv",
+                "x:\\test\\Localization\\SimpEn.psv",
                 "x:\\test\\Localization\\SimpEn_Errors.txt",
             };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\SimpEn.csv";
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = @"translate-01000000-0000-0000-0000-000000000000,,Some Text
-test-existing,,Some Text Existing
-test-existing,,Some Text Existing Mismatch
+            string expected = @"T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||Some Text
+test-existing||Some Text Existing
+test-existing||Some Text Existing Mismatch
 ";
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
 
             actual = fs.File.ReadAllText("x:\\test\\Localization\\SimpEn_Errors.txt");
             expected = @"---- Errors -----
@@ -849,7 +955,7 @@ Key: ""test-existing""
 ---- Warnings -----
 New Keys Created.  JSON was updated.
 
-	New Key: ""translate-01000000-0000-0000-0000-000000000000""
+	New Key: ""T-zlWCFIxvDBKCM1uH317Uvkt4E5k=""
 	Text: Some Text
 
 	File: x:\test\test.json
@@ -863,7 +969,7 @@ New Keys Created.  JSON was updated.
             expected = @"{
   ""DefaultStatusName"": {
     ""DefaultText"": ""Some Text"",
-    ""LocalizationKey"": ""translate-01000000-0000-0000-0000-000000000000""
+    ""LocalizationKey"": ""T-zlWCFIxvDBKCM1uH317Uvkt4E5k=""
   },
   ""DefaultStatusName-Existing1"": {
     ""DefaultText"": ""Some Text Existing"",
@@ -876,8 +982,7 @@ New Keys Created.  JSON was updated.
 }";
             Assert.Equal(expected, actual);
 
-            guidFactoryMock.Verify(x => x.Create(), Times.Once());
-        }
+                    }
 
 
     }
