@@ -109,8 +109,10 @@ namespace CardSurvival_Localization
                             //The game's example SimpCn.csv shows new lines to be escaped.
                             string encodedText = info.DefaultText.Replace("\n", "\\n");
                             
-                            //Google Sheets interprets the unicode character '，' as a comma, which throws off import.  Replacing is not technically correct, but works.
+                            //Google Sheets interprets some unicode characters as commas, which throws off import.
+                            //  The CSV import is confused on these items, so replacing them.
                             encodedText = encodedText.Replace('，', ',');
+                            encodedText = encodedText.Replace('、', ',');
 
                             csvWriter.WriteField(info.LocalizationKey);
                             csvWriter.WriteField("");  //Spot for English translation

@@ -106,7 +106,8 @@ https://github.com/dop-lm/CSTI-ModLoader  (Currently the NoReflection branch has
 
 
 # Version
-
+## 3.0.1
+Added code to replace unicode characters that Google Sheets is interpreting as commas to commas.
 ## 3.0.0
 * Can generate LocalizationKey's for objects which have DefaultText, but no key.
 * SimpEn.csv and SimpEn_Errors.txt files are now placed in the Mod's Localization folder.
