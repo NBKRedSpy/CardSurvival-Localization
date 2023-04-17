@@ -1,17 +1,17 @@
 # CardSurvival-Localization
 
-A utility to create English translations for mods that depend on the CSTI-ModLoader (AKA ModLoader).  Example mods are "Tea Lover" and "Greenhouse".
+A command line utility to create English translations for mods that depend on the CSTI-ModLoader (AKA ModLoader).  Example mods are "Tea Lover" and "Greenhouse".
 
 # Change Notice
 See the [Change Log](#changes) below as versions 2.0.0+ and 3.0.0+ have significant changes.
 
 # Summary - What Does This Do?
 
-This utility searches all the .json files for a ModLoader based mod and finds any DefaultText that is set.  If it has a LocalizationKey, the key and text will be written to SimpEn.psv.  If it does not contain a LocalizationKey, a new key will be created.  The new key and the DefaultText will be added to the SimpEn.psv.  
+This command line utility searches all the .json files for a ModLoader based mod and finds any DefaultText that is set.  If it has a LocalizationKey, the key and text will be written to SimpEn.psv.  If it does not contain a LocalizationKey, a new key will be created and written to the .json file.  The new key and the DefaultText will be added to the SimpEn.psv.  
 
 The SimpEn.psv can be translated by putting the English text in the second column, and then saved as a CSV named SimpEn.csv.  Then copy the SimpEn.csv to the ./Localization folder.  The game will now show the English text.
 
-This does not handle cards that are created or modified in a .dll.  See below.
+This utility does not handle cards that are created or modified in a .dll.  For those mods, the code must be modified to include a LocalizationKey.  If text for cards are created or modified programmatically, a class called CardSurvival-LocalizationStringUtility can be use to generate hash based keys which follows the same format as this utility's key generation.  See https://github.com/NBKRedSpy/CardSurvival-LocalizationStringUtility .
 
 # Overview
 This tool was made to help create localization files for Mod Loader mods that currently do not have an English translation.  This is not a replacement for a real translation or an official translation from the mod's author.  However, it is a useable workaround and can also be used to help mod authors start a translation file.  
@@ -31,7 +31,7 @@ Simply copy the SimpCn* file to SimpEn* and put the translation in the second co
 # Usage Summary
 To translate a mod based on CSTI-ModLoader to English, the process is as follows:
 
-* Run the tool, pointing to the mod's folder.
+* In a command prompt, run the tool, passing the target mod's folder as the first parameter.
 	* Example:  `CardSurvival-Localization.exe "E:\Mods\Apocalypse-43-1-392-1680010396\DisasterBeacons"`
 	* The app will create a SimpEn.psv file in mod's Localization folder.  If there are errors, there will also be a file named SimpEn_Errors.txt.
 * Translate the SimpEnv.psv output file manually or with a translator such as translate.google.com or DeepL.com.
