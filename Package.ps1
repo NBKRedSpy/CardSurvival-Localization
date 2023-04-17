@@ -1,5 +1,14 @@
-dotnet publish -c Release
-# Get the file name from the C# project name
 $ProjectName = "CardSurvival-Localization"
+$PackageFolder = "./Package/"
+$ArchiveName = "./$ProjectName.zip"
 
-Compress-Archive -Path "./CardSurvival-Localization/bin/Release/net6.0/publish/*" -Force -DestinationPath ./$ProjectName.zip
+mkdir -ErrorAction SilentlyContinue $PackageFolder
+Remove-Item -ErrorAction SilentlyContinue -Recurse ./Package/*
+Remove-Item -ErrorAction SilentlyContinue $ArchiveName
+
+dotnet publish ".\CardSurvival-Localization\CardSurvival-Localization.csproj" -c Release -o $PackageFolder
+
+
+Compress-Archive -Path $PackageFolder/* -DestinationPath $ArchiveName
+
+

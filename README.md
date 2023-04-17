@@ -5,16 +5,28 @@ A utility to create English translations for mods that depend on the CSTI-ModLoa
 # Change Notice
 See the [Change Log](#changes) below as versions 2.0.0+ and 3.0.0+ have significant changes.
 
+# Summary - What Does This Do?
+
+This utility searches all the .json files for a ModLoader based mod and finds any DefaultText that is set.  If it has a LocalizationKey, the key and text will be written to SimpEn.psv.  If it does not contain a LocalizationKey, a new key will be created.  The new key and the DefaultText will be added to the SimpEn.psv.  
+
+The SimpEn.psv can be translated by putting the English text in the second column, and then saved as a CSV named SimpEn.csv.  Then copy the SimpEn.csv to the ./Localization folder.  The game will now show the English text.
+
+This does not handle cards that are created or modified in a .dll.  See below.
+
 # Overview
-This tool was made to help create localization files for Mod Loader mods that currently do not have an English translation.  This is not a replacement for a real translation or an official translation from the mod's author.  However, it is a useable workaround and can also be used to help mod authors start a translation file.
+This tool was made to help create localization files for Mod Loader mods that currently do not have an English translation.  This is not a replacement for a real translation or an official translation from the mod's author.  However, it is a useable workaround and can also be used to help mod authors start a translation file.  
 
 Users can either manually translate the text, or use a translation website.
+
+If a mod has a .dll as well as ModLoader files, this tool will create the ModLoader .json translation keys and file; however, any cards referenced or created in the .DLL must be addressed in the source code.
+See https://github.com/NBKRedSpy/CardSurvival-LocalizationStringUtility for assistance with .DLL translation.
+
 
 This document is focused on Chinese to English translation, but can also be used for English to Chinese.
 
 ### Existing Translation File Note
-If the mod is in Chinese and already has a ./Localization/SimpCn* file (For example, SimpCn.csv) and the file is not empty, then this mod is not needed. 
-Simply copy the file to SimpEn.csv and put the translation in the second column. 
+If the mod is in Chinese and already has a ./Localization/SimpCn* file (For example, SimpCn.csv) and the file is not empty, then this mod is most likely not needed. 
+Simply copy the SimpCn* file to SimpEn* and put the translation in the second column. 
 
 # Usage Summary
 To translate a mod based on CSTI-ModLoader to English, the process is as follows:
@@ -25,9 +37,10 @@ To translate a mod based on CSTI-ModLoader to English, the process is as follows
 * Translate the SimpEnv.psv output file manually or with a translator such as translate.google.com or DeepL.com.
 	* Put the text translated from the third column into the second column.
 * Fix any errors listed in the SimpEn_Errors.txt file.
-* Convert the pipe delimited to a comma delimited SimpEn.csv.
-	* Google Sheets: Downloading as .csv as SimpEn.csv
+* Convert the pipe delimited text to a comma delimited file ./Localization/SimpEn.csv.
+	* Google Sheets: Download as .csv as SimpEn.csv
 	* Manually:  Rename to SimpEn.csv and replace all '|' characters to ','
+* Delete the SimpEn.psv and SimpEn_Errors.txt files.
 
 Note that this program will often need to change the mod's json files, so the entire mod folder will need to be distributed.
 
@@ -62,8 +75,14 @@ Bp_ConservatoriesNc_Two_CardName,Greenhouse No. 2,二号温室
 
 
 # Spreadsheet Recommended Workflow
-My recommendation would be to do as follows:
-* Run the tool to create the Localization/SimpEn.csv output.
+It is recommend to use a spreadsheet application.  
+
+## Benefits
+* Translation tools often have a character limit, not word limit.  With a spreadsheet, it is easy to copy the Chinese column to the translator and then copy the translated text to the English column.  This reduces the number of characters translated.
+* Spreadsheets often have a function to translate a cell directly in the spreadsheet. It also makes it easier to see accidental English to English translations.  Often translation tools will retranslate English text differently if included in the translation submission.
+
+## Spreadsheet process:
+* Run the tool to create the Localization/SimpEn.psv output.
 	* If there are errors, there will also be a file named SimpEn_Errors.txt as well.
 * Import the  SimpEn.psv document into Excel or Google Sheets.
 	* When splitting the row to columns, choose a custom delimiter of |
@@ -71,8 +90,11 @@ My recommendation would be to do as follows:
 	* Alternatively, Google Sheets has a function called GoogleTranslate that can translate text in the spreadsheet.  For example, Chinese to English is `=GOOGLETRANSLATE(C1,"zh","en")`.
 	* ```=DETECTLANGUAGE(C1)``` can be used to find text that is already in English.  This can be used to sort the sheet so all of the English items are together.  This makes it easier to remove any translations that are duplicates of the game's text.
 * Paste those results into the spreadsheet's second column.
+* If there are more than three columns, delete the excess columns.  
+	* Extra columns should not affect the ModLoader import, but it is best to keep the file in the expected format.
 * Save the spreadsheet with the format of CSV:  SimpEn.csv.
 * If a SimpEn_Error.txt file was created, fix any errors indicated in that file.
+* Delete the SimpEn.psv and SimpEn_Errors.txt files.
 
 When starting the game, the Mod's text should now reflect the translated text.
 If not, make sure that the SimpEn.psv was saved as SimpEn.csv and has commas instead of pipe separators.
@@ -80,14 +102,13 @@ If not, make sure that the SimpEn.psv was saved as SimpEn.csv and has commas ins
 
 ## Observations From Current Mods
 
-* There might be duplicate translations for the same key.  This is most likely an oversight.  Translate the text and pick the best one, removing the others.  They can be left in the file, but the Mod Loader will pick one and ignore the rest.  This issue will show up in the errors section of the output.
+* There might be duplicate translations for the same key.  This is most likely an oversight.  Translate the text and pick the best one, removing the others.  They can be left in the file, but the Mod Loader will pick one and ignore the rest.  This issue will show up in the errors section of the output.  
 
 * There might be entries that are from the base game, which can be removed.  These will often show up as having an English translation already.  They can be left in as the loader will ignore them, but it makes the translation file cleaner if they are removed.
 
 * Some mods will have no LocalizationKey at all and only Default Text.  This tool will generate a localization key and change the mod's .json files to use that new key.
 
-* Some mods include DLL's.  This is not handled by this too.  These DLL's may either create cards with no LocalizationKeys set or may do hard coded text compares with a Card or Action's DefaultText.  Additionally they may reference card text from other mods.  This must be handled manually.  A useful tool is https://github.com/NBKRedSpy/CardSurvival-LocalizationStringUtility, which creates keys that are compatible with this tool.  
-
+* Some mods include DLL's.  This is not handled by this tool.  These DLL's may create cards with no LocalizationKeys set and may do hard coded text compares with a Card or Action's DefaultText.  Additionally, the code may reference card text from other mods.  This must be handled manually in the code.  A useful tool is https://github.com/NBKRedSpy/CardSurvival-LocalizationStringUtility, which creates keys that are compatible with this tool.  
 
 # Command Line Parameters
 |Arguments|Description|
