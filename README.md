@@ -7,20 +7,15 @@ See the [Change Log](#changes) below as versions 2.0.0+ and 3.0.0+ have signific
 
 # Summary - What Does This Do?
 
-This command line utility searches all the .json files for a ModLoader based mod and finds any DefaultText that is set.  If it has a LocalizationKey, the key and text will be written to SimpEn.psv.  If it does not contain a LocalizationKey, a new key will be created and written to the .json file.  The new key and the DefaultText will be added to the SimpEn.psv.  
+This is a command line utility for CSTI-ModLoader type mods to create a translation file.  
+Important:  This utility does not handle cards that are created or modified in a .DLL. See the [Observations From Current Mods](#observations-from-current-mods) section.
 
-The SimpEn.psv can be translated by putting the English text in the second column, and then saved as a CSV named SimpEn.csv.  Then copy the SimpEn.csv to the ./Localization folder.  The game will now show the English text.
+The utility searches all of the mod's .json files and finds any DefaultText that is set.  If the entry has a LocalizationKey, the key and text will be written to SimpEn.psv.  
+If it does not contain a LocalizationKey, a new key will be created and written to the .json file.  The new key and the DefaultText will be added to the SimpEn.psv.  
 
-This utility does not handle cards that are created or modified in a .dll.  For those mods, the code must be modified to include a LocalizationKey.  If text for cards are created or modified programmatically, a class called CardSurvival-LocalizationStringUtility can be use to generate hash based keys which follows the same format as this utility's key generation.  See https://github.com/NBKRedSpy/CardSurvival-LocalizationStringUtility .
+The resulting SimpEn.psv can be translated by putting the English text in the second column, and then saved as a CSV formatted file named SimpEn.csv.  If there is a SimpEn_Errors.txt, correct any issues listed in that file.   Then copy the SimpEn.csv to the ./Localization folder.  The game will now show the English text.
 
-# Overview
-This tool was made to help create localization files for Mod Loader mods that currently do not have an English translation.  This is not a replacement for a real translation or an official translation from the mod's author.  However, it is a useable workaround and can also be used to help mod authors start a translation file.  
-
-Users can either manually translate the text, or use a translation website.
-
-If a mod has a .dll as well as ModLoader files, this tool will create the ModLoader .json translation keys and file; however, any cards referenced or created in the .DLL must be addressed in the source code.
-See https://github.com/NBKRedSpy/CardSurvival-LocalizationStringUtility for assistance with .DLL translation.
-
+This utility does not handle cards that are created or modified in a .dll.  Those types of mods require a code change.  A helper class for .DLL localization can be found here at https://github.com/NBKRedSpy/CardSurvival-LocalizationStringUtility .
 
 This document is focused on Chinese to English translation, but can also be used for English to Chinese.
 
@@ -32,14 +27,15 @@ Simply copy the SimpCn* file to SimpEn* and put the translation in the second co
 To translate a mod based on CSTI-ModLoader to English, the process is as follows:
 
 * In a command prompt, run the tool, passing the target mod's folder as the first parameter.
-	* Example:  `CardSurvival-Localization.exe "E:\Mods\Apocalypse-43-1-392-1680010396\DisasterBeacons"`
+	* Example:  ```CardSurvival-Localization.exe "E:\Mods\Apocalypse-43-1-392-1680010396\DisasterBeacons"```
 	* The app will create a SimpEn.psv file in mod's Localization folder.  If there are errors, there will also be a file named SimpEn_Errors.txt.
-* Translate the SimpEnv.psv output file manually or with a translator such as translate.google.com or DeepL.com.
-	* Put the text translated from the third column into the second column.
+* Translate the text in the third column of the SimpEnv.psv and place the result in the second column.
+	* translate.google.com and DeepL.com are great sites to handle text translation.
 * Fix any errors listed in the SimpEn_Errors.txt file.
 * Convert the pipe delimited text to a comma delimited file ./Localization/SimpEn.csv.
 	* Google Sheets: Download as .csv as SimpEn.csv
-	* Manually:  Rename to SimpEn.csv and replace all '|' characters to ','
+	* Manually:  Any lines that have a double quote or a comma, wrap the text in double quotes and change the double quotes to two sets of double quotes.  Then change all '|' characters to ',' characters.  
+		* Example:  ```SomeKey|Foo "bars", fizz|Chinese Translation``` should be changed to ```SomeKey,"Foo ""bars"", fizz",Chinese Translation```
 * Delete the SimpEn.psv and SimpEn_Errors.txt files.
 
 Note that this program will often need to change the mod's json files, so the entire mod folder will need to be distributed.
@@ -76,29 +72,17 @@ Bp_ConservatoriesNc_Two_CardName,Greenhouse No. 2,二号温室
 
 # Spreadsheet Recommended Workflow
 It is recommend to use a spreadsheet application.  
+Note that since the initial output is pipe delimited, the user will need to select a "custom" delimiter and use | as the character.
+When done, save the sheet as a CSV format with the name of SimpEn.csv.
 
 ## Benefits
-* Translation tools often have a character limit, not word limit.  With a spreadsheet, it is easy to copy the Chinese column to the translator and then copy the translated text to the English column.  This reduces the number of characters translated.
-* Spreadsheets often have a function to translate a cell directly in the spreadsheet. It also makes it easier to see accidental English to English translations.  Often translation tools will retranslate English text differently if included in the translation submission.
-
-## Spreadsheet process:
-* Run the tool to create the Localization/SimpEn.psv output.
-	* If there are errors, there will also be a file named SimpEn_Errors.txt as well.
-* Import the  SimpEn.psv document into Excel or Google Sheets.
-	* When splitting the row to columns, choose a custom delimiter of |
-* Copy the entirety of the third column (which will be in Chinese) and run it through a translator such as translate.google.com or deepl.com.
-	* Alternatively, Google Sheets has a function called GoogleTranslate that can translate text in the spreadsheet.  For example, Chinese to English is `=GOOGLETRANSLATE(C1,"zh","en")`.
-	* ```=DETECTLANGUAGE(C1)``` can be used to find text that is already in English.  This can be used to sort the sheet so all of the English items are together.  This makes it easier to remove any translations that are duplicates of the game's text.
-* Paste those results into the spreadsheet's second column.
-* If there are more than three columns, delete the excess columns.  
-	* Extra columns should not affect the ModLoader import, but it is best to keep the file in the expected format.
-* Save the spreadsheet with the format of CSV:  SimpEn.csv.
-* If a SimpEn_Error.txt file was created, fix any errors indicated in that file.
-* Delete the SimpEn.psv and SimpEn_Errors.txt files.
-
-When starting the game, the Mod's text should now reflect the translated text.
-If not, make sure that the SimpEn.psv was saved as SimpEn.csv and has commas instead of pipe separators.
-
+* Translation tools often have a character limit, not word limit.  With a spreadsheet, it is easy to copy only the Chinese text column to the translator.  It is also easier to translate a single item in case of an issue.
+* Spreadsheets often have a function to translate a cell directly in the spreadsheet. It also makes it easier to see accidental English to English translations.  Often translation tools will retranslate English text differently if included in the translation submission.  Sometimes translators will combine multiple rows into a single row.
+* Some spreadsheets already have a translation function built in.  
+	* Google Sheets has a function called GoogleTranslate() can be used to translate text.  Example:  For example, Chinese to English is `=GOOGLETRANSLATE(C1,"zh","en")`.
+	* A DeepL translation function for Google Sheets can be found at https://github.com/DeepLcom/google-sheets-example/
+* Text that have quotes or commas will be automatically escaped
+	* Example that has both a comma and a quote:  After 15 minutes, will create a "Foo".  Will be encoded as: "After 15 minutes, will create a ""Foo"""
 
 ## Observations From Current Mods
 
@@ -108,7 +92,8 @@ If not, make sure that the SimpEn.psv was saved as SimpEn.csv and has commas ins
 
 * Some mods will have no LocalizationKey at all and only Default Text.  This tool will generate a localization key and change the mod's .json files to use that new key.
 
-* Some mods include DLL's.  This is not handled by this tool.  These DLL's may create cards with no LocalizationKeys set and may do hard coded text compares with a Card or Action's DefaultText.  Additionally, the code may reference card text from other mods.  This must be handled manually in the code.  A useful tool is https://github.com/NBKRedSpy/CardSurvival-LocalizationStringUtility, which creates keys that are compatible with this tool.  
+* Some mods include DLL's which may create or modify cards.  In this case, the code has to be changed to handle the translation.  If the mod has a DLL and uses ModLoader, the LocalizationKey can be set in the Code and then the entry added to the mod's ./Localization/SimpEn.csv.  Additionally, the C# class at https://github.com/NBKRedSpy/CardSurvival-LocalizationStringUtility can be used to create keys programmatically with a minimum amount of code changes.
+
 
 # Command Line Parameters
 |Arguments|Description|
