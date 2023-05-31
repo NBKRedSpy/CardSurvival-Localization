@@ -19,6 +19,13 @@ This utility does not handle cards that are created or modified in a .dll.  Thos
 
 This document is focused on Chinese to English translation, but can also be used for English to Chinese.
 
+# Logical Flow of Mod Loader's Translation Load
+Below  is a logical flow of how Mod Loader decides which text to show in the game.
+Note that if a LocalizationKey exists multiple times, only the first translation found will be loaded.  This includes keys from the base game.
+
+![Alt text](media/Card%20Survival%20Translation%20Flow.png)
+
+
 ### Existing Translation File Note
 If the mod is in Chinese and already has a ./Localization/SimpCn* file (For example, SimpCn.csv) and the file is not empty, then this mod is most likely not needed. 
 Simply copy the SimpCn* file to SimpEn* and put the translation in the second column. 
@@ -68,7 +75,6 @@ Bp_ConservatoriesNc_Two_CardName||二号温室
 Bp_ConservatoriesNc_CardDescription,Provides a warm home for plant growth.,为植物生长提供一个温馨的家园。
 Bp_ConservatoriesNc_Two_CardName,Greenhouse No. 2,二号温室
 ```
-
 
 # Spreadsheet Recommended Workflow
 It is recommend to use a spreadsheet application.  
