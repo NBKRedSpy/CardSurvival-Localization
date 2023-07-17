@@ -1,47 +1,56 @@
 # CardSurvival-Localization
 
-A command line utility to create English translations for mods that depend on the CSTI-ModLoader (AKA ModLoader).  Example mods are "Tea Lover" and "Greenhouse".
+A command line utility which helps create an English translation file for CSTI-ModLoader mods that are in Chinese.  This file is used by the game to show the text as English.
 
-# Change Notice
-See the [Change Log](#changes) below as versions 2.0.0+ and 3.0.0+ have significant changes.
+# Summary
 
-# Summary - What Does This Do?
+## Preface
 
-This is a command line utility for CSTI-ModLoader type mods to create a translation file.  
-Important:  This utility does not handle cards that are created or modified in a .DLL. See the [Observations From Current Mods](#observations-from-current-mods) section.
+This is not the CSTI-ModLoader.  This utility creates an English translation file (SimpEn.csv) for ModLoader mods that are currently in Chinese.
 
-The utility searches all of the mod's .json files and finds any DefaultText that is set.  If the entry has a LocalizationKey, the key and text will be written to SimpEn.psv.  
-If it does not contain a LocalizationKey, a new key will be created and written to the .json file.  The new key and the DefaultText will be added to the SimpEn.psv.  
+*Important*:  This only handles ModLoader cards (.json files).  Some ModLoader mods will also include a .dll which may also create or modify cards.  Those cards will need to be translated in the dll's source code.
 
-The resulting SimpEn.psv can be translated by putting the English text in the second column, and then saved as a CSV formatted file named SimpEn.csv.  If there is a SimpEn_Errors.txt, correct any issues listed in that file.   Then copy the SimpEn.csv to the ./Localization folder.  The game will now show the English text.
+See the [Observations From Current Mods](#observations-from-current-mods) section.
 
-This utility does not handle cards that are created or modified in a .dll.  Those types of mods require a code change.  A helper class for .DLL localization can be found here at https://github.com/NBKRedSpy/CardSurvival-LocalizationStringUtility .
+## What Does This Utility Do?
+
+Helps create a SimpEn.csv file which the game can use to display English text.
+
+Functionality:
+* Extracts all DefaultText and LocalizationKeys in all of the .json files (the translation key/value pairs).
+* Generates unique localization keys if text is set, but no key was defined.
+	* If any keys were generated, the .json files will be updated with those keys.
+* Warns if an existing localization key is used multiple times, but has different text.
 
 This document is focused on Chinese to English translation, but can also be used for English to Chinese.
 
-# Logical Flow of Mod Loader's Translation Load
-Below  is a logical flow of how Mod Loader decides which text to show in the game.
-Note that if a LocalizationKey exists multiple times, only the first translation found will be loaded.  This includes keys from the base game.
+# Logical Flow of ModLoader's Translation Load
+The graphic below depicts the logical flow of how ModLoader decides which text to show in the game.
 
 ![Alt text](media/Card%20Survival%20Translation%20Flow.png)
 
 
 ### Existing Translation File Note
-If the mod is in Chinese and already has a ./Localization/SimpCn* file (For example, SimpCn.csv) and the file is not empty, then this mod is most likely not needed. 
-Simply copy the SimpCn* file to SimpEn* and put the translation in the second column. 
+If the mod is in Chinese and already has a ./Localization/SimpCn* file (For example, SimpCn.csv) and the file is not empty, then this utility may not be needed. 
+
+In this case:
+* Copy the SimpCn* file (usually SimpCn.csv) to SimpEn.csv
+* Translate the Chinese text in the third column and put the result into the second column.
+* Run the game and check if any cards are missing translations.
+	* The "Debug Mode" mod can spawn cards to help testing.
 
 # Usage Summary
 To translate a mod based on CSTI-ModLoader to English, the process is as follows:
 
-* In a command prompt, run the tool, passing the target mod's folder as the first parameter.
+* In a command prompt, run this tool using the target mod's folder as the first parameter.
 	* Example:  ```CardSurvival-Localization.exe "E:\Mods\Apocalypse-43-1-392-1680010396\DisasterBeacons"```
 	* The app will create a SimpEn.psv file in mod's Localization folder.  If there are errors, there will also be a file named SimpEn_Errors.txt.
 * Translate the text in the third column of the SimpEnv.psv and place the result in the second column.
 	* translate.google.com and DeepL.com are great sites to handle text translation.
 * Fix any errors listed in the SimpEn_Errors.txt file.
 * Convert the pipe delimited text to a comma delimited file ./Localization/SimpEn.csv.
-	* Google Sheets: Download as .csv as SimpEn.csv
-	* Manually:  Any lines that have a double quote or a comma, wrap the text in double quotes and change the double quotes to two sets of double quotes.  Then change all '|' characters to ',' characters.  
+	* Google Sheets version: Download as .csv with the file name SimpEn.csv
+	* Manual version:  Any lines that have a double quote or a comma, wrap the text in double quotes and change the double quotes to two sets of double quotes.  Then change all '|' characters to ',' characters.  
 		* Example:  ```SomeKey|Foo "bars", fizz|Chinese Translation``` should be changed to ```SomeKey,"Foo ""bars"", fizz",Chinese Translation```
 * Delete the SimpEn.psv and SimpEn_Errors.txt files.
 
@@ -92,7 +101,7 @@ When done, save the sheet as a CSV format with the name of SimpEn.csv.
 
 ## Observations From Current Mods
 
-* There might be duplicate translations for the same key.  This is most likely an oversight.  Translate the text and pick the best one, removing the others.  They can be left in the file, but the Mod Loader will pick one and ignore the rest.  This issue will show up in the errors section of the output.  
+* There might be duplicate translations for the same key.  This is most likely an oversight.  Translate the text and pick the best one, removing the others.  They can be left in the file, but the ModLoader will pick one and ignore the rest.  This issue will show up in the errors section of the output.  
 
 * There might be entries that are from the base game, which can be removed.  These will often show up as having an English translation already.  They can be left in as the loader will ignore them, but it makes the translation file cleaner if they are removed.
 
