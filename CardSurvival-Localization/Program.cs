@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.IO;
 using System.IO.Abstractions;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,6 +11,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 
 namespace CardSurvival_Localization
@@ -20,14 +22,18 @@ namespace CardSurvival_Localization
         public void Run([Argument(Description = "The directory of the mod to translate.  Must contain the ModInfo.json file in the folder")]
                         string sourceDirectory,
 
-                        [Option('e', Description = "How to escape unicode characters.  Defaults to retaining the file's format.")]
+                        [Option('e', Description = "How to escape unicode characters.  Defaults to retaining the file's format.  Ex:  For the letter A, escaped is \u0041, unescaped is A")]
                         [EnumDataType(typeof(UnicodeEscapeMode))]
-                        UnicodeEscapeMode? unicodeEscapeMode)
+                        UnicodeEscapeMode? unicodeEscapeMode,
+
+                        [Option('u', Description = "If set, uses lowercase for any Unicode escaped characters.  Ex: \u98CE instead of \u98ce")]
+                        bool useLowerCaseUnicodeEncoding)
+
         {
             try
             {
                 unicodeEscapeMode ??= UnicodeEscapeMode.AutoDetect;
-                ProcessMod(sourceDirectory, new FileSystem(), unicodeEscapeMode.Value);
+                ProcessMod(sourceDirectory, new FileSystem(), unicodeEscapeMode.Value, useLowerCaseUnicodeEncoding);
 
                 ReturnCode = 0;
             }
@@ -53,8 +59,11 @@ namespace CardSurvival_Localization
         }
 
 
-        public static string ProcessMod(string sourceDirectory, IFileSystem fileSystem, UnicodeEscapeMode escapeMode)
+        public static string ProcessMod(string sourceDirectory, IFileSystem fileSystem, UnicodeEscapeMode escapeMode,
+            bool useLowercaseUnicodeEncoding)
         {
+            Regex unicodeReplaceRegEx = new Regex(@"(\\u)([a-f0-9]{4})", RegexOptions.Compiled);
+
             if (!fileSystem.Directory.Exists(sourceDirectory))
             {
                 throw new ArgumentException($"Mod Directory does not exist: {sourceDirectory}");
@@ -91,17 +100,11 @@ namespace CardSurvival_Localization
                     || escapeMode == UnicodeEscapeMode.AlwaysEscapeNonAscii
                     || escapeMode == UnicodeEscapeMode.NoEncode)
                 {
-                    ////A new localization key was set, write the changes.
-                    fileSystem.File.WriteAllText(file, jsonDoc.ToString(Newtonsoft.Json.Formatting.Indented));
-
-                    //using (var streamWriter = new StreamWriter(file))
-                    using (var fileStreamWriter = fileSystem.FileStream.New(file, FileMode.Create))
-                    using (StreamWriter streamWriter = new StreamWriter(fileStreamWriter))
+                    using (MemoryStream resultWriterStream = new())
+                    using (StreamWriter streamWriter = new StreamWriter(resultWriterStream))
+                    using (JsonWriter writer = new JsonTextWriter(streamWriter))
                     {
-                        JsonWriter writer = new JsonTextWriter(streamWriter);
-
                         writer.Formatting = Formatting.Indented;
-
                         writer.AutoCompleteOnClose = true;
 
                         switch (escapeMode)
@@ -121,6 +124,31 @@ namespace CardSurvival_Localization
                         }
 
                         jsonDoc.WriteTo(writer);
+                        writer.Flush();
+
+                        byte[] jsonResultArray = resultWriterStream.ToArray();
+
+                        if (useLowercaseUnicodeEncoding)
+                        {
+                            fileSystem.File.WriteAllBytes(file, jsonResultArray);
+                        }
+                        else
+                        {
+                            //Dev Note:  This is a bit inefficient, but is fine for the performance target of this utility.
+                            //  Unfortunately was not able to intercept JsonWriter since it encodes Unicode after the
+                            //  converters are executed.  The encoding methods are also private.
+                            //
+                            //  A custom stream would require intercepting the bytes as they stream in, so not worth the 
+                            //  work since this accomplishes the need.
+
+                            string result = Encoding.UTF8.GetString(jsonResultArray);
+
+                            result = unicodeReplaceRegEx.Replace(result, (Match match) =>
+                                match.Groups[1].Value + match.Groups[2].Value.ToUpper());
+
+                            fileSystem.File.WriteAllText(file, result);
+
+                        }
                     }
 
                 }

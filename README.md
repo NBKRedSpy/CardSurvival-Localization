@@ -151,6 +151,11 @@ https://github.com/dop-lm/CSTI-ModLoader  (Currently the NoReflection branch has
 
 # Change Log
 
+## 3.3.0
+* Added uppercase text for escaped Unicode.  By default the ModEditor will uppercase the values.  This is optional via the 'u' parameter.
+	* This simplifies comparing the original files to the modified files.
+* Changed to .NET 8.
+
 ## 3.2.0
 * Added option to set how Unicode text is escaped. Default attempts to keep the same encoding.
 * Changed command line processing to use the Cocona library.
