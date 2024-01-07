@@ -181,7 +181,7 @@ namespace CardSurvival_Localization
                 }
             }
 
-            Console.WriteLine();
+            Console.Write("                                        \r");
             Console.WriteLine("Translation Completed.");
             return sourceDirectory;
         }
