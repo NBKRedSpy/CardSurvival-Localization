@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CardSurvival_Localization
 {
-    public class LocalizationInfo
+    internal class LocalizationInfo
     {
         public string FileName { get; set; } = "";
         public string JsonPath { get; set; } = "";

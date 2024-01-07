@@ -41,7 +41,7 @@ namespace CardSurvival_LocalizationTests
             }, "X:\\test");
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -107,7 +107,7 @@ New Keys Created.  JSON was updated.
             }, "X:\\test");
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -145,13 +145,13 @@ New Keys Created.  JSON was updated.
         'LocalizationKey': 'SOME_KEY'
     }
 }
-") 
+")
                 },
 
             }, "X:\\test");
-            
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -170,7 +170,7 @@ New Keys Created.  JSON was updated.
             };
 
             Assert.Equal(fs.AllFiles, expectedFiles);
-            
+
         }
 
         [Fact]
@@ -200,7 +200,7 @@ New Keys Created.  JSON was updated.
 
             }, "X:\\test");
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -221,9 +221,9 @@ SOME_KEY||Some Text2
             };
 
             Assert.Equal(fs.AllFiles, expectedFiles);
-            
+
             expected = @"---- Errors -----
-Error: Multiple keys exist with different text
+Error: Multiple keys exist with different text.
 
 Key: ""SOME_KEY""
 	Text: Some Text
@@ -236,7 +236,7 @@ Key: ""SOME_KEY""
 
 ";
             actual = fs.File.ReadAllText(@"x:\test\Localization\SimpEn_Errors.txt");
-            Assert.Equal( expected, actual);
+            Assert.Equal(expected, actual);
 
         }
         [Fact]
@@ -263,9 +263,9 @@ Key: ""SOME_KEY""
             }, "X:\\test");
 
 
-            
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -284,7 +284,7 @@ Key: ""SOME_KEY""
             };
 
             Assert.Equal(fs.AllFiles, expectedFiles);
-            
+
         }
 
         [Fact]
@@ -311,9 +311,9 @@ Key: ""SOME_KEY""
             }, "X:\\test");
 
 
-            
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -333,7 +333,7 @@ SOME_KEY2||番茄炒蛋
             };
 
             Assert.Equal(fs.AllFiles, expectedFiles);
-            
+
         }
 
         [Fact]
@@ -355,9 +355,9 @@ SOME_KEY2||番茄炒蛋
             }, "X:\\test");
 
 
-            
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -376,9 +376,9 @@ SOME_KEY2||番茄炒蛋
             };
 
             Assert.Equal(fs.AllFiles, expectedFiles);
-            
+
         }
-        
+
 
         [Fact]
         public void EntriesExist__OverlapExactMatch__Success()
@@ -407,8 +407,8 @@ SOME_KEY2||番茄炒蛋
                     }
                 }, "X:\\test");
 
-            
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -429,7 +429,7 @@ SOME_KEY2||番茄炒蛋
 
             Assert.Equal(fs.AllFiles, expectedFiles);
 
-                    }
+        }
 
 
         [Fact]
@@ -461,8 +461,8 @@ SOME_KEY2||番茄炒蛋
 
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
-            
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -474,7 +474,7 @@ SOME_KEY2||番茄炒蛋
                 "x:\\test\\Localization\\SimpEn_Errors.txt",
             };
 
-            Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x=> x));
+            Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
@@ -486,7 +486,7 @@ SOME_KEY||Some Text1
 
             actual = fs.File.ReadAllText("x:\\test\\Localization\\SimpEn_Errors.txt");
             expected = @"---- Errors -----
-Error: Multiple keys exist with different text
+Error: Multiple keys exist with different text.
 
 Key: ""SOME_KEY""
 	Text: Some Text
@@ -503,7 +503,7 @@ Key: ""SOME_KEY""
 
             AssertNoJsonChanged(fs);
 
-                    }
+        }
 
         [Fact]
         public void CreateNew__SingleNew__Warnings()
@@ -526,8 +526,8 @@ Key: ""SOME_KEY""
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -570,10 +570,10 @@ New Keys Created.  JSON was updated.
   }
 }";
 
-            Assert.Equal(expected, actual); 
+            Assert.Equal(expected, actual);
 
 
-                    }
+        }
 
 
         [Fact]
@@ -601,8 +601,8 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -655,7 +655,7 @@ New Keys Created.  JSON was updated.
             Assert.Equal(expected, actual);
 
 
-                    }
+        }
 
         [Fact]
         public void CreateNew__TwoNoDupes__Warnings()
@@ -682,9 +682,9 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             var expectedFiles = new List<string>()
             {
@@ -740,7 +740,7 @@ New Keys Created.  JSON was updated.
             Assert.Equal(expected, actual);
 
 
-                    }
+        }
 
         private static void SetWriteTimeToMin(MockFileSystem fs)
         {
@@ -784,8 +784,8 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -809,7 +809,7 @@ New Keys Created.  JSON was updated.
 
             AssertNoJsonChanged(fs);
 
-                    }
+        }
 
         [Fact]
         public void CreateEntry__SingleWithExisting__Success()
@@ -836,8 +836,8 @@ New Keys Created.  JSON was updated.
 
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
-            
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -885,7 +885,7 @@ New Keys Created.  JSON was updated.
 }";
             Assert.Equal(expected, actual);
 
-                    }
+        }
 
         [Fact]
         public void CreateEntry__SingleNewConsolidateExisting__Warnings()
@@ -916,8 +916,8 @@ New Keys Created.  JSON was updated.
 
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
-            
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -941,7 +941,7 @@ test-existing||Some Text Existing Mismatch
 
             actual = fs.File.ReadAllText("x:\\test\\Localization\\SimpEn_Errors.txt");
             expected = @"---- Errors -----
-Error: Multiple keys exist with different text
+Error: Multiple keys exist with different text.
 
 Key: ""test-existing""
 	Text: Some Text Existing
@@ -982,10 +982,209 @@ New Keys Created.  JSON was updated.
 }";
             Assert.Equal(expected, actual);
 
-                    }
+        }
+
+        [Fact]
+        public void UnicodeEscape_AutoDetect_WithEscaped_Escaped()
+        {
+            MockFileSystem fs = new MockFileSystem(new Dictionary<string, MockFileData>()
+                        {
+                            {@"x:\test\ModInfo.json", new MockFileData(@"{}") },
+                            {@"x:\test\test.json", new MockFileData(@"
+                                {
+                                    'DefaultStatusName-Existing': {
+                                        'DefaultText': '\u4e00\u9635\u98d3\u98ce',
+                                    }
+                                }
+                                ")
+                            },
+
+                        }, "X:\\test");
+
+            //Reset date for check for write changes later
+            SetWriteTimeToMin(fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+
+
+            var expectedFiles = new List<string>()
+                    {
+                        @"x:\test\ModInfo.json",
+                        "x:\\test\\test.json",
+                        "x:\\test\\Localization\\SimpEn.psv",
+                        "x:\\test\\Localization\\SimpEn_Errors.txt"
+                    };
+
+            Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
+
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
+            string actual = fs.File.ReadAllText(engPath);
+            string expected = "T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风\r\n";
+
+            Assert.Equal(expected, actual);
+
+            actual = fs.File.ReadAllText("x:\\test\\test.json");
+            expected = @"{
+  ""DefaultStatusName-Existing"": {
+    ""DefaultText"": ""\u4e00\u9635\u98d3\u98ce"",
+    ""LocalizationKey"": ""T-COd+NfxU19P/4TdHpGQTg4J8E/k=""
+  }
+}";
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void UnicodeEscape_AutoDetect_WithOutEscaped_Escaped()
+        {
+            MockFileSystem fs = new MockFileSystem(new Dictionary<string, MockFileData>()
+                        {
+                            {@"x:\test\ModInfo.json", new MockFileData(@"{}") },
+                            {@"x:\test\test.json", new MockFileData(@"
+                                {
+                                    'DefaultStatusName-Existing': {
+                                        'DefaultText': '一阵飓风',
+                                        'LocalizationKey': 'test-existing'
+                                    }
+                                }
+                                ")
+                            },
+
+                        }, "X:\\test");
+
+            //Reset date for check for write changes later
+            SetWriteTimeToMin(fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+
+
+            var expectedFiles = new List<string>()
+                    {
+                        @"x:\test\ModInfo.json",
+                        "x:\\test\\test.json",
+                        "x:\\test\\Localization\\SimpEn.psv"
+                    };
+
+            Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
+
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
+            string actual = fs.File.ReadAllText(engPath);
+            string expected = "test-existing||一阵飓风\r\n";
+
+            Assert.Equal(expected, actual);
+
+            actual = fs.File.ReadAllText("x:\\test\\test.json");
+            expected = @"
+                                {
+                                    'DefaultStatusName-Existing': {
+                                        'DefaultText': '一阵飓风',
+                                        'LocalizationKey': 'test-existing'
+                                    }
+                                }
+                                ";
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void UnicodeEscape_AlwaysEscapeNonAscii_Escaped()
+        {
+            MockFileSystem fs = new MockFileSystem(new Dictionary<string, MockFileData>()
+                        {
+                            {@"x:\test\ModInfo.json", new MockFileData(@"{}") },
+                            {@"x:\test\test.json", new MockFileData(@"
+                                {
+                                    'DefaultStatusName-Existing': {
+                                        'DefaultText': '一阵飓风',
+                                        'LocalizationKey': 'test-existing'
+                                    }
+                                }
+                                ")
+                            },
+
+                        }, "X:\\test");
+
+            //Reset date for check for write changes later
+            SetWriteTimeToMin(fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AlwaysEscapeNonAscii);
+
+
+            var expectedFiles = new List<string>()
+                    {
+                        @"x:\test\ModInfo.json",
+                        "x:\\test\\test.json",
+                        "x:\\test\\Localization\\SimpEn.psv"
+                    };
+
+            Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
+
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
+            string actual = fs.File.ReadAllText(engPath);
+            string expected = "test-existing||一阵飓风\r\n";
+
+            Assert.Equal(expected, actual);
+
+            actual = fs.File.ReadAllText("x:\\test\\test.json");
+            expected = @"{
+  ""DefaultStatusName-Existing"": {
+    ""DefaultText"": ""\u4e00\u9635\u98d3\u98ce"",
+    ""LocalizationKey"": ""test-existing""
+  }
+}";
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void UnicodeEscape_NoEncode_NotModified_Escaped()
+        {
+            MockFileSystem fs = new MockFileSystem(new Dictionary<string, MockFileData>()
+                        {
+                            {@"x:\test\ModInfo.json", new MockFileData(@"{}") },
+                            {@"x:\test\test.json", new MockFileData(@"
+                                {
+                                    'DefaultStatusName-Existing': {
+                                        'DefaultText': '\u4e00\u9635\u98d3\u98ce',
+                                        'LocalizationKey': 'test-existing'
+                                    }
+                                }
+                                ")
+                            },
+
+                        }, "X:\\test");
+
+            //Reset date for check for write changes later
+            SetWriteTimeToMin(fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.NoEncode);
+
+
+            var expectedFiles = new List<string>()
+                    {
+                        @"x:\test\ModInfo.json",
+                        "x:\\test\\test.json",
+                        "x:\\test\\Localization\\SimpEn.psv"
+                    };
+
+            Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
+
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
+            string actual = fs.File.ReadAllText(engPath);
+            string expected = "test-existing||一阵飓风\r\n";
+
+            Assert.Equal(expected, actual);
+
+            actual = fs.File.ReadAllText("x:\\test\\test.json");
+            expected = @"{
+  ""DefaultStatusName-Existing"": {
+    ""DefaultText"": ""一阵飓风"",
+    ""LocalizationKey"": ""test-existing""
+  }
+}";
+
+            Assert.Equal(expected, actual);
+        }
 
 
     }
-
-
 }

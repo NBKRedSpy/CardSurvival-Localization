@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CardSurvival_Localization
 {
-    public static class Utilities
+    internal static class Utilities
     {
         [return: NotNull]
         public static T ThrowIfNull<T>(T value, string name = "")

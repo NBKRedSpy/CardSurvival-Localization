@@ -115,6 +115,26 @@ When done, save the sheet as a CSV format with the name of SimpEn.csv.
 |--|--|
 |Path to Mod Directory|The full path to the mod that will be translated.  This must be the root of the mod and will contain a ModInfo.json |
 
+See the --help command for all parameters and options.
+
+
+## Unicode Escape Mode Option
+
+The -e option determines how the program will translate Unicode characters.
+
+```
+Unicode Examples:
+
+Encoded:  \u4e00\u9635\u98d3\u98ce
+Not Encoded: 一阵飓风
+```
+
+By default the program will use AutoDetect and retain the same Unicode encoding as the file.  However, if the text encoding is inconsistent, the AutoDetect will encode all non ASCII characters.
+
+This option makes it easier to compare the original .json files to the modified fileas as the ModEditor encodes Unicode by default.
+
+The SimpEn.psv file's text will always be unencoded.
+
 ## Mod's Root Folder
 Note that the root of the mod may be several directories deep.  Look for the ModInfo.json file
 
@@ -129,7 +149,12 @@ https://github.com/dop-lm/CSTI-ModLoader  (Currently the NoReflection branch has
 
 
 
-# Version
+# Change Log
+
+## 3.2.0
+* Added option to set how Unicode text is escaped. Default attempts to keep the same encoding.
+* Changed command line processing to use the Cocona library.
+
 ## 3.1.0
 * Changed key generation to use T-(text's SHA1 Hash).
 	* This is the same as the https://github.com/NBKRedSpy/CardSurvival-LocalizationStringUtility for cross mod key compatibility.

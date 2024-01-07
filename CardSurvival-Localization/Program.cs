@@ -1,8 +1,14 @@
-﻿using System.Globalization;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.IO.Abstractions;
 using System.Text;
+using System.Text.RegularExpressions;
+using Cocona;
+using Cocona.Help;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 
@@ -10,30 +16,44 @@ namespace CardSurvival_Localization
 {
     internal class Program
     {
-        static int Main(string[] args)
+        [DescriptionTransformHelp]
+        public void Run([Argument(Description = "The directory of the mod to translate.  Must contain the ModInfo.json file in the folder")]
+                        string sourceDirectory,
+
+                        [Option('e', Description = "How to escape unicode characters.  Defaults to retaining the file's format.")]
+                        [EnumDataType(typeof(UnicodeEscapeMode))]
+                        UnicodeEscapeMode? unicodeEscapeMode)
         {
             try
             {
-                if (ShowUsage(args))
-                {
-                    return -2;
-                }
+                unicodeEscapeMode ??= UnicodeEscapeMode.AutoDetect;
+                ProcessMod(sourceDirectory, new FileSystem(), unicodeEscapeMode.Value);
 
-                string sourceDirectory;
-                sourceDirectory = args[0];
-
-                sourceDirectory = ProcessMod(sourceDirectory, new FileSystem());
-
-                return 0;
+                ReturnCode = 0;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
-                return -1;
+                ReturnCode = 1;
             }
+
+            //Console.WriteLine("To show help message, use '--help' option.");
         }
 
-        internal static string ProcessMod(string sourceDirectory, IFileSystem fileSystem)
+        //Hack until I can determine how to return result codes with Cocona.
+        static int ReturnCode = 0;
+
+        static int Main(string[] args)
+        {
+            //Not sure how to return an error code in the Cocona context.
+            CoconaApp.Run<Program>(args);
+
+            return ReturnCode;
+
+        }
+
+
+        public static string ProcessMod(string sourceDirectory, IFileSystem fileSystem, UnicodeEscapeMode escapeMode)
         {
             if (!fileSystem.Directory.Exists(sourceDirectory))
             {
@@ -55,15 +75,54 @@ namespace CardSurvival_Localization
 
             foreach (string file in files)
             {
+                Console.Write($"\r{Path.GetFileName(file)}                                  ");
 
                 string jsonSource = fileSystem.File.ReadAllText(file);
+
                 JObject jsonDoc = JObject.Parse(jsonSource);
+
                 bool jsonModified = localizationKeyExtrator.Extract(jsonDoc, file);
 
-                if (jsonModified)
+
+                //For AlwaysEscapeNonAscii and NoEncode, have to always write since there could
+                //  be mixed escape/not escape.  Newtonsoft doesn't have a way to get a property's read value.
+                if (
+                    jsonModified && escapeMode == UnicodeEscapeMode.AutoDetect
+                    || escapeMode == UnicodeEscapeMode.AlwaysEscapeNonAscii
+                    || escapeMode == UnicodeEscapeMode.NoEncode)
                 {
-                    //A new localization key was set, write the changes.
+                    ////A new localization key was set, write the changes.
                     fileSystem.File.WriteAllText(file, jsonDoc.ToString(Newtonsoft.Json.Formatting.Indented));
+
+                    //using (var streamWriter = new StreamWriter(file))
+                    using (var fileStreamWriter = fileSystem.FileStream.New(file, FileMode.Create))
+                    using (StreamWriter streamWriter = new StreamWriter(fileStreamWriter))
+                    {
+                        JsonWriter writer = new JsonTextWriter(streamWriter);
+
+                        writer.Formatting = Formatting.Indented;
+
+                        writer.AutoCompleteOnClose = true;
+
+                        switch (escapeMode)
+                        {
+                            case UnicodeEscapeMode.AutoDetect:
+                                writer.StringEscapeHandling = IsUnicodeEscaped(jsonSource) ?
+                                    StringEscapeHandling.EscapeNonAscii : StringEscapeHandling.Default;
+                                break;
+                            case UnicodeEscapeMode.AlwaysEscapeNonAscii:
+                                writer.StringEscapeHandling = StringEscapeHandling.EscapeNonAscii;
+                                break;
+                            case UnicodeEscapeMode.NoEncode:
+                                writer.StringEscapeHandling = StringEscapeHandling.Default;
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(escapeMode), $"Unexpected value: {escapeMode}");
+                        }
+
+                        jsonDoc.WriteTo(writer);
+                    }
+
                 }
             }
 
@@ -122,8 +181,19 @@ namespace CardSurvival_Localization
                 }
             }
 
+            Console.WriteLine();
             Console.WriteLine("Translation Completed.");
             return sourceDirectory;
+        }
+
+        /// <summary>
+        /// Returns if there is escaped unicode in the text file.
+        /// </summary>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        private static bool IsUnicodeEscaped(string json)
+        {
+            return Regex.IsMatch(json, @"u[a-f0-9]", RegexOptions.IgnoreCase);
         }
 
         private static string GetErrorsAndWarnings(LocalizationKeyExtrator localizationKeyExtractor)
@@ -135,15 +205,10 @@ namespace CardSurvival_Localization
 
             StringBuilder sb = new StringBuilder();
 
-            if (localizationKeyExtractor.LocalizationKeys.ContainsKey("")){
-                sb.AppendLine("---- Errors -----");
-                sb.AppendLine("One or more keys are blank.  These entries can be created with the --create-keys option.");
-            }
-
             if (multiDefinedInfo.Count() > 0)
             {
                 sb.AppendLine("---- Errors -----");
-                sb.AppendLine("Error: Multiple keys exist with different text");
+                sb.AppendLine($"Error: Multiple keys exist with different text.");
                 sb.AppendLine();
 
                 foreach (KeyValuePair<string, List<LocalizationInfo>> dupeInfo in multiDefinedInfo)
@@ -161,10 +226,10 @@ namespace CardSurvival_Localization
 
             }
 
-            if(localizationKeyExtractor.GeneratedKeys.Count() > 0)
+            if (localizationKeyExtractor.GeneratedKeys.Count() > 0)
             {
                 sb.AppendLine("---- Warnings -----");
-                sb.AppendLine("New Keys Created.  JSON was updated.");
+                sb.AppendLine($"New Keys Created.  JSON was updated.");
                 sb.AppendLine();
 
                 foreach (var newKeyEntry in localizationKeyExtractor.GeneratedKeys)
@@ -186,38 +251,6 @@ namespace CardSurvival_Localization
 
             return sb.ToString();
         }
-
-        private static bool ShowUsage(string[] args)
-        {
-            var firstArg = args.Length > 0 ? args[0] : "";
-            firstArg = firstArg.Trim();
-
-            if(args.Length != 1 || firstArg == "-h" || firstArg == "/?" || firstArg == "--help")
-            {
-                var text = @"
-Usage: CardSurvival-Localization <path to mod directory>
-
-Description:  
-
-Creates a SimpEn.psv translation file which is used for a CSTI-ModLoader 
-mod which is only in Chinese.  
-
-Remember to translate the pipe delimited SimpEn.psv to a comma delimited SimpEn.csv or the mod will not use the file.
-
-See https://github.com/NBKRedSpy/CardSurvival-Localization for documentation.
-
-
-Parameters:
-path to mod directory  The directory the mod is located
-";
-
-                Console.WriteLine(text);
-                return true;
-            }
-
-            return false;
-        }
     }
-
-
 }
+

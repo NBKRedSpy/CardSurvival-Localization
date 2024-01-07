@@ -12,7 +12,7 @@ using Newtonsoft.Json.Linq;
 
 namespace CardSurvival_Localization
 {
-    public class LocalizationKeyExtrator
+    internal class LocalizationKeyExtrator
     {
         /// <summary>
         /// The localization keys, used to keep track of existing strings of text as well as

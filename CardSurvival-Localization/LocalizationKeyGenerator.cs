@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CardSurvival_Localization
 {
-    public class LocalizationKeyGenerator
+    internal class LocalizationKeyGenerator
     {
 
         private static SHA1 Sha1 = SHA1.Create();
