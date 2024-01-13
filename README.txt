@@ -12,6 +12,10 @@ This is not the CSTI-ModLoader.  This utility creates an English translation fil
 
 See the [Observations From Current Mods](#observations-from-current-mods) section.
 
+
+[size=3][b]Video[/b][/size]
+A simple tutorial video can be found here:  https://youtu.be/ABbwkaBecCg
+
 [size=3][b]What Does This Utility Do?[/b][/size]
 
 Helps create a SimpEn.csv file which the game can use to display English text.
