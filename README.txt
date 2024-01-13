@@ -14,7 +14,7 @@ See the [Observations From Current Mods](#observations-from-current-mods) sectio
 
 
 [size=3][b]Video[/b][/size]
-A simple tutorial video can be found here:  https://youtu.be/ABbwkaBecCg
+A simple tutorial video can be found here:  https://youtu.be/svdUEJXaGnY
 
 [size=3][b]What Does This Utility Do?[/b][/size]
 

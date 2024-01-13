@@ -13,7 +13,7 @@ This is not the CSTI-ModLoader.  This utility creates an English translation fil
 See the [Observations From Current Mods](#observations-from-current-mods) section.
 
 # Video
-A simple tutorial video can be found here:  https://youtu.be/ABbwkaBecCg
+A simple tutorial video can be found here:  https://youtu.be/svdUEJXaGnY
 
 ## What Does This Utility Do?
 
