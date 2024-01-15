@@ -14,7 +14,7 @@ See the [Observations From Current Mods](#observations-from-current-mods) sectio
 
 
 [size=3][b]Video[/b][/size]
-A simple tutorial video can be found here:  https://youtu.be/svdUEJXaGnY
+A simple tutorial video can be found here:  https://youtu.be/ABbwkaBecCg
 
 [size=3][b]What Does This Utility Do?[/b][/size]
 
@@ -184,6 +184,9 @@ https://github.com/dop-lm/CSTI-ModLoader  (Currently the NoReflection branch has
 
 
 [size=4][b]Change Log[/b][/size]
+
+[size=3][b]3.3.1[/b][/size]
+* Corrects Unicode format Auto Detection error due to bad match string.
 
 [size=3][b]3.3.0[/b][/size]
 

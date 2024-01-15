@@ -221,7 +221,7 @@ namespace CardSurvival_Localization
         /// <returns></returns>
         private static bool IsUnicodeEscaped(string json)
         {
-            return Regex.IsMatch(json, @"u[a-f0-9]", RegexOptions.IgnoreCase);
+            return Regex.IsMatch(json, @"\\u[a-f0-9]", RegexOptions.IgnoreCase);
         }
 
         private static string GetErrorsAndWarnings(LocalizationKeyExtrator localizationKeyExtractor)

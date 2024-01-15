@@ -1033,6 +1033,74 @@ New Keys Created.  JSON was updated.
             Assert.Equal(expected, actual);
         }
 
+
+        [Fact]
+        public void UnicodeEscape_AutoDetect_has_u_with_no_backslash_Not()
+        {
+            MockFileSystem fs = new MockFileSystem(new Dictionary<string, MockFileData>()
+                        {
+                            {@"x:\test\ModInfo.json", new MockFileData(@"{}") },
+                            {@"x:\test\test.json", new MockFileData(
+"""
+{
+    'DefaultStatusName-Existing': {
+        'DefaultText': 'u4e00u9635u98d3u98ce',
+    },
+    'DefaultStatusName-Existing2': {
+        'DefaultText': '一阵飓风',
+    }
+}
+"""
+)
+                            },
+
+                        }, "X:\\test");
+
+            //Reset date for check for write changes later
+            SetWriteTimeToMin(fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, true);
+
+
+            var expectedFiles = new List<string>()
+                    {
+                        @"x:\test\ModInfo.json",
+                        "x:\\test\\test.json",
+                        "x:\\test\\Localization\\SimpEn.psv",
+                        "x:\\test\\Localization\\SimpEn_Errors.txt"
+                    };
+
+            Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
+
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
+            string actual = fs.File.ReadAllText(engPath);
+            string expected =
+"""
+T-mDA3fJ+/j7ZSIYmR2spKmdU2RSs=||u4e00u9635u98d3u98ce
+T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风
+
+""";
+
+            Assert.Equal(expected, actual);
+
+            actual = fs.File.ReadAllText("x:\\test\\test.json");
+            expected =
+"""
+{
+  "DefaultStatusName-Existing": {
+    "DefaultText": "u4e00u9635u98d3u98ce",
+    "LocalizationKey": "T-mDA3fJ+/j7ZSIYmR2spKmdU2RSs="
+  },
+  "DefaultStatusName-Existing2": {
+    "DefaultText": "一阵飓风",
+    "LocalizationKey": "T-COd+NfxU19P/4TdHpGQTg4J8E/k="
+  }
+}
+""";
+
+            Assert.Equal(expected, actual);
+        }
+
         [Fact]
         public void UnicodeEscape_AutoDetect_Mixed_Escaped()
         {

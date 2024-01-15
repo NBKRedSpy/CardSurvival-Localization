@@ -13,7 +13,7 @@ This is not the CSTI-ModLoader.  This utility creates an English translation fil
 See the [Observations From Current Mods](#observations-from-current-mods) section.
 
 # Video
-A simple tutorial video can be found here:  https://youtu.be/svdUEJXaGnY
+A simple tutorial video can be found here:  https://youtu.be/ABbwkaBecCg
 
 ## What Does This Utility Do?
 
@@ -153,6 +153,9 @@ https://github.com/dop-lm/CSTI-ModLoader  (Currently the NoReflection branch has
 
 
 # Change Log
+
+## 3.3.1
+* Corrects Unicode format Auto Detection error due to bad match string.
 
 ## 3.3.0
 * Added uppercase text for escaped Unicode.  By default the ModEditor will uppercase the values.  This is optional via the 'u' parameter.
