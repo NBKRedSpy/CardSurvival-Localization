@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IO;
 using System.IO.Abstractions;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Text.RegularExpressions;
 using Cocona;
@@ -24,16 +25,12 @@ namespace CardSurvival_Localization
 
                         [Option('e', Description = "How to escape unicode characters.  Defaults to retaining the file's format.  Ex:  For the letter A, escaped is \u0041, unescaped is A")]
                         [EnumDataType(typeof(UnicodeEscapeMode))]
-                        UnicodeEscapeMode? unicodeEscapeMode,
-
-                        [Option('u', Description = "If set, uses lowercase for any Unicode escaped characters.  Ex: \u98CE instead of \u98ce")]
-                        bool useLowerCaseUnicodeEncoding)
-
+                        UnicodeEscapeMode? unicodeEscapeMode)
         {
             try
             {
                 unicodeEscapeMode ??= UnicodeEscapeMode.AutoDetect;
-                ProcessMod(sourceDirectory, new FileSystem(), unicodeEscapeMode.Value, useLowerCaseUnicodeEncoding);
+                ProcessMod(sourceDirectory, new FileSystem(), unicodeEscapeMode.Value);
 
                 ReturnCode = 0;
             }
@@ -59,8 +56,7 @@ namespace CardSurvival_Localization
         }
 
 
-        public static string ProcessMod(string sourceDirectory, IFileSystem fileSystem, UnicodeEscapeMode escapeMode,
-            bool useLowercaseUnicodeEncoding)
+        public static string ProcessMod(string sourceDirectory, IFileSystem fileSystem, UnicodeEscapeMode escapeMode)
         {
             Regex unicodeReplaceRegEx = new Regex(@"(\\u)([a-f0-9]{4})", RegexOptions.Compiled);
 
@@ -75,16 +71,19 @@ namespace CardSurvival_Localization
                 throw new ArgumentException($"The ModInfo.json cannot be found in the mod directory: {modInfoFilePath}");
             }
 
+            Console.CursorVisible = false;
             Console.WriteLine("Processing...");
 
             //---Extract info from .json files
-            string[] files = fileSystem.Directory.GetFiles(sourceDirectory, "*.json", SearchOption.AllDirectories);
+            string[] files = fileSystem.Directory.GetFiles(sourceDirectory, "*.json", SearchOption.AllDirectories)
+                .Where(x => String.Equals(Path.GetFileName(x),"ModInfo.json",StringComparison.OrdinalIgnoreCase) == false)
+                .ToArray();
 
             LocalizationKeyExtrator localizationKeyExtrator = new();
 
             foreach (string file in files)
             {
-                Console.Write($"\r{Path.GetFileName(file)}                                  ");
+                Console.Write($"\r{Path.GetFileName(file)}                                  \r");
 
                 string jsonSource = fileSystem.File.ReadAllText(file);
 
@@ -94,7 +93,7 @@ namespace CardSurvival_Localization
 
 
                 //For AlwaysEscapeNonAscii and NoEncode, have to always write since there could
-                //  be mixed escape/not escape.  Newtonsoft doesn't have a way to get a property's read value.
+                //  be mixed escape/not escape.  Newtonsoft doesn't have a way to get a property's original value.
                 if (
                     jsonModified && escapeMode == UnicodeEscapeMode.AutoDetect
                     || escapeMode == UnicodeEscapeMode.AlwaysEscapeNonAscii
@@ -107,14 +106,17 @@ namespace CardSurvival_Localization
                         writer.Formatting = Formatting.Indented;
                         writer.AutoCompleteOnClose = true;
 
+                        bool isUnicodeLowerCased = true; //Default to lower case to match the ModEditor.
+
                         switch (escapeMode)
                         {
                             case UnicodeEscapeMode.AutoDetect:
-                                writer.StringEscapeHandling = IsUnicodeEscaped(jsonSource) ?
+                                writer.StringEscapeHandling = IsUnicodeEscaped(jsonSource, out isUnicodeLowerCased) ?
                                     StringEscapeHandling.EscapeNonAscii : StringEscapeHandling.Default;
                                 break;
                             case UnicodeEscapeMode.AlwaysEscapeNonAscii:
                                 writer.StringEscapeHandling = StringEscapeHandling.EscapeNonAscii;
+                                isUnicodeLowerCased = true; //ModEditor uses lower.
                                 break;
                             case UnicodeEscapeMode.NoEncode:
                                 writer.StringEscapeHandling = StringEscapeHandling.Default;
@@ -128,7 +130,7 @@ namespace CardSurvival_Localization
 
                         byte[] jsonResultArray = resultWriterStream.ToArray();
 
-                        if (useLowercaseUnicodeEncoding)
+                        if (isUnicodeLowerCased)
                         {
                             fileSystem.File.WriteAllBytes(file, jsonResultArray);
                         }
@@ -154,6 +156,8 @@ namespace CardSurvival_Localization
                 }
             }
 
+            Console.CursorVisible = true;
+
             string localizationFolder = Path.Combine(sourceDirectory, "Localization");
 
             if (!fileSystem.Directory.Exists(localizationFolder))
@@ -163,12 +167,19 @@ namespace CardSurvival_Localization
 
             string errorFileName = Path.Combine(localizationFolder, "SimpEn_Errors.txt");
 
-            string errorText = GetErrorsAndWarnings(localizationKeyExtrator);
+            string errorText = GetErrorsAndWarnings(localizationKeyExtrator, out int keysWithDifferentTextCount);
+
+            Console.WriteLine();
+
             if (!string.IsNullOrEmpty(errorText))
             {
-
                 fileSystem.File.WriteAllText(errorFileName, errorText);
-                Console.WriteLine($"One or more translation warnings or errors occurred. See {errorFileName}");
+
+                if (keysWithDifferentTextCount > 0)
+                {
+                    Console.WriteLine($"Important: There are {keysWithDifferentTextCount} keys that have more than text mapping.");
+                    Console.WriteLine($"See {errorFileName}");
+                }
             }
 
             string localizationFilePath = Path.Combine(localizationFolder, "SimpEn.psv");
@@ -219,17 +230,39 @@ namespace CardSurvival_Localization
         /// </summary>
         /// <param name="json"></param>
         /// <returns></returns>
-        private static bool IsUnicodeEscaped(string json)
+        private static bool IsUnicodeEscaped(string json, out bool isLowerCased)
         {
-            return Regex.IsMatch(json, @"\\u[a-f0-9]", RegexOptions.IgnoreCase);
+
+            MatchCollection matches =  Regex.Matches(json, @"(\\u)([a-f0-9]{4})", RegexOptions.IgnoreCase);
+
+            bool isEscaped = matches.Count > 0;
+
+            isLowerCased = true;
+
+            if(isEscaped)
+            {
+                //If all numbers, assume lower.  If one item is lower, assume lower.
+                isLowerCased = matches.Any(x =>
+                {
+                    string hexCode = x.Groups[2].Value;
+                    //Does not count.
+                    if (int.TryParse(hexCode, out _)) return false;
+
+                    return hexCode.ToLower() == hexCode;
+                });
+            }
+
+            return isEscaped;
         }
 
-        private static string GetErrorsAndWarnings(LocalizationKeyExtrator localizationKeyExtractor)
+        private static string GetErrorsAndWarnings(LocalizationKeyExtrator localizationKeyExtractor, out int keysWithDifferentTextCount)
         {
 
             //Duplicate text entries
             List<KeyValuePair<string, List<LocalizationInfo>>> multiDefinedInfo = localizationKeyExtractor.LocalizationKeys.Where(x => x.Value.Count > 1)
                 .ToList();
+
+            keysWithDifferentTextCount = multiDefinedInfo.Count;
 
             StringBuilder sb = new StringBuilder();
 
@@ -256,7 +289,7 @@ namespace CardSurvival_Localization
 
             if (localizationKeyExtractor.GeneratedKeys.Count() > 0)
             {
-                sb.AppendLine("---- Warnings -----");
+                sb.AppendLine("---- Informational ----");
                 sb.AppendLine($"New Keys Created.  JSON was updated.");
                 sb.AppendLine();
 

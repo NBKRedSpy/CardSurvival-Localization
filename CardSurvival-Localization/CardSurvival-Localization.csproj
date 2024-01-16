@@ -6,8 +6,8 @@
     <RootNamespace>CardSurvival_Localization</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <FileVersion>3.3.1</FileVersion>
-    <AssemblyVersion>3.3.1</AssemblyVersion>
+    <FileVersion>3.4.0</FileVersion>
+    <AssemblyVersion>3.4.0</AssemblyVersion>
     <Description></Description>
     <Title></Title>
     <Product>$(AssemblyName)</Product>

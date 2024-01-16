@@ -41,7 +41,7 @@ namespace CardSurvival_LocalizationTests
             }, "X:\\test");
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, false);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -64,7 +64,7 @@ T-VzorawrFGpoS68TyA2fy/c9JZGM=||Some Spaced Text
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            expected = @"---- Warnings -----
+            expected = @"---- Informational ----
 New Keys Created.  JSON was updated.
 
 	New Key: ""T-VzorawrFGpoS68TyA2fy/c9JZGM=""
@@ -107,7 +107,7 @@ New Keys Created.  JSON was updated.
             }, "X:\\test");
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, false);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -151,7 +151,7 @@ New Keys Created.  JSON was updated.
             }, "X:\\test");
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, false);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -200,7 +200,7 @@ New Keys Created.  JSON was updated.
 
             }, "X:\\test");
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, false);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -265,7 +265,7 @@ Key: ""SOME_KEY""
 
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, false);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -313,7 +313,7 @@ Key: ""SOME_KEY""
 
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, false);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -357,7 +357,7 @@ SOME_KEY2||番茄炒蛋
 
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, false);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -408,7 +408,7 @@ SOME_KEY2||番茄炒蛋
                 }, "X:\\test");
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, false);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -462,7 +462,7 @@ SOME_KEY2||番茄炒蛋
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, false);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -527,7 +527,7 @@ Key: ""SOME_KEY""
             SetWriteTimeToMin(fs);
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, false);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -548,7 +548,7 @@ Key: ""SOME_KEY""
             Assert.Equal(expected, actual);
 
             actual = fs.File.ReadAllText("x:\\test\\Localization\\SimpEn_Errors.txt");
-            expected = @"---- Warnings -----
+            expected = @"---- Informational ----
 New Keys Created.  JSON was updated.
 
 	New Key: ""T-zlWCFIxvDBKCM1uH317Uvkt4E5k=""
@@ -602,7 +602,7 @@ New Keys Created.  JSON was updated.
             SetWriteTimeToMin(fs);
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, false);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -623,7 +623,7 @@ New Keys Created.  JSON was updated.
             Assert.Equal(expected, actual);
 
             actual = fs.File.ReadAllText("x:\\test\\Localization\\SimpEn_Errors.txt");
-            expected = @"---- Warnings -----
+            expected = @"---- Informational ----
 New Keys Created.  JSON was updated.
 
 	New Key: ""T-zlWCFIxvDBKCM1uH317Uvkt4E5k=""
@@ -684,7 +684,7 @@ New Keys Created.  JSON was updated.
 
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, false);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             var expectedFiles = new List<string>()
             {
@@ -705,7 +705,7 @@ T-G02XAZWFpzT4hBqdzTtw+2cR+CE=||Some Text2
             Assert.Equal(expected, actual);
 
             actual = fs.File.ReadAllText("x:\\test\\Localization\\SimpEn_Errors.txt");
-            expected = @"---- Warnings -----
+            expected = @"---- Informational ----
 New Keys Created.  JSON was updated.
 
 	New Key: ""T-MtvodPkQIAwKNWr+IDrEvoZpvJM=""
@@ -785,7 +785,7 @@ New Keys Created.  JSON was updated.
             SetWriteTimeToMin(fs);
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, false);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -837,7 +837,7 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, false);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -859,7 +859,7 @@ test||Some Text Existing
             Assert.Equal(expected, actual);
 
             actual = fs.File.ReadAllText("x:\\test\\Localization\\SimpEn_Errors.txt");
-            expected = @"---- Warnings -----
+            expected = @"---- Informational ----
 New Keys Created.  JSON was updated.
 
 	New Key: ""T-zlWCFIxvDBKCM1uH317Uvkt4E5k=""
@@ -917,7 +917,7 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, false);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -952,7 +952,7 @@ Key: ""test-existing""
 	File: x:\test\test.json
 	JSON Path: DefaultStatusName-Existing2
 
----- Warnings -----
+---- Informational ----
 New Keys Created.  JSON was updated.
 
 	New Key: ""T-zlWCFIxvDBKCM1uH317Uvkt4E5k=""
@@ -1004,7 +1004,7 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, true);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -1059,7 +1059,7 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, true);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -1129,7 +1129,7 @@ T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, true);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -1190,7 +1190,7 @@ T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, false);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -1242,7 +1242,7 @@ T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AlwaysEscapeNonAscii, true);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AlwaysEscapeNonAscii);
 
 
             var expectedFiles = new List<string>()
@@ -1292,7 +1292,7 @@ T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.NoEncode, false);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.NoEncode);
 
 
             var expectedFiles = new List<string>()
@@ -1332,7 +1332,7 @@ T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风
 {
     "a" : {
         "DefaultStatusName-Existing": {
-            "DefaultText": "\u4e00\u9635\u98d3\u98ce",
+            "DefaultText": "\u4E00\u9635\u98D3\u98CE",
         }
     },
     "b" : {
@@ -1349,7 +1349,7 @@ T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect, false);
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -1389,6 +1389,142 @@ T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风
             Assert.Equal(expected, actual);
         }
 
+        [Fact]
+        public void LowerCaseUnicode_lowercased()
+        {
+            MockFileSystem fs = new MockFileSystem(new Dictionary<string, MockFileData>()
+                        {
+                            {@"x:\test\ModInfo.json", new MockFileData(@"{}") },
+                            {@"x:\test\test.json", new MockFileData(
+"""
+{
+    "a" : {
+        "DefaultStatusName-Existing": {
+            "DefaultText": "\u4e00\u9635\u98d3\u98ce",
+        }
+    },
+    "b" : {
+        "DefaultStatusName-Existing2": {
+            "DefaultText": "一阵飓风",
+        }
+    }
+}
+""")
+                },
+
+                        }, "X:\\test");
+
+            //Reset date for check for write changes later
+            SetWriteTimeToMin(fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+
+
+            var expectedFiles = new List<string>()
+                    {
+                        @"x:\test\ModInfo.json",
+                        "x:\\test\\test.json",
+                        "x:\\test\\Localization\\SimpEn.psv",
+                        "x:\\test\\Localization\\SimpEn_Errors.txt"
+                    };
+
+            Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
+
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
+            string actual = fs.File.ReadAllText(engPath);
+            string expected = "T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风\r\n";
+
+            Assert.Equal(expected, actual);
+
+            actual = fs.File.ReadAllText("x:\\test\\test.json");
+            expected =
+"""
+{
+  "a": {
+    "DefaultStatusName-Existing": {
+      "DefaultText": "\u4e00\u9635\u98d3\u98ce",
+      "LocalizationKey": "T-COd+NfxU19P/4TdHpGQTg4J8E/k="
+    }
+  },
+  "b": {
+    "DefaultStatusName-Existing2": {
+      "DefaultText": "\u4e00\u9635\u98d3\u98ce",
+      "LocalizationKey": "T-COd+NfxU19P/4TdHpGQTg4J8E/k="
+    }
+  }
+}
+""";
+            Assert.Equal(expected, actual);
+        }
+
+
+        [Fact]
+        public void MixedCaseUnicode_Lowercased()
+        {
+            MockFileSystem fs = new MockFileSystem(new Dictionary<string, MockFileData>()
+                        {
+                            {@"x:\test\ModInfo.json", new MockFileData(@"{}") },
+                            {@"x:\test\test.json", new MockFileData(
+"""
+{
+    "a" : {
+        "DefaultStatusName-Existing": {
+            "DefaultText": "\u4e00\u9635\u98d3\u98ce",
+        }
+    },
+    "b" : {
+        "DefaultStatusName-Existing2": {
+            "DefaultText": "\u4E00\u9635\u98D3\u98CE",
+        }
+    }
+}
+""")
+                },
+
+                        }, "X:\\test");
+
+            //Reset date for check for write changes later
+            SetWriteTimeToMin(fs);
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+
+
+            var expectedFiles = new List<string>()
+                    {
+                        @"x:\test\ModInfo.json",
+                        "x:\\test\\test.json",
+                        "x:\\test\\Localization\\SimpEn.psv",
+                        "x:\\test\\Localization\\SimpEn_Errors.txt"
+                    };
+
+            Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
+
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
+            string actual = fs.File.ReadAllText(engPath);
+            string expected = "T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风\r\n";
+
+            Assert.Equal(expected, actual);
+
+            actual = fs.File.ReadAllText("x:\\test\\test.json");
+            expected =
+"""
+{
+  "a": {
+    "DefaultStatusName-Existing": {
+      "DefaultText": "\u4e00\u9635\u98d3\u98ce",
+      "LocalizationKey": "T-COd+NfxU19P/4TdHpGQTg4J8E/k="
+    }
+  },
+  "b": {
+    "DefaultStatusName-Existing2": {
+      "DefaultText": "\u4e00\u9635\u98d3\u98ce",
+      "LocalizationKey": "T-COd+NfxU19P/4TdHpGQTg4J8E/k="
+    }
+  }
+}
+""";
+            Assert.Equal(expected, actual);
+        }
 
 
 
