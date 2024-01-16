@@ -14,7 +14,7 @@ See the [Observations From Current Mods](#observations-from-current-mods) sectio
 
 
 [size=3][b]Video[/b][/size]
-A simple tutorial video can be found here:  https://youtu.be/ABbwkaBecCg
+A simple tutorial video can be found here:  https://youtu.be/svdUEJXaGnY
 
 [size=3][b]What Does This Utility Do?[/b][/size]
 
@@ -184,6 +184,12 @@ https://github.com/dop-lm/CSTI-ModLoader  (Currently the NoReflection branch has
 
 
 [size=4][b]Change Log[/b][/size]
+
+[size=3][b]3.4.0[/b][/size]
+* Tries to keep the same casing for escaped Unicode. Makes file compares between the modified and original files easier.
+* Changed console error text to only include issues that must be addressed.
+* The Warnings header in the error file has been changed to "information".  Informational severity is more accurate.
+
 
 [size=3][b]3.3.1[/b][/size]
 * Corrects Unicode format Auto Detection error due to bad match string.

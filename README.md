@@ -13,7 +13,7 @@ This is not the CSTI-ModLoader.  This utility creates an English translation fil
 See the [Observations From Current Mods](#observations-from-current-mods) section.
 
 # Video
-A simple tutorial video can be found here:  https://youtu.be/ABbwkaBecCg
+A simple tutorial video can be found here:  https://youtu.be/svdUEJXaGnY
 
 ## What Does This Utility Do?
 
@@ -153,6 +153,13 @@ https://github.com/dop-lm/CSTI-ModLoader  (Currently the NoReflection branch has
 
 
 # Change Log
+
+
+## 3.4.0
+* Tries to keep the same casing for escaped Unicode. Makes file compares between the modified and original files easier.
+* Changed console error text to only include issues that must be addressed.
+* The Warnings header in the error file has been changed to "information".  Informational severity is more accurate.
+
 
 ## 3.3.1
 * Corrects Unicode format Auto Detection error due to bad match string.
