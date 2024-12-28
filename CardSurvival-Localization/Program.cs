@@ -92,6 +92,8 @@ namespace CardSurvival_Localization
                 bool jsonModified = localizationKeyExtrator.Extract(jsonDoc, file);
 
 
+                //Write out the json file.  Handles adding the newly created keys to the json objects
+                //  as well as handling any Unicode escaping consistencies.
                 //For AlwaysEscapeNonAscii and NoEncode, have to always write since there could
                 //  be mixed escape/not escape.  Newtonsoft doesn't have a way to get a property's original value.
                 if (
@@ -99,60 +101,7 @@ namespace CardSurvival_Localization
                     || escapeMode == UnicodeEscapeMode.AlwaysEscapeNonAscii
                     || escapeMode == UnicodeEscapeMode.NoEncode)
                 {
-                    using (MemoryStream resultWriterStream = new())
-                    using (StreamWriter streamWriter = new StreamWriter(resultWriterStream))
-                    using (JsonWriter writer = new JsonTextWriter(streamWriter))
-                    {
-                        writer.Formatting = Formatting.Indented;
-                        writer.AutoCompleteOnClose = true;
-
-                        bool isUnicodeLowerCased = true; //Default to lower case to match the ModEditor.
-
-                        switch (escapeMode)
-                        {
-                            case UnicodeEscapeMode.AutoDetect:
-                                writer.StringEscapeHandling = IsUnicodeEscaped(jsonSource, out isUnicodeLowerCased) ?
-                                    StringEscapeHandling.EscapeNonAscii : StringEscapeHandling.Default;
-                                break;
-                            case UnicodeEscapeMode.AlwaysEscapeNonAscii:
-                                writer.StringEscapeHandling = StringEscapeHandling.EscapeNonAscii;
-                                isUnicodeLowerCased = true; //ModEditor uses lower.
-                                break;
-                            case UnicodeEscapeMode.NoEncode:
-                                writer.StringEscapeHandling = StringEscapeHandling.Default;
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(escapeMode), $"Unexpected value: {escapeMode}");
-                        }
-
-                        jsonDoc.WriteTo(writer);
-                        writer.Flush();
-
-                        byte[] jsonResultArray = resultWriterStream.ToArray();
-
-                        if (isUnicodeLowerCased)
-                        {
-                            fileSystem.File.WriteAllBytes(file, jsonResultArray);
-                        }
-                        else
-                        {
-                            //Dev Note:  This is a bit inefficient, but is fine for the performance target of this utility.
-                            //  Unfortunately was not able to intercept JsonWriter since it encodes Unicode after the
-                            //  converters are executed.  The encoding methods are also private.
-                            //
-                            //  A custom stream would require intercepting the bytes as they stream in, so not worth the 
-                            //  work since this accomplishes the need.
-
-                            string result = Encoding.UTF8.GetString(jsonResultArray);
-
-                            result = unicodeReplaceRegEx.Replace(result, (Match match) =>
-                                match.Groups[1].Value + match.Groups[2].Value.ToUpper());
-
-                            fileSystem.File.WriteAllText(file, result);
-
-                        }
-                    }
-
+                    WriteGameFileChange(fileSystem, escapeMode, unicodeReplaceRegEx, file, jsonSource, jsonDoc);
                 }
             }
 
@@ -183,8 +132,6 @@ namespace CardSurvival_Localization
             }
 
             string localizationFilePath = Path.Combine(localizationFolder, "SimpEn.psv");
-
-
 
             using (TextWriter outputWriter = new StreamWriter(fileSystem.FileStream.New(localizationFilePath, FileMode.Create)))
             {
@@ -223,6 +170,73 @@ namespace CardSurvival_Localization
             Console.Write("                                        \r");
             Console.WriteLine("Translation Completed.");
             return sourceDirectory;
+        }
+
+        /// <summary>
+        /// Writes the json file.  Called to update data such as key info or to make the Unicode encoding method consistent.
+        /// </summary>
+        /// <param name="fileSystem"></param>
+        /// <param name="escapeMode"></param>
+        /// <param name="unicodeReplaceRegEx"></param>
+        /// <param name="file"></param>
+        /// <param name="jsonSource"></param>
+        /// <param name="jsonDoc"></param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private static void WriteGameFileChange(IFileSystem fileSystem, UnicodeEscapeMode escapeMode, Regex unicodeReplaceRegEx, string file, string jsonSource, JObject jsonDoc)
+        {
+            using (MemoryStream resultWriterStream = new())
+            using (StreamWriter streamWriter = new StreamWriter(resultWriterStream))
+            using (JsonWriter writer = new JsonTextWriter(streamWriter))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.AutoCompleteOnClose = true;
+
+                bool isUnicodeLowerCased = true; //Default to lower case to match the ModEditor.
+
+                switch (escapeMode)
+                {
+                    case UnicodeEscapeMode.AutoDetect:
+                        writer.StringEscapeHandling = IsUnicodeEscaped(jsonSource, out isUnicodeLowerCased) ?
+                            StringEscapeHandling.EscapeNonAscii : StringEscapeHandling.Default;
+                        break;
+                    case UnicodeEscapeMode.AlwaysEscapeNonAscii:
+                        writer.StringEscapeHandling = StringEscapeHandling.EscapeNonAscii;
+                        isUnicodeLowerCased = true; //ModEditor uses lower.
+                        break;
+                    case UnicodeEscapeMode.NoEncode:
+                        writer.StringEscapeHandling = StringEscapeHandling.Default;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(escapeMode), $"Unexpected value: {escapeMode}");
+                }
+
+                jsonDoc.WriteTo(writer);
+                writer.Flush();
+
+                byte[] jsonResultArray = resultWriterStream.ToArray();
+
+                if (isUnicodeLowerCased)
+                {
+                    fileSystem.File.WriteAllBytes(file, jsonResultArray);
+                }
+                else
+                {
+                    //Dev Note:  This is a bit inefficient, but is fine for the performance target of this utility.
+                    //  Unfortunately was not able to intercept JsonWriter since it encodes Unicode after the
+                    //  converters are executed.  The encoding methods are also private.
+                    //
+                    //  A custom stream would require intercepting the bytes as they stream in, so not worth the 
+                    //  work since this accomplishes the need.
+
+                    string result = Encoding.UTF8.GetString(jsonResultArray);
+
+                    result = unicodeReplaceRegEx.Replace(result, (Match match) =>
+                        match.Groups[1].Value + match.Groups[2].Value.ToUpper());
+
+                    fileSystem.File.WriteAllText(file, result);
+
+                }
+            }
         }
 
         /// <summary>
