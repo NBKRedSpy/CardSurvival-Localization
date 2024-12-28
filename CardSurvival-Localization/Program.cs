@@ -71,7 +71,8 @@ namespace CardSurvival_Localization
                 throw new ArgumentException($"The ModInfo.json cannot be found in the mod directory: {modInfoFilePath}");
             }
 
-            Console.CursorVisible = false;
+            if(!Console.IsOutputRedirected) Console.CursorVisible = false;
+
             Console.WriteLine("Processing...");
 
             //---Extract info from .json files
@@ -105,7 +106,7 @@ namespace CardSurvival_Localization
                 }
             }
 
-            Console.CursorVisible = true;
+            if (!Console.IsOutputRedirected) Console.CursorVisible = true; 
 
             string localizationFolder = Path.Combine(sourceDirectory, "Localization");
 
