@@ -127,10 +127,11 @@ namespace CardSurvival_Localization
 
                 if (keysWithDifferentTextCount > 0)
                 {
-                    Console.WriteLine($"Important: There are {keysWithDifferentTextCount} keys that have more than text mapping.");
+                    Console.WriteLine($"Important: There are {keysWithDifferentTextCount} keys that have more than one text mapping.");
                     Console.WriteLine($"See {errorFileName}");
                 }
             }
+
 
             string localizationFilePath = Path.Combine(localizationFolder, "SimpEn.psv");
 
