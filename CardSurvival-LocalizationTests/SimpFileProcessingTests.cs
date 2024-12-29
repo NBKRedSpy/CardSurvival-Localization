@@ -11,7 +11,6 @@ namespace CardSurvival_LocalizationTests
 {
     public class SimpFileProcessingTests
     {
-
         [Fact]
         public void SimpEn_HasFile_ReturnsEntries()
         {
@@ -63,10 +62,11 @@ KeyValue , EngValue , CnValue
 
             List<CsLocalizationEntry> actual = Program.ParseSimpFile(fileSystem, @"X:\SimpEn.csv");
 
-
             List<CsLocalizationEntry> expected = new List<CsLocalizationEntry>();
 
             Assert.Equivalent(expected, actual);
+
+
 
         }
     }

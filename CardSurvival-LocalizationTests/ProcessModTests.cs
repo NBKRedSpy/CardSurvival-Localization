@@ -9,6 +9,8 @@ namespace CardSurvival_LocalizationTests
     public class ProcessModTests
     {
 
+        public const string PsvHeader = "Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese";
+
         [Fact]
         public void TrimTest__Success__Success()
         {
@@ -46,9 +48,12 @@ namespace CardSurvival_LocalizationTests
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
 
-            string expected = @"SOME_KEY||Some Text
+            string expected = 
+$"""
+{PsvHeader}
+SOME_KEY||Some Text
 T-VzorawrFGpoS68TyA2fy/c9JZGM=||Some Spaced Text
-";
+""";
             string actual = fs.File.ReadAllText(engPath);
 
             Assert.Equal(expected, actual);
@@ -932,10 +937,14 @@ New Keys Created.  JSON was updated.
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = @"T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||Some Text
-test-existing||Some Text Existing
-test-existing||Some Text Existing Mismatch
-";
+            string expected = 
+            """
+            Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+            T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||||Some Text||||
+            test-existing|||Y|Some Text Existing||||
+            test-existing|||Y|Some Text Existing Mismatch||||
+
+            """;
 
             Assert.Equal(expected, actual);
 
@@ -1306,7 +1315,11 @@ T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = "test-existing||一阵飓风\r\n";
+            string expected = 
+            """
+            Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+            test-existing||||一阵飓风||||
+            """;
 
             Assert.Equal(expected, actual);
 
