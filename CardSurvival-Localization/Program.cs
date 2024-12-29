@@ -221,7 +221,7 @@ namespace CardSurvival_Localization
                 //Using Pipe format since spreadsheet programs like Google Sheets gets caught up on unicode comma like characters.
                 var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
                 {
-                    Delimiter = "|"
+                    Delimiter = "|",
                 };
 
                 //---- Write to English translation output
