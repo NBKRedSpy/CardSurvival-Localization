@@ -12,8 +12,8 @@ namespace CardSurvival_Localization
     internal class CsLocalizationEntry
     {
         public string Key{ get; set; }
-        public string English { get; set; }
-        public string Chinese { get; set; }
+        public string English { get; set; } = "";
+        public string Chinese { get; set; } = "";
 
         public CsLocalizationEntry() { }
 

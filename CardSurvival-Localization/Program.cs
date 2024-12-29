@@ -180,10 +180,10 @@ namespace CardSurvival_Localization
 
             //Get the full join data for each key.
             var flattenedInfo = combinedLocalization
-                .SelectMany(x => x.Json.Select(y => y.DefaultText).DefaultIfEmpty(), (item, json) => new { 
-                    item, 
-                    item.Key, 
-                    json
+                .SelectMany(x => x.Json.DefaultIfEmpty(), (item, json) => new {
+                    item,
+                    item.Key,
+                    json = json?.DefaultText ?? ""
                 })
                 .SelectMany(x => x.item.English.DefaultIfEmpty(new CsLocalizationEntry()), (item, english) => new
                 {
@@ -202,16 +202,6 @@ namespace CardSurvival_Localization
                     item.en_chinese, 
                     cn_english = chinese.English, 
                     cn_chinese = chinese.Chinese })
-                //.Select(item =>  new 
-                //{
-                //    item.item,
-                //    item.Key,
-                //    item.json,
-                //    item.en_english,
-                //    item.en_chinese,
-                //    item.cn_english,
-                //    item.cn_chinese,
-                //})
                 .ToList();
 
             using (TextWriter outputWriter = new StreamWriter(fileSystem.FileStream.New(localizationFilePath, FileMode.Create)))
@@ -305,7 +295,7 @@ namespace CardSurvival_Localization
 
                 if (!dataLookup.TryGetValue(group.Key, out info))
                 {
-                    info = new CombinedLocalizationInfo();
+                    info = new CombinedLocalizationInfo() { Key = group.Key };
                     dataLookup[group.Key] = info;
                 }
 
