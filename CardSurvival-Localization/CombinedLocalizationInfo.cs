@@ -24,8 +24,6 @@ namespace CardSurvival_Localization
         /// </summary>
         public List<LocalizationInfo> Json { get; set; } = new();
 
-        //The text from the SimpEn.csv file.
-
         /// <summary>
         /// Data from the SimpEn.csv file.
         /// </summary>

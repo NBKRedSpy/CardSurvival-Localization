@@ -170,22 +170,48 @@ namespace CardSurvival_Localization
 
             string localizationFilePath = Path.Combine(localizationFolder, "SimpEn.psv");
 
+            //Debug
+            combinedLocalization[0].English = new List<CsLocalizationEntry>();
+            combinedLocalization[0].Chinese = new List<CsLocalizationEntry>();
+
+            var nullItem = combinedLocalization.FirstOrDefault();
+
+            ;
+
             //Get the full join data for each key.
             var flattenedInfo = combinedLocalization
-                .SelectMany(x => x.Json.DefaultIfEmpty(), (item, json) => new { item, item.Key, json = json.DefaultText })
-                .SelectMany(x => x.item.English.DefaultIfEmpty(), (item, english) => new { item, item.Key, item.json, en_english = english.English, en_chinese = english.Chinese })
-                .SelectMany(x => x.item.item.Chinese.DefaultIfEmpty(), (item, chinese) => new { item, item.Key, item.json, item.en_english, 
-                    item.en_chinese, cn_english = chinese.English, cn_chinese = chinese.Chinese })
-                .Select(item =>  new 
+                .SelectMany(x => x.Json.Select(y => y.DefaultText).DefaultIfEmpty(), (item, json) => new { 
+                    item, 
+                    item.Key, 
+                    json
+                })
+                .SelectMany(x => x.item.English.DefaultIfEmpty(new CsLocalizationEntry()), (item, english) => new
                 {
-                    item,
+                    item.item,
+                    item.Key,
+                    item.json,
+                    en_english = english.English,
+                    en_chinese = english.Chinese
+                })
+                .SelectMany(x => x.item.Chinese.DefaultIfEmpty(new CsLocalizationEntry()), (item, chinese) => new
+                {
+                    item.item,
                     item.Key,
                     item.json,
                     item.en_english,
-                    item.en_chinese,
-                    item.cn_english,
-                    item.cn_chinese,
-                })
+                    item.en_chinese, 
+                    cn_english = chinese.English, 
+                    cn_chinese = chinese.Chinese })
+                //.Select(item =>  new 
+                //{
+                //    item.item,
+                //    item.Key,
+                //    item.json,
+                //    item.en_english,
+                //    item.en_chinese,
+                //    item.cn_english,
+                //    item.cn_chinese,
+                //})
                 .ToList();
 
             using (TextWriter outputWriter = new StreamWriter(fileSystem.FileStream.New(localizationFilePath, FileMode.Create)))
