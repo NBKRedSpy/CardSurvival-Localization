@@ -18,22 +18,22 @@ namespace CardSurvival_Localization
         /// The key
         /// </summary>
         public string Key { get; set; }
-        
+
         /// <summary>
         /// The text from the json file
         /// </summary>
-        public List<LocalizationInfo> Json { get; set; }
+        public List<LocalizationInfo> Json { get; set; } = new();
 
         //The text from the SimpEn.csv file.
 
         /// <summary>
         /// Data from the SimpEn.csv file.
         /// </summary>
-        public List<CsLocalizationEntry> English { get; set; }
+        public List<CsLocalizationEntry> English { get; set; } = new();
 
         /// <summary>
         /// Data from the SimpCn.csv file.
         /// </summary>
-        public List<CsLocalizationEntry> Chinese { get; set; }
+        public List<CsLocalizationEntry> Chinese { get; set; } = new();
     }
 }

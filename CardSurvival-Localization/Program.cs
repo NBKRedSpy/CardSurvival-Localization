@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Abstractions;
 using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -92,7 +93,9 @@ namespace CardSurvival_Localization
 
                 JObject jsonDoc = JObject.Parse(jsonSource);
 
-                bool jsonModified = localizationKeyExtrator.Extract(jsonDoc, file);
+                //Debug
+                //bool jsonModified = localizationKeyExtrator.Extract(jsonDoc, file);
+                bool jsonModified = localizationKeyExtrator.Extract(jsonDoc, file, 100);
 
 
                 //Write out the json file.  Handles adding the newly created keys to the json objects
@@ -163,9 +166,24 @@ namespace CardSurvival_Localization
 
             string localizationFilePath = Path.Combine(localizationFolder, "SimpEn.psv");
 
+            //Get the full join data for each key.
+            var flattenedInfo = combinedLocalization
+                .SelectMany(x => x.Json, (item, json) => new { item, item.Key, json = json.DefaultText })
+                .SelectMany(x => x.item.English, (item, english) => new { item, item.Key, item.json, en_english = english.English, en_chinese = english.Chinese })
+                .SelectMany(x => x.item.item.Chinese, (item, english) => new
+                {
+                    item,
+                    item.Key,
+                    item.json,
+                    item.en_english,
+                    item.en_chinese,
+                    cn_english = english.English,
+                    cn_chinese = english.Chinese
+                })
+                .ToList();
+
             using (TextWriter outputWriter = new StreamWriter(fileSystem.FileStream.New(localizationFilePath, FileMode.Create)))
             {
-
                 //Using Pipe format since spreadsheet programs like Google Sheets gets caught up on unicode comma like characters.
                 var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
                 {
@@ -175,32 +193,35 @@ namespace CardSurvival_Localization
                 //---- Write to English translation output
                 using (CsvWriter csvWriter = new CsvWriter(outputWriter, csvConfig))
                 {
-                    foreach (List<LocalizationInfo> keyInfos in localizationKeyExtrator.LocalizationKeys.Values)
+                    //----Header
+                    //Debug
+                    //csvWriter.WriteFields("Key", "English", "Chinese", "HasDupe", "CardDefault", "SimpEn-English", "SimpEn-Chinese", "SimpCn-English", "SimpCn-Chinese");
+                    csvWriter.WriteFields("Key", "CardDefault", "SimpEn-English", "SimpEn-Chinese", "SimpCn-English", "SimpCn-Chinese");
+
+                    csvWriter.NextRecord();
+
+                    foreach (var flattened in flattenedInfo)
                     {
+                        csvWriter.WriteFields(
+                            flattened.Key,
+                            flattened.json.Replace("\n", "\\n"), //Escape the new lines.
+                            flattened.en_english,
+                            flattened.en_chinese,
+                            flattened.cn_english,
+                            flattened.cn_chinese
+                        );
 
-                        //For entries that had a new key created, there will always be one key.
-                        //For duplicate existing keys, there may be one or move values
-                        foreach (LocalizationInfo info in keyInfos)
-                        {
-                            //The game's example SimpCn.csv shows new lines to be escaped.
-                            string encodedText = info.DefaultText.Replace("\n", "\\n");
-
-                            csvWriter.WriteField(info.LocalizationKey);
-                            csvWriter.WriteField("");  //Spot for English translation
-                            csvWriter.WriteField(encodedText);
-
-                            csvWriter.NextRecord();
-                        }
-
-
+                        csvWriter.NextRecord();
                     }
                 }
             }
 
+            
             Console.Write("                                        \r");
             Console.WriteLine("Translation Completed.");
             return sourceDirectory;
         }
+
 
         /// <summary>
         /// Combines the Json data, existing SimpEn.csv, and SimpCn.csv data,
@@ -227,6 +248,7 @@ namespace CardSurvival_Localization
 
 
             //SimpEn.csv (English data)
+
 
             AddSimpData(englishLocalization, dataLookup);
             AddSimpData(chineseLocalization, dataLookup);
