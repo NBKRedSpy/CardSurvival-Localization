@@ -85,17 +85,21 @@ namespace CardSurvival_Localization
 
             LocalizationKeyExtrator localizationKeyExtrator = new();
 
+            //debug
+            int i = 0;
+
             foreach (string file in files)
             {
+                //debug
+                if (i++ >= 100) break;
+
                 Console.Write($"\r{Path.GetFileName(file)}                                  \r");
 
                 string jsonSource = fileSystem.File.ReadAllText(file);
 
                 JObject jsonDoc = JObject.Parse(jsonSource);
 
-                //Debug
-                //bool jsonModified = localizationKeyExtrator.Extract(jsonDoc, file);
-                bool jsonModified = localizationKeyExtrator.Extract(jsonDoc, file, 100);
+                bool jsonModified = localizationKeyExtrator.Extract(jsonDoc, file);
 
 
                 //Write out the json file.  Handles adding the newly created keys to the json objects
@@ -168,17 +172,19 @@ namespace CardSurvival_Localization
 
             //Get the full join data for each key.
             var flattenedInfo = combinedLocalization
-                .SelectMany(x => x.Json, (item, json) => new { item, item.Key, json = json.DefaultText })
-                .SelectMany(x => x.item.English, (item, english) => new { item, item.Key, item.json, en_english = english.English, en_chinese = english.Chinese })
-                .SelectMany(x => x.item.item.Chinese, (item, english) => new
+                .SelectMany(x => x.Json.DefaultIfEmpty(), (item, json) => new { item, item.Key, json = json.DefaultText })
+                .SelectMany(x => x.item.English.DefaultIfEmpty(), (item, english) => new { item, item.Key, item.json, en_english = english.English, en_chinese = english.Chinese })
+                .SelectMany(x => x.item.item.Chinese.DefaultIfEmpty(), (item, chinese) => new { item, item.Key, item.json, item.en_english, 
+                    item.en_chinese, cn_english = chinese.English, cn_chinese = chinese.Chinese })
+                .Select(item =>  new 
                 {
                     item,
                     item.Key,
                     item.json,
                     item.en_english,
                     item.en_chinese,
-                    cn_english = english.English,
-                    cn_chinese = english.Chinese
+                    item.cn_english,
+                    item.cn_chinese,
                 })
                 .ToList();
 
