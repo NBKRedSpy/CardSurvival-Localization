@@ -74,13 +74,13 @@ namespace CardSurvival_Localization
                 throw new ArgumentException($"The ModInfo.json cannot be found in the mod directory: {modInfoFilePath}");
             }
 
-            if(!Console.IsOutputRedirected) Console.CursorVisible = false;
+            if (!Console.IsOutputRedirected) Console.CursorVisible = false;
 
             Console.WriteLine("Processing...");
 
             //---Extract info from .json files
             string[] files = fileSystem.Directory.GetFiles(sourceDirectory, "*.json", SearchOption.AllDirectories)
-                .Where(x => String.Equals(Path.GetFileName(x),"ModInfo.json",StringComparison.OrdinalIgnoreCase) == false)
+                .Where(x => String.Equals(Path.GetFileName(x), "ModInfo.json", StringComparison.OrdinalIgnoreCase) == false)
                 .ToArray();
 
             LocalizationKeyExtrator localizationKeyExtrator = new();
@@ -162,14 +162,34 @@ namespace CardSurvival_Localization
                 }
             }
 
+            WriteCombinedPsv(fileSystem, localizationKeyExtrator, localizationFolder, englishLocalization, chineseLocalization);
+
+            Console.Write("                                        \r");
+            Console.WriteLine("Translation Completed.");
+            return sourceDirectory;
+        }
+
+        /// <summary>
+        /// Writes out the SimpEn.psv, combining the localization sources.
+        /// </summary>
+        /// <param name="fileSystem"></param>
+        /// <param name="localizationKeyExtrator"></param>
+        /// <param name="localizationFolder"></param>
+        /// <param name="englishLocalization"></param>
+        /// <param name="chineseLocalization"></param>
+        private static void WriteCombinedPsv(IFileSystem fileSystem, LocalizationKeyExtrator localizationKeyExtrator, string localizationFolder, List<CsLocalizationEntry> englishLocalization, List<CsLocalizationEntry> chineseLocalization)
+        {
             List<CombinedLocalizationInfo> combinedLocalization = GetCombinedLocalization(localizationKeyExtrator,
-                englishLocalization, chineseLocalization);
+                            englishLocalization, chineseLocalization);
 
             string localizationFilePath = Path.Combine(localizationFolder, "SimpEn.psv");
 
             //Get the full join data for each key.
+            
+            //TODO:  Simplify this.  Try changing to an object with multiple SelectMany with a downstream projection.
             var flattenedInfo = combinedLocalization
-                .SelectMany(x => x.Json.DefaultIfEmpty(), (item, json) => new {
+                .SelectMany(x => x.Json.DefaultIfEmpty(), (item, json) => new
+                {
                     item,
                     item.Key,
                     json = json?.DefaultText ?? ""
@@ -189,9 +209,10 @@ namespace CardSurvival_Localization
                     item.Key,
                     item.json,
                     item.en_english,
-                    item.en_chinese, 
-                    cn_english = chinese.English, 
-                    cn_chinese = chinese.Chinese })
+                    item.en_chinese,
+                    cn_english = chinese.English,
+                    cn_chinese = chinese.Chinese
+                })
                 .OrderBy(x => x.Key)
                 .ToList();
 
@@ -238,10 +259,6 @@ namespace CardSurvival_Localization
                     }
                 }
             }
-
-            Console.Write("                                        \r");
-            Console.WriteLine("Translation Completed.");
-            return sourceDirectory;
         }
 
         ///// <summary>
@@ -259,7 +276,7 @@ namespace CardSurvival_Localization
         //        || (value.Json.Count == 0 && value.EnglishData.Count == 0) return "";
 
         //    return value.Json.Count == 1 ? value.Json.First : value.EnglishData.First()
-            
+
         //}
 
 

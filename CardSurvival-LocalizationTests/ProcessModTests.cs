@@ -1,15 +1,27 @@
 using System.IO.Abstractions.TestingHelpers;
+using System.Windows;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using CardSurvival_Localization;
 using System.Diagnostics.Contracts;
 using Moq;
+using static System.Net.Mime.MediaTypeNames;
+using Xunit.Abstractions;
+using TextCopy;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
 
 namespace CardSurvival_LocalizationTests
 {
     public class ProcessModTests
     {
 
+        public ProcessModTests(ITestOutputHelper output)
+        {
+            Output = output;
+        }
+
         public const string PsvHeader = "Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese";
+
+        public ITestOutputHelper Output { get; }
 
         [Fact]
         public void TrimTest__Success__Success()
@@ -36,24 +48,26 @@ namespace CardSurvival_LocalizationTests
         'DefaultText': '   Some Spaced Text',
         'LocalizationKey': ''
     },
+
 }
 ")
                 },
 
             }, "X:\\test");
 
-
             CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
 
-            string expected = 
-$"""
-{PsvHeader}
-SOME_KEY||Some Text
-T-VzorawrFGpoS68TyA2fy/c9JZGM=||Some Spaced Text
-""";
+            string expected =
+            """
+            Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+            SOME_KEY||||Some Text||||
+            T-VzorawrFGpoS68TyA2fy/c9JZGM=||||Some Spaced Text||||
+
+            """;
+
             string actual = fs.File.ReadAllText(engPath);
 
             Assert.Equal(expected, actual);
@@ -118,8 +132,13 @@ New Keys Created.  JSON was updated.
             Assert.True(fs.FileExists(engPath));
 
             //Chinese comma lookalike unicode character
-            string expected = @"SOME_KEY||Some，Text
-";
+            string expected =
+                    """
+                    Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                    SOME_KEY||||Some，Text||||
+
+                    """;
+
             string actual = fs.File.ReadAllText(engPath);
 
             Assert.Equal(expected, actual);
@@ -161,8 +180,13 @@ New Keys Created.  JSON was updated.
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
 
-            string expected = @"SOME_KEY||Some Text
-";
+            string expected =
+                """
+                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                SOME_KEY||||Some Text||||
+                
+                """;
+
             string actual = fs.File.ReadAllText(engPath);
 
             Assert.Equal(expected, actual);
@@ -210,9 +234,14 @@ New Keys Created.  JSON was updated.
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
 
-            string expected = @"SOME_KEY||Some Text
-SOME_KEY||Some Text2
-";
+            string expected =
+                    """
+                    Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                    SOME_KEY|||Y|Some Text||||
+                    SOME_KEY|||Y|Some Text2||||
+
+                    """;
+
             string actual = fs.File.ReadAllText(engPath);
 
             Assert.Equal(expected, actual);
@@ -275,10 +304,14 @@ Key: ""SOME_KEY""
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
 
-            string expected = @"SOME_KEY||番茄炒蛋
-";
-            string actual = fs.File.ReadAllText(engPath);
+            string expected =
+                """
+                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                SOME_KEY||||番茄炒蛋||||
+                
+                """;
 
+            string actual = fs.File.ReadAllText(engPath);
             Assert.Equal(expected, actual);
 
             List<string> expectedFiles = new()
@@ -323,9 +356,13 @@ Key: ""SOME_KEY""
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
 
-            string expected = @"SOME_KEY||番茄炒蛋
-SOME_KEY2||番茄炒蛋
-";
+            string expected =
+                """
+                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                SOME_KEY||||番茄炒蛋||||
+                SOME_KEY2||||番茄炒蛋||||
+                
+                """;
             string actual = fs.File.ReadAllText(engPath);
 
             Assert.Equal(expected, actual);
@@ -367,8 +404,14 @@ SOME_KEY2||番茄炒蛋
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
 
-            string expected = @"SOME_KEY||Some, Text
-";
+            string expected =
+            """
+            Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+            SOME_KEY||||Some, Text||||
+
+            """;
+
+
             string actual = fs.File.ReadAllText(engPath);
 
             Assert.Equal(expected, actual);
@@ -418,8 +461,13 @@ SOME_KEY2||番茄炒蛋
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
 
-            string expected = @"SOME_KEY||Some Text
-";
+            string expected =
+                """
+                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                SOME_KEY||||Some Text||||
+                
+                """;
+
             string actual = fs.File.ReadAllText(engPath);
 
             Assert.Equal(expected, actual);
@@ -483,9 +531,13 @@ SOME_KEY2||番茄炒蛋
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = @"SOME_KEY||Some Text
-SOME_KEY||Some Text1
-";
+            string expected =
+                """
+                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                SOME_KEY|||Y|Some Text||||
+                SOME_KEY|||Y|Some Text1||||
+
+                """;
 
             Assert.Equal(expected, actual);
 
@@ -547,8 +599,13 @@ Key: ""SOME_KEY""
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = @"T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||Some Text
-";
+
+            string expected =
+                """
+                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||||Some Text||||
+                
+                """;
 
             Assert.Equal(expected, actual);
 
@@ -622,8 +679,12 @@ New Keys Created.  JSON was updated.
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = @"T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||Some Text
-";
+            string expected =
+                """
+                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||||Some Text||||
+                
+                """;
 
             Assert.Equal(expected, actual);
 
@@ -703,9 +764,13 @@ New Keys Created.  JSON was updated.
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = @"T-MtvodPkQIAwKNWr+IDrEvoZpvJM=||Some Text1
-T-G02XAZWFpzT4hBqdzTtw+2cR+CE=||Some Text2
-";
+            string expected =
+                """
+                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                T-G02XAZWFpzT4hBqdzTtw+2cR+CE=||||Some Text2||||
+                T-MtvodPkQIAwKNWr+IDrEvoZpvJM=||||Some Text1||||
+
+                """;
 
             Assert.Equal(expected, actual);
 
@@ -804,11 +869,15 @@ New Keys Created.  JSON was updated.
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = @"test||Some Text
-";
+
+            string expected = 
+           """
+            Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+            test||||Some Text||||
+            
+            """;
 
             Assert.Equal(expected, actual);
-
 
             //Check for json update
 
@@ -857,9 +926,13 @@ New Keys Created.  JSON was updated.
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = @"T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||Some Text
-test||Some Text Existing
-";
+            string expected =
+                """
+                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||||Some Text||||
+                test||||Some Text Existing||||
+                
+                """;
 
             Assert.Equal(expected, actual);
 
@@ -1028,7 +1101,12 @@ New Keys Created.  JSON was updated.
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = "T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风\r\n";
+            string expected =
+                """
+                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                T-COd+NfxU19P/4TdHpGQTg4J8E/k=||||一阵飓风||||
+
+                """;
 
             Assert.Equal(expected, actual);
 
@@ -1084,11 +1162,14 @@ New Keys Created.  JSON was updated.
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
             string expected =
-"""
-T-mDA3fJ+/j7ZSIYmR2spKmdU2RSs=||u4e00u9635u98d3u98ce
-T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风
 
-""";
+            """
+            Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+            T-COd+NfxU19P/4TdHpGQTg4J8E/k=||||一阵飓风||||
+            T-mDA3fJ+/j7ZSIYmR2spKmdU2RSs=||||u4e00u9635u98d3u98ce||||
+
+            """;
+
 
             Assert.Equal(expected, actual);
 
@@ -1153,7 +1234,12 @@ T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = "T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风\r\n";
+            string expected =
+                    """
+                    Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                    T-COd+NfxU19P/4TdHpGQTg4J8E/k=||||一阵飓风||||
+
+                    """;
 
             Assert.Equal(expected, actual);
 
@@ -1213,7 +1299,13 @@ T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = "test-existing||一阵飓风\r\n";
+            string expected =
+                    """
+                    Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                    test-existing||||一阵飓风||||
+
+                    """;
+
 
             Assert.Equal(expected, actual);
 
@@ -1265,7 +1357,12 @@ T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = "test-existing||一阵飓风\r\n";
+            string expected =
+                """
+                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                test-existing||||一阵飓风||||
+
+                """;
 
             Assert.Equal(expected, actual);
 
@@ -1319,6 +1416,7 @@ T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风
             """
             Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
             test-existing||||一阵飓风||||
+
             """;
 
             Assert.Equal(expected, actual);
@@ -1377,7 +1475,12 @@ T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = "T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风\r\n";
+            string expected =
+                    """
+                    Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                    T-COd+NfxU19P/4TdHpGQTg4J8E/k=||||一阵飓风||||
+
+                    """;
 
             Assert.Equal(expected, actual);
 
@@ -1445,7 +1548,13 @@ T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = "T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风\r\n";
+            string expected =
+                """
+                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                T-COd+NfxU19P/4TdHpGQTg4J8E/k=||||一阵飓风||||
+
+                """;
+            
 
             Assert.Equal(expected, actual);
 
@@ -1514,9 +1623,16 @@ T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = "T-COd+NfxU19P/4TdHpGQTg4J8E/k=||一阵飓风\r\n";
+            string expected =
+                    """
+                    Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                    T-COd+NfxU19P/4TdHpGQTg4J8E/k=||||一阵飓风||||
+
+                    """;
+
 
             Assert.Equal(expected, actual);
+
 
             actual = fs.File.ReadAllText("x:\\test\\test.json");
             expected =
