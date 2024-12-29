@@ -17,8 +17,16 @@
 	<ItemGroup>
 		<InternalsVisibleTo Include="CardSurvival-LocalizationTests" />
 	</ItemGroup>
+
+	<Target Name="RemoveObjAndBin" AfterTargets="Clean">
+		<!-- common vars https://msdn.microsoft.com/en-us/library/c02as0cs.aspx?f=255&MSPPError=-2147217396 -->
+		<!-- bin -->
+		<RemoveDir Directories="$(TargetDir)" />
+		<!-- obj -->
+		<RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)" />
+	</Target>
 	
-  <ItemGroup>
+	<ItemGroup>
     <PackageReference Include="Cocona" Version="2.2.0" />
     <PackageReference Include="CsvHelper" Version="33.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
