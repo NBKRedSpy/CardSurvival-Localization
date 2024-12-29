@@ -27,11 +27,11 @@ namespace CardSurvival_Localization
         /// <summary>
         /// Data from the SimpEn.csv file.
         /// </summary>
-        public List<CsLocalizationEntry> English { get; set; } = new();
+        public List<CsLocalizationEntry> EnglishData { get; set; } = new();
 
         /// <summary>
         /// Data from the SimpCn.csv file.
         /// </summary>
-        public List<CsLocalizationEntry> Chinese { get; set; } = new();
+        public List<CsLocalizationEntry> ChineseData { get; set; } = new();
     }
 }

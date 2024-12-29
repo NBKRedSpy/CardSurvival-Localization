@@ -177,7 +177,7 @@ namespace CardSurvival_Localization
                     item.Key,
                     json = json?.DefaultText ?? ""
                 })
-                .SelectMany(x => x.item.English.DefaultIfEmpty(new CsLocalizationEntry()), (item, english) => new
+                .SelectMany(x => x.item.EnglishData.DefaultIfEmpty(new CsLocalizationEntry()), (item, english) => new
                 {
                     item.item,
                     item.Key,
@@ -185,10 +185,10 @@ namespace CardSurvival_Localization
                     en_english = english.English,
                     en_chinese = english.Chinese
                 })
-                .SelectMany(x => x.item.Chinese.DefaultIfEmpty(new CsLocalizationEntry()), (item, chinese) => new
+                .SelectMany(x => x.item.ChineseData.DefaultIfEmpty(new CsLocalizationEntry()), (item, chinese) => new
                 {
                     item.item,
-                    isDuplicate = item.item.English.Count() > 1 || item.item.Chinese.Count() > 1 || item.item.Json.Count() > 1,
+                    isDuplicate = item.item.EnglishData.Count > 1 || item.item.ChineseData.Count > 1 || item.item.Json.Count > 1,
                     item.Key,
                     item.json,
                     item.en_english,
@@ -242,11 +242,28 @@ namespace CardSurvival_Localization
                 }
             }
 
-            
             Console.Write("                                        \r");
             Console.WriteLine("Translation Completed.");
             return sourceDirectory;
         }
+
+        ///// <summary>
+        ///// Return an empty string if there is more than one English or card entry.
+        ///// Otherwise, returns the single English entry.
+        ///// </summary>
+        ///// <param name="value"></param>
+        ///// <returns></returns>
+        //private static string GetEnglishDefault(CombinedLocalizationInfo value)
+        //{
+
+        //    //todo:  finish
+        //    if((value.Json.Count > 1 || value.EnglishData.Count > 1 || value.ChineseData.Count > 1 && ) 
+
+        //        || (value.Json.Count == 0 && value.EnglishData.Count == 0) return "";
+
+        //    return value.Json.Count == 1 ? value.Json.First : value.EnglishData.First()
+            
+        //}
 
 
         /// <summary>
@@ -303,7 +320,7 @@ namespace CardSurvival_Localization
                     dataLookup[group.Key] = info;
                 }
 
-                info.English = group.ToList();
+                info.EnglishData = group.ToList();
             }
         }
 
@@ -320,6 +337,12 @@ namespace CardSurvival_Localization
 
 
             List<CsLocalizationEntry> records = csvReader.GetRecords<CsLocalizationEntry>()
+                .ToList();
+
+            //Trim the text and remove any entries that only have a key.
+            records = records
+                .Select(x => new CsLocalizationEntry(x.Key, x.English.Trim(), x.Chinese.Trim()))
+                .Where(x => x.English != "" && x.Chinese != "")
                 .ToList();
 
             return records;

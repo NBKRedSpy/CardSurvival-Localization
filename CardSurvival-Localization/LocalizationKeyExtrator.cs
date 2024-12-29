@@ -75,7 +75,7 @@ namespace CardSurvival_Localization
                 info.FileName = fileName;
                 info.JsonPath = token.Path;
 
-                if(String.IsNullOrEmpty(info.LocalizationKey))
+                if(String .IsNullOrWhiteSpace(info.LocalizationKey))
                 {
                     CreateNewKey(token, info);
                 }
