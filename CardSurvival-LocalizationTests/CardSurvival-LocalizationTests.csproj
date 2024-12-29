@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CardSurvival-Localization\CardSurvival-Localization.csproj" />
+    <ProjectReference Include="..\CardSurvival-Localization\CardSurvival-Localization.csproj" Publicize="true" />
   </ItemGroup>
 
 </Project>
