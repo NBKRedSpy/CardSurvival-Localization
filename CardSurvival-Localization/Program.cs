@@ -307,19 +307,19 @@ namespace CardSurvival_Localization
             //SimpEn.csv (English data)
 
 
-            AddSimpData(englishLocalization, dataLookup);
-            AddSimpData(chineseLocalization, dataLookup);
+            AddSimpData(true, englishLocalization, dataLookup);
+            AddSimpData(false, chineseLocalization, dataLookup);
 
             return dataLookup.Values.ToList();
         }
 
         /// <summary>
         /// Adds the Simp* data to an existing CombinedLocalizationInfo dictionary.
-        /// Reuses existing keys or adds new entgries.
+        /// Based on the Simp* entry's key, will create a new row or add to a row with the same key.
         /// </summary>
         /// <param name="simpData">All of the lines in a Simp*.csv file.  Keys can be duplicated.</param>
         /// <param name="dataLookup">The dictionary to add the data to.</param>
-        private static void AddSimpData(List<CsLocalizationEntry> simpRecords, Dictionary<string, CombinedLocalizationInfo> dataLookup)
+        private static void AddSimpData(bool isEnglish, List<CsLocalizationEntry> simpRecords, Dictionary<string, CombinedLocalizationInfo> dataLookup)
         {
             var keyGrouping = simpRecords
                 .GroupBy(x => x.Key);
@@ -334,7 +334,15 @@ namespace CardSurvival_Localization
                     dataLookup[group.Key] = info;
                 }
 
-                info.EnglishData = group.ToList();
+                if (isEnglish)
+                {
+                    info.EnglishData = group.ToList();
+                }
+                else
+                {
+                    info.ChineseData = group.ToList();
+                }
+                
             }
         }
 
