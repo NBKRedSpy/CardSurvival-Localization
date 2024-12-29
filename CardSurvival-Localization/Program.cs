@@ -91,7 +91,7 @@ namespace CardSurvival_Localization
             foreach (string file in files)
             {
                 //debug
-                if (i++ >= 100) break;
+                //if (i++ >= 100) break;
 
                 Console.Write($"\r{Path.GetFileName(file)}                                  \r");
 
@@ -170,14 +170,6 @@ namespace CardSurvival_Localization
 
             string localizationFilePath = Path.Combine(localizationFolder, "SimpEn.psv");
 
-            //Debug
-            combinedLocalization[0].English = new List<CsLocalizationEntry>();
-            combinedLocalization[0].Chinese = new List<CsLocalizationEntry>();
-
-            var nullItem = combinedLocalization.FirstOrDefault();
-
-            ;
-
             //Get the full join data for each key.
             var flattenedInfo = combinedLocalization
                 .SelectMany(x => x.Json.DefaultIfEmpty(), (item, json) => new {
@@ -196,12 +188,14 @@ namespace CardSurvival_Localization
                 .SelectMany(x => x.item.Chinese.DefaultIfEmpty(new CsLocalizationEntry()), (item, chinese) => new
                 {
                     item.item,
+                    isDuplicate = item.item.English.Count() > 1 || item.item.Chinese.Count() > 1 || item.item.Json.Count() > 1,
                     item.Key,
                     item.json,
                     item.en_english,
                     item.en_chinese, 
                     cn_english = chinese.English, 
                     cn_chinese = chinese.Chinese })
+                .OrderBy(x => x.Key)
                 .ToList();
 
             using (TextWriter outputWriter = new StreamWriter(fileSystem.FileStream.New(localizationFilePath, FileMode.Create)))
@@ -216,9 +210,16 @@ namespace CardSurvival_Localization
                 using (CsvWriter csvWriter = new CsvWriter(outputWriter, csvConfig))
                 {
                     //----Header
-                    //Debug
-                    //csvWriter.WriteFields("Key", "English", "Chinese", "HasDupe", "CardDefault", "SimpEn-English", "SimpEn-Chinese", "SimpCn-English", "SimpCn-Chinese");
-                    csvWriter.WriteFields("Key", "CardDefault", "SimpEn-English", "SimpEn-Chinese", "SimpCn-English", "SimpCn-Chinese");
+                    csvWriter.WriteFields(
+                        "Key",
+                        "English",
+                        "Chinese",
+                        "IsDuplicate",
+                        "CardDefault",
+                        "SimpEn-English",
+                        "SimpEn-Chinese",
+                        "SimpCn-English",
+                        "SimpCn-Chinese");
 
                     csvWriter.NextRecord();
 
@@ -226,6 +227,9 @@ namespace CardSurvival_Localization
                     {
                         csvWriter.WriteFields(
                             flattened.Key,
+                            "",
+                            "",
+                            flattened.isDuplicate ? "Y" : "",
                             flattened.json.Replace("\n", "\\n"), //Escape the new lines.
                             flattened.en_english,
                             flattened.en_chinese,
