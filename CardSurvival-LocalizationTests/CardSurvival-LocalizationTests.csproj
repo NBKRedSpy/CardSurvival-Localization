@@ -8,7 +8,14 @@
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
+<PropertyGroup>
+	<FineCodeCoverage>
+		<Enabled>
+			True
+		</Enabled>
+		<!-- and more -->
+	</FineCodeCoverage>
+</PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2">
       <PrivateAssets>all</PrivateAssets>
