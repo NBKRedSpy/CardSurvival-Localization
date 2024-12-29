@@ -85,9 +85,6 @@ namespace CardSurvival_Localization
 
             LocalizationKeyExtrator localizationKeyExtrator = new();
 
-            //debug
-            int i = 0;
-
             foreach (string file in files)
             {
                 //debug
