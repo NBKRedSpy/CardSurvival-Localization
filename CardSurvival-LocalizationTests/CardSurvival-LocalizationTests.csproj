@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="System.Text.Json" Version="9.0.0" />
@@ -33,5 +37,14 @@
   <ItemGroup>
     <ProjectReference Include="..\CardSurvival-Localization\CardSurvival-Localization.csproj" Publicize="true" />
   </ItemGroup>
+
+	<!--<Target Name="RemoveObjAndBin" AfterTargets="Clean">
+		--><!-- common vars https://learn.microsoft.com/en-us/cpp/build/reference/common-macros-for-build-commands-and-properties?view=msvc-170 --><!--
+		--><!-- bin --><!--
+		<RemoveDir Directories="$(TargetDir)" />
+		--><!-- obj --><!--
+		<RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)" />
+	</Target>-->
+
 
 </Project>
