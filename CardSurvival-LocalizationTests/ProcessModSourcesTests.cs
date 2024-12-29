@@ -126,7 +126,7 @@ namespace CardSurvival_LocalizationTests
 
 
         [Fact]
-        public void ProcessMod_MultipleEnglishKeys_ResultsForTwoEnglishEntries()
+        public void ProcessMod_DifferentEnCnKeys_ResultsForCnAndEnEntries()
         {
             MockFileSystem fs = new MockFileSystem();
 
@@ -143,6 +143,34 @@ namespace CardSurvival_LocalizationTests
                 foo|||||En-En|En-Cn||
                 
                 """; 
+
+            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+
+            const string engPath = "x:\\test\\Localization\\SimpEn.psv";
+            Assert.True(fs.FileExists(engPath));
+
+            string actual = fs.File.ReadAllText(engPath);
+
+            Assert.Equal(expected, actual);
+
+        }
+
+        public void ProcessMod_MultipleChineseKeys_ResultsForTwoChineseEntries()
+        {
+            MockFileSystem fs = new MockFileSystem();
+
+            string key = "foo";
+            AddModInfo(fs);
+            AddSimpData(fs, "Cn", key);
+            AddSimpData(fs, "Cn", "bar", "fiz");
+
+            string expected =
+                """
+                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                bar|||||||fiz-En|fiz-Cn
+                foo|||||||Cn-En|Cn-Cn
+                
+                """;
 
             CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
@@ -173,8 +201,17 @@ namespace CardSurvival_LocalizationTests
         {
             if (dataPrefix == "") dataPrefix = suffix;
 
-            fs.AddFile(
-                $@"x:\test\localization\Simp{suffix}.csv",
+            string fileName = $@"x:\test\localization\Simp{suffix}.csv";
+
+
+            if(fs.FileExists(fileName) == false)
+            {
+                fs.Directory.CreateDirectory(@"x:\test\localization");
+                fs.File.WriteAllText(fileName,"");
+            }
+
+            fs.File.AppendAllText(
+                fileName,
                 $"{key},{dataPrefix}-En,{dataPrefix}-Cn"
             );
         }
