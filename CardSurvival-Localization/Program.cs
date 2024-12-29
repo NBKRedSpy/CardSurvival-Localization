@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IO;
 using System.IO.Abstractions;
+using System.Reflection.Metadata;
 using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -82,31 +83,32 @@ namespace CardSurvival_Localization
 
             LocalizationKeyExtrator localizationKeyExtrator = new();
 
-            foreach (string file in files)
-            {
-                Console.Write($"\r{Path.GetFileName(file)}                                  \r");
+            //Debug
+            //foreach (string file in files)
+            //{
+            //    Console.Write($"\r{Path.GetFileName(file)}                                  \r");
 
-                string jsonSource = fileSystem.File.ReadAllText(file);
+            //    string jsonSource = fileSystem.File.ReadAllText(file);
 
-                JObject jsonDoc = JObject.Parse(jsonSource);
+            //    JObject jsonDoc = JObject.Parse(jsonSource);
 
-                bool jsonModified = localizationKeyExtrator.Extract(jsonDoc, file);
+            //    bool jsonModified = localizationKeyExtrator.Extract(jsonDoc, file);
 
 
-                //Write out the json file.  Handles adding the newly created keys to the json objects
-                //  as well as handling any Unicode escaping consistencies.
-                //For AlwaysEscapeNonAscii and NoEncode, have to always write since there could
-                //  be mixed escape/not escape.  Newtonsoft doesn't have a way to get a property's original value.
-                if (
-                    jsonModified && escapeMode == UnicodeEscapeMode.AutoDetect
-                    || escapeMode == UnicodeEscapeMode.AlwaysEscapeNonAscii
-                    || escapeMode == UnicodeEscapeMode.NoEncode)
-                {
-                    WriteGameFileChange(fileSystem, escapeMode, unicodeReplaceRegEx, file, jsonSource, jsonDoc);
-                }
-            }
+            //    //Write out the json file.  Handles adding the newly created keys to the json objects
+            //    //  as well as handling any Unicode escaping consistencies.
+            //    //For AlwaysEscapeNonAscii and NoEncode, have to always write since there could
+            //    //  be mixed escape/not escape.  Newtonsoft doesn't have a way to get a property's original value.
+            //    if (
+            //        jsonModified && escapeMode == UnicodeEscapeMode.AutoDetect
+            //        || escapeMode == UnicodeEscapeMode.AlwaysEscapeNonAscii
+            //        || escapeMode == UnicodeEscapeMode.NoEncode)
+            //    {
+            //        WriteGameFileChange(fileSystem, escapeMode, unicodeReplaceRegEx, file, jsonSource, jsonDoc);
+            //    }
+            //}
 
-            if (!Console.IsOutputRedirected) Console.CursorVisible = true; 
+            if (!Console.IsOutputRedirected) Console.CursorVisible = true;      //Required since unit tests don't have a console, but do have a stream.
 
             string localizationFolder = Path.Combine(sourceDirectory, "Localization");
 
@@ -115,8 +117,32 @@ namespace CardSurvival_Localization
                 fileSystem.Directory.CreateDirectory(localizationFolder);
             }
 
-            string errorFileName = Path.Combine(localizationFolder, "SimpEn_Errors.txt");
+            localizationFolder = Path.Combine(sourceDirectory, "localization");
 
+            List<CsLocalizationEntry> englishLocalization;
+            List<CsLocalizationEntry> chineseLocalization;
+
+            try
+            {
+                englishLocalization = ParseSimpFile(fileSystem, Path.Combine(localizationFolder, "SimpEn.csv"));
+            }
+            catch (Exception ex)
+            {
+                englishLocalization = new();
+                Console.WriteLine($"Error loading SimpEn.csv: {ex}");
+            }
+
+            try
+            {
+                chineseLocalization = ParseSimpFile(fileSystem, Path.Combine(localizationFolder, "SimpCn.csv"));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading SimpCn.csv: {ex}");
+                chineseLocalization = new();
+            }
+
+            string errorFileName = Path.Combine(localizationFolder, "SimpEn_Errors.txt");
             string errorText = GetErrorsAndWarnings(localizationKeyExtrator, out int keysWithDifferentTextCount);
 
             Console.WriteLine();
@@ -132,6 +158,7 @@ namespace CardSurvival_Localization
                 }
             }
 
+            
 
             string localizationFilePath = Path.Combine(localizationFolder, "SimpEn.psv");
 
@@ -172,6 +199,24 @@ namespace CardSurvival_Localization
             Console.Write("                                        \r");
             Console.WriteLine("Translation Completed.");
             return sourceDirectory;
+        }
+
+        private static List<CsLocalizationEntry> ParseSimpFile(IFileSystem fileSystem, string simpSourceFile)
+        {
+            if (!fileSystem.File.Exists(simpSourceFile)) return new List<CsLocalizationEntry>();
+
+            using StreamReader reader = fileSystem.File.OpenText(simpSourceFile);
+            using CsvReader csvReader = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
+                {
+                    HasHeaderRecord = false,
+                    
+                });
+
+
+            List<CsLocalizationEntry> records = csvReader.GetRecords<CsLocalizationEntry>()
+                .ToList();
+
+            return records;
         }
 
         /// <summary>

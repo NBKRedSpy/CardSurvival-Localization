@@ -12,7 +12,7 @@ namespace CardSurvival_Localization
     /// Contains the localization key and all realted texts from the .json files, SimpEn.csv and SimpCn.csv.
     /// While there should only be one text entry per source, it is common for more than one to be present.
     /// </summary>
-    internal class LocalizationText
+    internal class CombinedLocalizationInfo
     {
         /// <summary>
         /// The key
