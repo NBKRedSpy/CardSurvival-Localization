@@ -15,5 +15,13 @@ namespace CardSurvival_Localization
         public string English { get; set; }
         public string Chinese { get; set; }
 
+        public CsLocalizationEntry() { }
+
+        public CsLocalizationEntry(string key, string english, string chinese)
+        {
+            Key = key;
+            English = english;
+            Chinese = chinese;
+        }
     }
 }

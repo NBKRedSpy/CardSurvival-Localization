@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IO;
@@ -83,30 +84,29 @@ namespace CardSurvival_Localization
 
             LocalizationKeyExtrator localizationKeyExtrator = new();
 
-            //Debug
-            //foreach (string file in files)
-            //{
-            //    Console.Write($"\r{Path.GetFileName(file)}                                  \r");
+            foreach (string file in files)
+            {
+                Console.Write($"\r{Path.GetFileName(file)}                                  \r");
 
-            //    string jsonSource = fileSystem.File.ReadAllText(file);
+                string jsonSource = fileSystem.File.ReadAllText(file);
 
-            //    JObject jsonDoc = JObject.Parse(jsonSource);
+                JObject jsonDoc = JObject.Parse(jsonSource);
 
-            //    bool jsonModified = localizationKeyExtrator.Extract(jsonDoc, file);
+                bool jsonModified = localizationKeyExtrator.Extract(jsonDoc, file);
 
 
-            //    //Write out the json file.  Handles adding the newly created keys to the json objects
-            //    //  as well as handling any Unicode escaping consistencies.
-            //    //For AlwaysEscapeNonAscii and NoEncode, have to always write since there could
-            //    //  be mixed escape/not escape.  Newtonsoft doesn't have a way to get a property's original value.
-            //    if (
-            //        jsonModified && escapeMode == UnicodeEscapeMode.AutoDetect
-            //        || escapeMode == UnicodeEscapeMode.AlwaysEscapeNonAscii
-            //        || escapeMode == UnicodeEscapeMode.NoEncode)
-            //    {
-            //        WriteGameFileChange(fileSystem, escapeMode, unicodeReplaceRegEx, file, jsonSource, jsonDoc);
-            //    }
-            //}
+                //Write out the json file.  Handles adding the newly created keys to the json objects
+                //  as well as handling any Unicode escaping consistencies.
+                //For AlwaysEscapeNonAscii and NoEncode, have to always write since there could
+                //  be mixed escape/not escape.  Newtonsoft doesn't have a way to get a property's original value.
+                if (
+                    jsonModified && escapeMode == UnicodeEscapeMode.AutoDetect
+                    || escapeMode == UnicodeEscapeMode.AlwaysEscapeNonAscii
+                    || escapeMode == UnicodeEscapeMode.NoEncode)
+                {
+                    WriteGameFileChange(fileSystem, escapeMode, unicodeReplaceRegEx, file, jsonSource, jsonDoc);
+                }
+            }
 
             if (!Console.IsOutputRedirected) Console.CursorVisible = true;      //Required since unit tests don't have a console, but do have a stream.
 
@@ -158,7 +158,8 @@ namespace CardSurvival_Localization
                 }
             }
 
-            
+            List<CombinedLocalizationInfo> combinedLocalization = GetCombinedLocalization(localizationKeyExtrator,
+                englishLocalization, chineseLocalization);
 
             string localizationFilePath = Path.Combine(localizationFolder, "SimpEn.psv");
 
@@ -199,6 +200,63 @@ namespace CardSurvival_Localization
             Console.Write("                                        \r");
             Console.WriteLine("Translation Completed.");
             return sourceDirectory;
+        }
+
+        /// <summary>
+        /// Combines the Json data, existing SimpEn.csv, and SimpCn.csv data,
+        /// mapping all to the translation key.  
+        /// Duplicates will have a cartesian join.
+        /// </summary>
+        /// <param name="localizationKeyExtrator"></param>
+        /// <param name="englishLocalization"></param>
+        /// <param name="chineseLocalization"></param>
+        /// <returns></returns>The combined data.
+        private static List<CombinedLocalizationInfo> GetCombinedLocalization(LocalizationKeyExtrator localizationKeyExtractor, 
+            List<CsLocalizationEntry> englishLocalization, List<CsLocalizationEntry> chineseLocalization)
+        {
+            Dictionary<string, CombinedLocalizationInfo> dataLookup = new Dictionary<string, CombinedLocalizationInfo>();
+
+
+            //Json data
+            dataLookup = localizationKeyExtractor.LocalizationKeys.Select(x => new CombinedLocalizationInfo()
+            {
+                Key = x.Key,
+                Json = new List<LocalizationInfo>(x.Value),
+            })
+            .ToDictionary(x => x.Key);
+
+
+            //SimpEn.csv (English data)
+
+            AddSimpData(englishLocalization, dataLookup);
+            AddSimpData(chineseLocalization, dataLookup);
+
+            return dataLookup.Values.ToList();
+        }
+
+        /// <summary>
+        /// Adds the Simp* data to an existing CombinedLocalizationInfo dictionary.
+        /// Reuses existing keys or adds new entgries.
+        /// </summary>
+        /// <param name="simpData">All of the lines in a Simp*.csv file.  Keys can be duplicated.</param>
+        /// <param name="dataLookup">The dictionary to add the data to.</param>
+        private static void AddSimpData(List<CsLocalizationEntry> simpRecords, Dictionary<string, CombinedLocalizationInfo> dataLookup)
+        {
+            var keyGrouping = simpRecords
+                .GroupBy(x => x.Key);
+
+            foreach (var group in keyGrouping)
+            {
+                CombinedLocalizationInfo info;
+
+                if (!dataLookup.TryGetValue(group.Key, out info))
+                {
+                    info = new CombinedLocalizationInfo();
+                    dataLookup[group.Key] = info;
+                }
+
+                info.English = group.ToList();
+            }
         }
 
         private static List<CsLocalizationEntry> ParseSimpFile(IFileSystem fileSystem, string simpSourceFile)
