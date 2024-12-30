@@ -16,10 +16,10 @@ namespace CardSurvival_Localization
             var descSection = (HelpSection)helpMessage.Children.First(x => x is HelpSection section && section.Id == HelpSectionId.Description);
             descSection.Children.Add(new HelpPreformattedText(@"
 Description:  
-    Creates a SimpEn.psv translation file which is used for a CSTI-ModLoader 
+    Creates a TranslationData.psv translation file which is used for a CSTI-ModLoader 
     mod which is only in Chinese.  
 
-    Remember to translate the pipe delimited SimpEn.psv to a comma delimited SimpEn.csv or the mod will not use the file.
+    Remember to translate the pipe delimited TranslationData.psv to a comma delimited SimpEn.csv or the mod will not use the file.
 
     See https://github.com/NBKRedSpy/CardSurvival-Localization for documentation.
 "));

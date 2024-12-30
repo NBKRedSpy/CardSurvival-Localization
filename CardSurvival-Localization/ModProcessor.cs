@@ -141,7 +141,7 @@ namespace CardSurvival_Localization
         }
 
         /// <summary>
-        /// Writes out the SimpEn.psv, combining the localization sources.
+        /// Writes out the TranslationData.psv, combining the localization sources.
         /// </summary>
         /// <param name="fileSystem"></param>
         /// <param name="localizationKeyExtrator"></param>
@@ -153,7 +153,7 @@ namespace CardSurvival_Localization
             List<CombinedLocalizationInfo> combinedLocalization = GetCombinedLocalization(localizationKeyExtrator,
                             englishLocalization, chineseLocalization);
 
-            string localizationFilePath = Path.Combine(localizationFolder, "SimpEn.psv");
+            string localizationFilePath = Path.Combine(localizationFolder, "TranslationData.psv");
 
             //Get the full join data for each key.
 
