@@ -183,7 +183,7 @@ namespace CardSurvival_LocalizationTests
 
         }
 
-        private void AddJsonData(MockFileSystem fs, string key)
+        internal static void AddJsonData(MockFileSystem fs, string key)
         {
             fs.AddFile(@"x:\test\test.json",
                 $$"""
@@ -197,7 +197,7 @@ namespace CardSurvival_LocalizationTests
             );
         }
 
-        private void AddSimpData(MockFileSystem fs, string suffix, string key, string dataPrefix = "")
+        internal static void AddSimpData(MockFileSystem fs, string suffix, string key, string dataPrefix = "")
         {
             if (dataPrefix == "") dataPrefix = suffix;
 
@@ -216,7 +216,7 @@ namespace CardSurvival_LocalizationTests
             );
         }
 
-        private void AddModInfo(MockFileSystem fs)
+        internal static void AddModInfo(MockFileSystem fs)
         {
             fs.AddFile(@"x:\test\ModInfo.json", @"{}");
 
