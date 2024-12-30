@@ -19,7 +19,7 @@ namespace CardSurvival_LocalizationTests
             Output = output;
         }
 
-        public const string PsvHeader = "Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese";
+        public const string PsvHeader = "Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese";
 
         public ITestOutputHelper Output { get; }
 
@@ -62,9 +62,9 @@ namespace CardSurvival_LocalizationTests
 
             string expected =
             """
-            Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-            SOME_KEY||||Some Text||||
-            T-VzorawrFGpoS68TyA2fy/c9JZGM=||||Some Spaced Text||||
+            Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+            SOME_KEY||||||Some Text||||
+            T-VzorawrFGpoS68TyA2fy/c9JZGM=||||||Some Spaced Text||||
 
             """;
 
@@ -134,8 +134,8 @@ New Keys Created.  JSON was updated.
             //Chinese comma lookalike unicode character
             string expected =
                     """
-                    Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                    SOME_KEY||||Some，Text||||
+                    Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                    SOME_KEY||||||Some，Text||||
 
                     """;
 
@@ -182,8 +182,8 @@ New Keys Created.  JSON was updated.
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                SOME_KEY||||Some Text||||
+                Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                SOME_KEY||||||Some Text||||
                 
                 """;
 
@@ -236,9 +236,9 @@ New Keys Created.  JSON was updated.
 
             string expected =
                     """
-                    Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                    SOME_KEY|||Y|Some Text||||
-                    SOME_KEY|||Y|Some Text2||||
+                    Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                    SOME_KEY|||Y|||Some Text||||
+                    SOME_KEY|||Y|||Some Text2||||
 
                     """;
 
@@ -306,8 +306,8 @@ Key: ""SOME_KEY""
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                SOME_KEY||||番茄炒蛋||||
+                Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                SOME_KEY||||||番茄炒蛋||||
                 
                 """;
 
@@ -358,9 +358,9 @@ Key: ""SOME_KEY""
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                SOME_KEY||||番茄炒蛋||||
-                SOME_KEY2||||番茄炒蛋||||
+                Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                SOME_KEY||||||番茄炒蛋||||
+                SOME_KEY2||||||番茄炒蛋||||
                 
                 """;
             string actual = fs.File.ReadAllText(engPath);
@@ -406,8 +406,8 @@ Key: ""SOME_KEY""
 
             string expected =
             """
-            Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-            SOME_KEY||||Some, Text||||
+            Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+            SOME_KEY||||||Some, Text||||
 
             """;
 
@@ -463,8 +463,8 @@ Key: ""SOME_KEY""
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                SOME_KEY||||Some Text||||
+                Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                SOME_KEY||||||Some Text||||
                 
                 """;
 
@@ -533,9 +533,9 @@ Key: ""SOME_KEY""
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                SOME_KEY|||Y|Some Text||||
-                SOME_KEY|||Y|Some Text1||||
+                Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                SOME_KEY|||Y|||Some Text||||
+                SOME_KEY|||Y|||Some Text1||||
 
                 """;
 
@@ -602,8 +602,8 @@ Key: ""SOME_KEY""
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||||Some Text||||
+                Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||||||Some Text||||
                 
                 """;
 
@@ -681,8 +681,8 @@ New Keys Created.  JSON was updated.
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||||Some Text||||
+                Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||||||Some Text||||
                 
                 """;
 
@@ -766,9 +766,9 @@ New Keys Created.  JSON was updated.
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                T-G02XAZWFpzT4hBqdzTtw+2cR+CE=||||Some Text2||||
-                T-MtvodPkQIAwKNWr+IDrEvoZpvJM=||||Some Text1||||
+                Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                T-G02XAZWFpzT4hBqdzTtw+2cR+CE=||||||Some Text2||||
+                T-MtvodPkQIAwKNWr+IDrEvoZpvJM=||||||Some Text1||||
 
                 """;
 
@@ -872,8 +872,8 @@ New Keys Created.  JSON was updated.
 
             string expected = 
            """
-            Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-            test||||Some Text||||
+            Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+            test||||||Some Text||||
             
             """;
 
@@ -928,9 +928,9 @@ New Keys Created.  JSON was updated.
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||||Some Text||||
-                test||||Some Text Existing||||
+                Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||||||Some Text||||
+                test||||||Some Text Existing||||
                 
                 """;
 
@@ -1010,12 +1010,12 @@ New Keys Created.  JSON was updated.
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             string actual = fs.File.ReadAllText(engPath);
-            string expected = 
+            string expected =
             """
-            Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-            T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||||Some Text||||
-            test-existing|||Y|Some Text Existing||||
-            test-existing|||Y|Some Text Existing Mismatch||||
+            Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+            T-zlWCFIxvDBKCM1uH317Uvkt4E5k=||||||Some Text||||
+            test-existing|||Y|||Some Text Existing||||
+            test-existing|||Y|||Some Text Existing Mismatch||||
 
             """;
 
@@ -1103,8 +1103,8 @@ New Keys Created.  JSON was updated.
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                T-COd+NfxU19P/4TdHpGQTg4J8E/k=||||一阵飓风||||
+                Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                T-COd+NfxU19P/4TdHpGQTg4J8E/k=||||||一阵飓风||||
 
                 """;
 
@@ -1164,9 +1164,9 @@ New Keys Created.  JSON was updated.
             string expected =
 
             """
-            Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-            T-COd+NfxU19P/4TdHpGQTg4J8E/k=||||一阵飓风||||
-            T-mDA3fJ+/j7ZSIYmR2spKmdU2RSs=||||u4e00u9635u98d3u98ce||||
+            Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+            T-COd+NfxU19P/4TdHpGQTg4J8E/k=||||||一阵飓风||||
+            T-mDA3fJ+/j7ZSIYmR2spKmdU2RSs=||||||u4e00u9635u98d3u98ce||||
 
             """;
 
@@ -1236,8 +1236,8 @@ New Keys Created.  JSON was updated.
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                     """
-                    Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                    T-COd+NfxU19P/4TdHpGQTg4J8E/k=||||一阵飓风||||
+                    Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                    T-COd+NfxU19P/4TdHpGQTg4J8E/k=||||||一阵飓风||||
 
                     """;
 
@@ -1301,8 +1301,8 @@ New Keys Created.  JSON was updated.
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                     """
-                    Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                    test-existing||||一阵飓风||||
+                    Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                    test-existing||||||一阵飓风||||
 
                     """;
 
@@ -1359,8 +1359,8 @@ New Keys Created.  JSON was updated.
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                test-existing||||一阵飓风||||
+                Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                test-existing||||||一阵飓风||||
 
                 """;
 
@@ -1414,8 +1414,8 @@ New Keys Created.  JSON was updated.
             string actual = fs.File.ReadAllText(engPath);
             string expected = 
             """
-            Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-            test-existing||||一阵飓风||||
+            Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+            test-existing||||||一阵飓风||||
 
             """;
 
@@ -1477,8 +1477,8 @@ New Keys Created.  JSON was updated.
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                     """
-                    Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                    T-COd+NfxU19P/4TdHpGQTg4J8E/k=||||一阵飓风||||
+                    Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                    T-COd+NfxU19P/4TdHpGQTg4J8E/k=||||||一阵飓风||||
 
                     """;
 
@@ -1550,8 +1550,8 @@ New Keys Created.  JSON was updated.
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                T-COd+NfxU19P/4TdHpGQTg4J8E/k=||||一阵飓风||||
+                Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                T-COd+NfxU19P/4TdHpGQTg4J8E/k=||||||一阵飓风||||
 
                 """;
             
@@ -1625,8 +1625,8 @@ New Keys Created.  JSON was updated.
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                     """
-                    Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                    T-COd+NfxU19P/4TdHpGQTg4J8E/k=||||一阵飓风||||
+                    Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                    T-COd+NfxU19P/4TdHpGQTg4J8E/k=||||||一阵飓风||||
 
                     """;
 

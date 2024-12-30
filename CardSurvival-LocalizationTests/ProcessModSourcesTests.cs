@@ -25,8 +25,8 @@ namespace CardSurvival_LocalizationTests
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                foo||||Some，Text|En-En|En-Cn|Cn-En|Cn-Cn
+                Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                foo||||||Some，Text|En-En|En-Cn|Cn-En|Cn-Cn
 
                 """;
 
@@ -52,8 +52,8 @@ namespace CardSurvival_LocalizationTests
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                foo||||Some，Text||||
+                Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                foo||||||Some，Text||||
 
                 """;
 
@@ -80,8 +80,8 @@ namespace CardSurvival_LocalizationTests
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                foo|||||||Cn-En|Cn-Cn
+                Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                foo||||N|||||Cn-En|Cn-Cn
 
                 """;
 
@@ -108,9 +108,9 @@ namespace CardSurvival_LocalizationTests
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                foo|||||En-En|En-Cn||
-
+                Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                foo||||N|||En-En|En-Cn||
+                
                 """;
 
             new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
@@ -138,9 +138,9 @@ namespace CardSurvival_LocalizationTests
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                bar|||||||fiz-En|fiz-Cn
-                foo|||||En-En|En-Cn||
+                Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                bar||||N|||||fiz-En|fiz-Cn
+                foo||||N|||En-En|En-Cn||
                 
                 """; 
 
@@ -166,7 +166,7 @@ namespace CardSurvival_LocalizationTests
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
+                Key|English|Chinese|IsDuplicate|IsCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
                 bar|||||||fiz-En|fiz-Cn
                 foo|||||||Cn-En|Cn-Cn
                 

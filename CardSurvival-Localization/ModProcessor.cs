@@ -181,7 +181,8 @@ namespace CardSurvival_Localization
                     item.json,
                     item.en_english,
                     item.en_chinese,
-                    IsCardKey = localizationKeyExtrator.LocalizationKeys.ContainsKey(item.Key),    //
+                    IsCardKey = localizationKeyExtrator.LocalizationKeys.ContainsKey(item.Key),    //True if the key is from a card (newly generated or not)
+                    IsGameKey = GamesLocalizationKeys.Contains(item.Key),   //True if it is a default game key.
                     cn_english = chinese.English,
                     cn_chinese = chinese.Chinese
                 })
@@ -204,8 +205,9 @@ namespace CardSurvival_Localization
                         "Key",
                         "English",
                         "Chinese",
-                        "IsCardKey",
                         "IsDuplicate",
+                        "IsCardKey",
+                        "IsGameKey",
                         "CardDefault",
                         "SimpEn-English",
                         "SimpEn-Chinese",
@@ -220,8 +222,9 @@ namespace CardSurvival_Localization
                             flattened.Key,
                             "",
                             "",
-                            flattened.IsCardKey ? "" : "N",
                             flattened.isDuplicate ? "Y" : "",
+                            flattened.IsCardKey ? "" : "N",
+                            flattened.IsGameKey ? "Y" : "",
                             flattened.json.Replace("\n", "\\n"), //Escape the new lines.
                             flattened.en_english,
                             flattened.en_chinese,
