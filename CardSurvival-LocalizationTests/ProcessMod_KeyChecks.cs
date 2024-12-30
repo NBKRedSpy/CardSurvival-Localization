@@ -26,8 +26,8 @@ namespace CardSurvival_LocalizationTests
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|IsNotCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                foo||||||Some，Text|En-En|En-Cn|Cn-En|Cn-Cn
+                Key,English,Chinese,IsDuplicate,IsNotCardKey,IsGameKey,CardDefault,SimpEn-English,SimpEn-Chinese,SimpCn-English,SimpCn-Chinese
+                foo,,,,,,Some，Text,En-En,En-Cn,Cn-En,Cn-Cn
 
                 """;
 
@@ -54,8 +54,8 @@ namespace CardSurvival_LocalizationTests
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|IsNotCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                foo||||x|||En-En|En-Cn|Cn-En|Cn-Cn
+                Key,English,Chinese,IsDuplicate,IsNotCardKey,IsGameKey,CardDefault,SimpEn-English,SimpEn-Chinese,SimpCn-English,SimpCn-Chinese
+                foo,,,,x,,,En-En,En-Cn,Cn-En,Cn-Cn
 
                 """;
 
@@ -81,8 +81,8 @@ namespace CardSurvival_LocalizationTests
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|IsNotCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                CropPlotRuined_CardName|||||x|Some，Text||||
+                Key,English,Chinese,IsDuplicate,IsNotCardKey,IsGameKey,CardDefault,SimpEn-English,SimpEn-Chinese,SimpCn-English,SimpCn-Chinese
+                CropPlotRuined_CardName,,,,,x,Some，Text,,,,
 
                 """;
 
@@ -108,8 +108,8 @@ namespace CardSurvival_LocalizationTests
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|IsNotCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                foo||||||Some，Text||||
+                Key,English,Chinese,IsDuplicate,IsNotCardKey,IsGameKey,CardDefault,SimpEn-English,SimpEn-Chinese,SimpCn-English,SimpCn-Chinese
+                foo,,,,,,Some，Text,,,,
 
                 """;
 

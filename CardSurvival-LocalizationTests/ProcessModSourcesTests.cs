@@ -25,8 +25,8 @@ namespace CardSurvival_LocalizationTests
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|IsNotCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                foo||||||Some，Text|En-En|En-Cn|Cn-En|Cn-Cn
+                Key,English,Chinese,IsDuplicate,IsNotCardKey,IsGameKey,CardDefault,SimpEn-English,SimpEn-Chinese,SimpCn-English,SimpCn-Chinese
+                foo,,,,,,Some，Text,En-En,En-Cn,Cn-En,Cn-Cn
 
                 """;
 
@@ -52,8 +52,8 @@ namespace CardSurvival_LocalizationTests
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|IsNotCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                foo||||||Some，Text||||
+                Key,English,Chinese,IsDuplicate,IsNotCardKey,IsGameKey,CardDefault,SimpEn-English,SimpEn-Chinese,SimpCn-English,SimpCn-Chinese
+                foo,,,,,,Some，Text,,,,
 
                 """;
 
@@ -80,8 +80,8 @@ namespace CardSurvival_LocalizationTests
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|IsNotCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                foo||||x|||||Cn-En|Cn-Cn
+                Key,English,Chinese,IsDuplicate,IsNotCardKey,IsGameKey,CardDefault,SimpEn-English,SimpEn-Chinese,SimpCn-English,SimpCn-Chinese
+                foo,,,,x,,,,,Cn-En,Cn-Cn
 
                 """;
 
@@ -108,8 +108,8 @@ namespace CardSurvival_LocalizationTests
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|IsNotCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                foo||||x|||En-En|En-Cn||
+                Key,English,Chinese,IsDuplicate,IsNotCardKey,IsGameKey,CardDefault,SimpEn-English,SimpEn-Chinese,SimpCn-English,SimpCn-Chinese
+                foo,,,,x,,,En-En,En-Cn,,
                 
                 """;
 
@@ -138,9 +138,9 @@ namespace CardSurvival_LocalizationTests
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|IsNotCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                bar||||x|||||fiz-En|fiz-Cn
-                foo||||x|||En-En|En-Cn||
+                Key,English,Chinese,IsDuplicate,IsNotCardKey,IsGameKey,CardDefault,SimpEn-English,SimpEn-Chinese,SimpCn-English,SimpCn-Chinese
+                bar,,,,x,,,,,fiz-En,fiz-Cn
+                foo,,,,x,,,En-En,En-Cn,,
                 
                 """; 
 
@@ -166,9 +166,9 @@ namespace CardSurvival_LocalizationTests
 
             string expected =
                 """
-                Key|English|Chinese|IsDuplicate|IsNotCardKey|IsGameKey|CardDefault|SimpEn-English|SimpEn-Chinese|SimpCn-English|SimpCn-Chinese
-                bar|||||||fiz-En|fiz-Cn
-                foo|||||||Cn-En|Cn-Cn
+                Key,English,Chinese,IsDuplicate,IsNotCardKey,IsGameKey,CardDefault,SimpEn-English,SimpEn-Chinese,SimpCn-English,SimpCn-Chinese
+                bar,,,,,,,fiz-En,fiz-Cn
+                foo,,,,,,,Cn-En,Cn-Cn
                 
                 """;
 
