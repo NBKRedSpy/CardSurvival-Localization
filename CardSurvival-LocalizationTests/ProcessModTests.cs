@@ -55,7 +55,7 @@ namespace CardSurvival_LocalizationTests
 
             }, "X:\\test");
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -126,7 +126,7 @@ New Keys Created.  JSON was updated.
             }, "X:\\test");
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -175,7 +175,7 @@ New Keys Created.  JSON was updated.
             }, "X:\\test");
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -229,7 +229,7 @@ New Keys Created.  JSON was updated.
 
             }, "X:\\test");
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -299,7 +299,7 @@ Key: ""SOME_KEY""
 
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -351,7 +351,7 @@ Key: ""SOME_KEY""
 
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -399,7 +399,7 @@ Key: ""SOME_KEY""
 
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -456,7 +456,7 @@ Key: ""SOME_KEY""
                 }, "X:\\test");
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -515,7 +515,7 @@ Key: ""SOME_KEY""
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -584,7 +584,7 @@ Key: ""SOME_KEY""
             SetWriteTimeToMin(fs);
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -664,7 +664,7 @@ New Keys Created.  JSON was updated.
             SetWriteTimeToMin(fs);
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -750,7 +750,7 @@ New Keys Created.  JSON was updated.
 
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             var expectedFiles = new List<string>()
             {
@@ -855,7 +855,7 @@ New Keys Created.  JSON was updated.
             SetWriteTimeToMin(fs);
 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -911,7 +911,7 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -995,7 +995,7 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -1086,7 +1086,7 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -1146,7 +1146,7 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -1219,7 +1219,7 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -1285,7 +1285,7 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -1343,7 +1343,7 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AlwaysEscapeNonAscii);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AlwaysEscapeNonAscii);
 
 
             var expectedFiles = new List<string>()
@@ -1398,7 +1398,7 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.NoEncode);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.NoEncode);
 
 
             var expectedFiles = new List<string>()
@@ -1460,7 +1460,7 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -1533,7 +1533,7 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()
@@ -1608,7 +1608,7 @@ New Keys Created.  JSON was updated.
             //Reset date for check for write changes later
             SetWriteTimeToMin(fs);
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
 
             var expectedFiles = new List<string>()

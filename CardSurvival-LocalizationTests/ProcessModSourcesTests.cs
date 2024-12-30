@@ -30,7 +30,7 @@ namespace CardSurvival_LocalizationTests
 
                 """;
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -57,7 +57,7 @@ namespace CardSurvival_LocalizationTests
 
                 """;
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -85,7 +85,7 @@ namespace CardSurvival_LocalizationTests
 
                 """;
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -113,7 +113,7 @@ namespace CardSurvival_LocalizationTests
 
                 """;
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -144,7 +144,7 @@ namespace CardSurvival_LocalizationTests
                 
                 """; 
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));
@@ -172,7 +172,7 @@ namespace CardSurvival_LocalizationTests
                 
                 """;
 
-            CardSurvival_Localization.Program.ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
+            new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
             const string engPath = "x:\\test\\Localization\\SimpEn.psv";
             Assert.True(fs.FileExists(engPath));

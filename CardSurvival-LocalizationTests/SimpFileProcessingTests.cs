@@ -22,7 +22,7 @@ KeyValue2,EngValue2,CnValue2
 """);
 
 
-            List<CsLocalizationEntry> actual = Program.ParseSimpFile(fileSystem, @"X:\SimpEn.csv");
+            List<CsLocalizationEntry> actual = new ModProcessor().ParseSimpFile(fileSystem, @"X:\SimpEn.csv");
 
 
             List<CsLocalizationEntry> expected = new List<CsLocalizationEntry>()
@@ -43,8 +43,7 @@ KeyValue2,EngValue2,CnValue2
 KeyValue , EngValue , CnValue 
 """);
 
-
-            List<CsLocalizationEntry> actual = Program.ParseSimpFile(fileSystem, @"X:\SimpEn.csv");
+            List<CsLocalizationEntry> actual = new ModProcessor().ParseSimpFile(fileSystem, @"X:\SimpEn.csv");
 
 
             List<CsLocalizationEntry> expected = new List<CsLocalizationEntry>()
@@ -60,7 +59,7 @@ KeyValue , EngValue , CnValue
         {
             MockFileSystem fileSystem = new MockFileSystem();
 
-            List<CsLocalizationEntry> actual = Program.ParseSimpFile(fileSystem, @"X:\SimpEn.csv");
+            List<CsLocalizationEntry> actual = new ModProcessor().ParseSimpFile(fileSystem, @"X:\SimpEn.csv");
 
             List<CsLocalizationEntry> expected = new List<CsLocalizationEntry>();
 

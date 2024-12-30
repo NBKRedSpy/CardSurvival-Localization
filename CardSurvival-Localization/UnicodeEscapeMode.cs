@@ -11,7 +11,7 @@ namespace CardSurvival_Localization
     /// Determines if non ASCII characters will be written as Unicode or escaped Unicode.
     /// For example:   π = \u03c0
     /// </summary>
-    internal enum UnicodeEscapeMode
+    public enum UnicodeEscapeMode
     {
         /// <summary>
         /// If the file contains escaped Unicode, the modified file will encode non ASCII characters.
