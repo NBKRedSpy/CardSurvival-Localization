@@ -14,6 +14,14 @@
     <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="GameDefaultKeys.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="GameDefaultKeys.txt" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<InternalsVisibleTo Include="CardSurvival-LocalizationTests" />
 	</ItemGroup>
@@ -29,6 +37,7 @@
 	<ItemGroup>
     <PackageReference Include="Cocona" Version="2.2.0" />
     <PackageReference Include="CsvHelper" Version="33.0.1" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="9.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Text.Json" Version="9.0.0" />
     <PackageReference Include="TestableIO.System.IO.Abstractions" Version="21.2.1" />

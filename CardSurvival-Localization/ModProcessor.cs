@@ -10,11 +10,26 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Reflection;
+using Microsoft.Extensions.FileProviders;
 
 namespace CardSurvival_Localization
 {
     public class ModProcessor
     {
+        private HashSet<string> GamesLocalizationKeys { get; set; }
+
+        public ModProcessor()
+        {
+
+            using (Stream resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("CardSurvival_Localization.GameDefaultKeys.txt"))
+            using (StreamReader reader = new StreamReader(resourceStream))
+            {
+                string data = reader.ReadToEnd();
+                GamesLocalizationKeys = new HashSet<string>(data.Split("\r\n"));
+            }
+
+        }
         public string ProcessMod(string sourceDirectory, IFileSystem fileSystem, UnicodeEscapeMode escapeMode)
         {
             Regex unicodeReplaceRegEx = new Regex(@"(\\u)([a-f0-9]{4})", RegexOptions.Compiled);
