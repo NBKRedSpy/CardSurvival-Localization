@@ -141,7 +141,7 @@ namespace CardSurvival_Localization
         }
 
         /// <summary>
-        /// Writes out the TranslationData.psv, combining the localization sources.
+        /// Writes out the TranslationData.tsv, combining the localization sources.
         /// </summary>
         /// <param name="fileSystem"></param>
         /// <param name="localizationKeyExtrator"></param>
@@ -153,7 +153,7 @@ namespace CardSurvival_Localization
             List<CombinedLocalizationInfo> combinedLocalization = GetCombinedLocalization(localizationKeyExtrator,
                             englishLocalization, chineseLocalization);
 
-            string localizationFilePath = Path.Combine(localizationFolder, "TranslationData.psv");
+            string localizationFilePath = Path.Combine(localizationFolder, "TranslationData.tsv");
 
             //Get the full join data for each key.
 
@@ -194,7 +194,7 @@ namespace CardSurvival_Localization
                 //Using Pipe format since spreadsheet programs like Google Sheets gets caught up on unicode comma like characters.
                 var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
                 {
-                    Delimiter = "|",
+                    Delimiter = "\t",
                 };
 
                 //---- Write to English translation output

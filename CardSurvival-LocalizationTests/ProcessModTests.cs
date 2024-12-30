@@ -57,7 +57,7 @@ namespace CardSurvival_LocalizationTests
 
             new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             Assert.True(fs.FileExists(engPath));
 
             string expected =
@@ -76,7 +76,7 @@ namespace CardSurvival_LocalizationTests
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\TranslationData.psv",
+                "x:\\test\\Localization\\TranslationData.tsv",
                 @"x:\test\Localization\SimpEn_Errors.txt",
 
             };
@@ -128,7 +128,7 @@ New Keys Created.  JSON was updated.
 
             new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             Assert.True(fs.FileExists(engPath));
 
             //Chinese comma lookalike unicode character
@@ -147,7 +147,7 @@ New Keys Created.  JSON was updated.
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\TranslationData.psv",
+                "x:\\test\\Localization\\TranslationData.tsv",
             };
 
             Assert.Equal(fs.AllFiles, expectedFiles);
@@ -177,7 +177,7 @@ New Keys Created.  JSON was updated.
 
             new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             Assert.True(fs.FileExists(engPath));
 
             string expected =
@@ -195,7 +195,7 @@ New Keys Created.  JSON was updated.
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\TranslationData.psv",
+                "x:\\test\\Localization\\TranslationData.tsv",
             };
 
             Assert.Equal(fs.AllFiles, expectedFiles);
@@ -224,14 +224,14 @@ New Keys Created.  JSON was updated.
 }
 ")
                 },
-                {@"x:\test\Localization\TranslationData.psv", new MockFileData(new string('1',1000))},
+                {@"x:\test\Localization\TranslationData.tsv", new MockFileData(new string('1',1000))},
                 {@"x:\test\Localization\SimpEn_Errors.txt", new MockFileData(new string('2',1000))},
 
             }, "X:\\test");
 
             new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             Assert.True(fs.FileExists(engPath));
 
             string expected =
@@ -250,7 +250,7 @@ New Keys Created.  JSON was updated.
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\TranslationData.psv",
+                "x:\\test\\Localization\\TranslationData.tsv",
                 @"x:\test\Localization\SimpEn_Errors.txt",
             };
 
@@ -301,7 +301,7 @@ Key: ""SOME_KEY""
 
             new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             Assert.True(fs.FileExists(engPath));
 
             string expected =
@@ -318,7 +318,7 @@ Key: ""SOME_KEY""
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\TranslationData.psv",
+                "x:\\test\\Localization\\TranslationData.tsv",
             };
 
             Assert.Equal(fs.AllFiles, expectedFiles);
@@ -353,7 +353,7 @@ Key: ""SOME_KEY""
 
             new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             Assert.True(fs.FileExists(engPath));
 
             string expected =
@@ -371,7 +371,7 @@ Key: ""SOME_KEY""
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\TranslationData.psv",
+                "x:\\test\\Localization\\TranslationData.tsv",
             };
 
             Assert.Equal(fs.AllFiles, expectedFiles);
@@ -401,7 +401,7 @@ Key: ""SOME_KEY""
 
             new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             Assert.True(fs.FileExists(engPath));
 
             string expected =
@@ -420,7 +420,7 @@ Key: ""SOME_KEY""
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\TranslationData.psv",
+                "x:\\test\\Localization\\TranslationData.tsv",
             };
 
             Assert.Equal(fs.AllFiles, expectedFiles);
@@ -458,7 +458,7 @@ Key: ""SOME_KEY""
 
             new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             Assert.True(fs.FileExists(engPath));
 
             string expected =
@@ -477,7 +477,7 @@ Key: ""SOME_KEY""
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
                 "x:\\test\\test2.json",
-                "x:\\test\\Localization\\TranslationData.psv",
+                "x:\\test\\Localization\\TranslationData.tsv",
             };
 
             Assert.Equal(fs.AllFiles, expectedFiles);
@@ -523,13 +523,13 @@ Key: ""SOME_KEY""
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
                 "x:\\test\\test2.json",
-                "x:\\test\\Localization\\TranslationData.psv",
+                "x:\\test\\Localization\\TranslationData.tsv",
                 "x:\\test\\Localization\\SimpEn_Errors.txt",
             };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                 """
@@ -591,13 +591,13 @@ Key: ""SOME_KEY""
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\TranslationData.psv",
+                "x:\\test\\Localization\\TranslationData.tsv",
                 "x:\\test\\Localization\\SimpEn_Errors.txt",
             };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             string actual = fs.File.ReadAllText(engPath);
 
             string expected =
@@ -671,13 +671,13 @@ New Keys Created.  JSON was updated.
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\TranslationData.psv",
+                "x:\\test\\Localization\\TranslationData.tsv",
                 "x:\\test\\Localization\\SimpEn_Errors.txt",
             };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                 """
@@ -756,13 +756,13 @@ New Keys Created.  JSON was updated.
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\TranslationData.psv",
+                "x:\\test\\Localization\\TranslationData.tsv",
                 "x:\\test\\Localization\\SimpEn_Errors.txt",
             };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                 """
@@ -862,12 +862,12 @@ New Keys Created.  JSON was updated.
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\TranslationData.psv",
+                "x:\\test\\Localization\\TranslationData.tsv",
             };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             string actual = fs.File.ReadAllText(engPath);
 
             string expected = 
@@ -918,13 +918,13 @@ New Keys Created.  JSON was updated.
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\TranslationData.psv",
+                "x:\\test\\Localization\\TranslationData.tsv",
                 "x:\\test\\Localization\\SimpEn_Errors.txt",
             };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                 """
@@ -1002,13 +1002,13 @@ New Keys Created.  JSON was updated.
             {
                 @"x:\test\ModInfo.json",
                 "x:\\test\\test.json",
-                "x:\\test\\Localization\\TranslationData.psv",
+                "x:\\test\\Localization\\TranslationData.tsv",
                 "x:\\test\\Localization\\SimpEn_Errors.txt",
             };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             string actual = fs.File.ReadAllText(engPath);
             string expected =
             """
@@ -1093,13 +1093,13 @@ New Keys Created.  JSON was updated.
                     {
                         @"x:\test\ModInfo.json",
                         "x:\\test\\test.json",
-                        "x:\\test\\Localization\\TranslationData.psv",
+                        "x:\\test\\Localization\\TranslationData.tsv",
                         "x:\\test\\Localization\\SimpEn_Errors.txt"
                     };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                 """
@@ -1153,13 +1153,13 @@ New Keys Created.  JSON was updated.
                     {
                         @"x:\test\ModInfo.json",
                         "x:\\test\\test.json",
-                        "x:\\test\\Localization\\TranslationData.psv",
+                        "x:\\test\\Localization\\TranslationData.tsv",
                         "x:\\test\\Localization\\SimpEn_Errors.txt"
                     };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             string actual = fs.File.ReadAllText(engPath);
             string expected =
 
@@ -1226,13 +1226,13 @@ New Keys Created.  JSON was updated.
                     {
                         @"x:\test\ModInfo.json",
                         "x:\\test\\test.json",
-                        "x:\\test\\Localization\\TranslationData.psv",
+                        "x:\\test\\Localization\\TranslationData.tsv",
                         "x:\\test\\Localization\\SimpEn_Errors.txt"
                     };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                     """
@@ -1292,12 +1292,12 @@ New Keys Created.  JSON was updated.
                     {
                         @"x:\test\ModInfo.json",
                         "x:\\test\\test.json",
-                        "x:\\test\\Localization\\TranslationData.psv"
+                        "x:\\test\\Localization\\TranslationData.tsv"
                     };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                     """
@@ -1350,12 +1350,12 @@ New Keys Created.  JSON was updated.
                     {
                         @"x:\test\ModInfo.json",
                         "x:\\test\\test.json",
-                        "x:\\test\\Localization\\TranslationData.psv"
+                        "x:\\test\\Localization\\TranslationData.tsv"
                     };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                 """
@@ -1405,12 +1405,12 @@ New Keys Created.  JSON was updated.
                     {
                         @"x:\test\ModInfo.json",
                         "x:\\test\\test.json",
-                        "x:\\test\\Localization\\TranslationData.psv"
+                        "x:\\test\\Localization\\TranslationData.tsv"
                     };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             string actual = fs.File.ReadAllText(engPath);
             string expected = 
             """
@@ -1467,13 +1467,13 @@ New Keys Created.  JSON was updated.
                     {
                         @"x:\test\ModInfo.json",
                         "x:\\test\\test.json",
-                        "x:\\test\\Localization\\TranslationData.psv",
+                        "x:\\test\\Localization\\TranslationData.tsv",
                         "x:\\test\\Localization\\SimpEn_Errors.txt"
                     };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                     """
@@ -1540,13 +1540,13 @@ New Keys Created.  JSON was updated.
                     {
                         @"x:\test\ModInfo.json",
                         "x:\\test\\test.json",
-                        "x:\\test\\Localization\\TranslationData.psv",
+                        "x:\\test\\Localization\\TranslationData.tsv",
                         "x:\\test\\Localization\\SimpEn_Errors.txt"
                     };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                 """
@@ -1615,13 +1615,13 @@ New Keys Created.  JSON was updated.
                     {
                         @"x:\test\ModInfo.json",
                         "x:\\test\\test.json",
-                        "x:\\test\\Localization\\TranslationData.psv",
+                        "x:\\test\\Localization\\TranslationData.tsv",
                         "x:\\test\\Localization\\SimpEn_Errors.txt"
                     };
 
             Assert.Equal<string>(fs.AllFiles.OrderBy(x => x), expectedFiles.OrderBy(x => x));
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.psv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
             string actual = fs.File.ReadAllText(engPath);
             string expected =
                     """
