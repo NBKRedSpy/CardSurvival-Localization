@@ -9,18 +9,29 @@ using System.Data;
 using static CardSurvival_Localization.Utilities;
 using System.Text.Json;
 using Newtonsoft.Json.Linq;
+using System.Diagnostics.Eventing.Reader;
 
 namespace CardSurvival_Localization
 {
     internal class LocalizationKeyExtrator
     {
+
         /// <summary>
-        /// The localization keys, used to keep track of existing strings of text as well as
-        /// newly generated keys.
+        /// The list of the new key for any Localization Keys that were re-generated.
+        /// This is used to make existing duplicate Localization Keys unique.
+        /// Contains the new key and one or more entries that were updated based on that new key.
+        /// The key is already based on the info's text.
+        /// </summary>
+        public Dictionary<string, List<LocalizationInfo>> RegeneratedKeys { get; private set; } = new();
+
+        /// <summary>
+        /// The localization keys that were created for cards that had text, but no key.
+        /// Keyed by the card's DefaultText and contains the list of LocalizationInfo's all use that text.
         /// </summary>
         public Dictionary<string, List<LocalizationInfo>> LocalizationKeys { get; private set; } = new();
 
         private LocalizationKeyGenerator KeyGen { get;} = new LocalizationKeyGenerator();
+
         /// <summary>
         /// The lookup for generated keys.  
         ///     Key: The DefaultText that generated the key,
@@ -74,10 +85,10 @@ namespace CardSurvival_Localization
                 info.DefaultText = ThrowIfNull(token["DefaultText"]?.Value<string>()).Trim();
                 info.FileName = fileName;
                 info.JsonPath = token.Path;
-
-                if(String .IsNullOrWhiteSpace(info.LocalizationKey))
+                 
+                if(String.IsNullOrWhiteSpace(info.LocalizationKey))
                 {
-                    CreateNewKey(token, info);
+                    CreateNewKeyByText(token, info);
                 }
                 else
                 {
@@ -93,6 +104,58 @@ namespace CardSurvival_Localization
         }
 
         /// <summary>
+        /// For any keys that are duplicate, create new keys. 
+        /// Exclude any keys that are in the excludeKeys list.
+        /// 
+        /// </summary>
+        /// <remarks>This is primarily used to deconflict any keys that are in the json data, but not in the SimpCn.csv file.
+        /// Often Chinese mods will re-use the same key based on what the card was copied from.  Since there is no entry in the SimpCn.csv,
+        /// The DefaultText member is used.  Therefore it works fine for the Chinese mode, but not the translated English mode.
+        /// </remarks>
+        /// <param name="excludeKeys">The keys to not de-dupe</param>
+        public void FixDuplicateKeys(HashSet<string> excludeKeys)
+        {
+             var duplicateKeysList = LocalizationKeys
+                .Where(x => x.Value.Count > 1 && !excludeKeys.Contains(x.Key))
+                .SelectMany(x=> x.Value)
+                .ToList();
+
+            foreach (var localizationInfo in duplicateKeysList)
+            {
+                CreateNewKeyByKey(localizationInfo);
+            }
+        }
+
+        /// <summary>
+        /// Generates a new unique key for a LocalizationInfo.
+        /// Will re-use previous keys with the same text and existing key.
+        /// </summary>
+        /// <param name="info"></param>
+        private void CreateNewKeyByKey(LocalizationInfo info)
+        {
+            string newKey = KeyGen.Create(info.DefaultText, prefix: "__" + info.LocalizationKey);
+
+            List<LocalizationInfo> generatedInfos;
+            info.LocalizationKey = newKey;
+
+            info.OldLocalizationKey = info.LocalizationKey;
+            info.LocalizationKey = newKey;
+
+            if (RegeneratedKeys.TryGetValue(newKey, out generatedInfos!))
+            {
+                generatedInfos.Add(info);
+            }
+            else
+            {
+                RegeneratedKeys.Add(newKey, new List<LocalizationInfo>() { info });
+            }
+
+            //TODO: Update the Json
+
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Used if CreateMissingLocalizationKeys is true and the key is empty.
         /// Will try to re-use an existing created key, otherwise will create a new one.
         /// All keys will be added to the GeneratedKeys dictionary.
@@ -100,7 +163,8 @@ namespace CardSurvival_Localization
         /// </summary>
         /// <param name="token">The token to create a new key for</param>
         /// <param name="info">The LocalizationInfo to update with the new key.</param>
-        private void CreateNewKey(JToken token, LocalizationInfo info)
+        /// <param name="prefix">The prefix to add to the key.</param>
+        private void CreateNewKeyByText(JToken token, LocalizationInfo info)
         {
             info.KeyWasCreated = true;
 

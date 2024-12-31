@@ -20,5 +20,23 @@ namespace CardSurvival_Localization
         /// True if true, then a new key was generated for this entry.
         /// </summary>
         public bool KeyWasCreated { get; set; }
+
+
+        /// <summary>
+        /// Set when the LocalizationKey was regenerated.
+        /// LocalizationKey will contain the new key and this will contain 
+        /// the old key.
+        /// </summary>
+        /// <remarks>
+        /// This is used by the functionality that de-duplicates keys.
+        /// </remarks>
+        public string OldLocalizationKey { get; set; } = string.Empty;
+
+        /// <summary>
+        /// True if the key was recreated.  
+        /// </summary>
+        /// 
+        public bool KeyWasRegenerated => !String.IsNullOrEmpty(OldLocalizationKey);
+
     }
 }

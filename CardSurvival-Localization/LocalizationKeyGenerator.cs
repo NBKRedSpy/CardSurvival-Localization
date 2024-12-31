@@ -31,11 +31,11 @@ namespace CardSurvival_Localization
         /// </remarks>
         /// <param name="text"></param>
         /// <returns></returns>
-        public string Create(string text)
+        public string Create(string text, string prefix = "")
         {
             //----Set LocalizationKey
-            const string prefix = "T-";
-            string key = prefix + Convert.ToBase64String(Sha1.ComputeHash(UTF8Encoding.UTF8.GetBytes(text)));
+            const string genPrefix = "T-";
+            string key = string.Join(null, prefix, genPrefix, Convert.ToBase64String(Sha1.ComputeHash(UTF8Encoding.UTF8.GetBytes(text))));
 
             return key;
         }
