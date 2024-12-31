@@ -123,36 +123,30 @@ namespace CardSurvival_Localization
             foreach (var localizationInfo in duplicateKeysList)
             {
                 CreateNewKeyByKey(localizationInfo);
+
             }
         }
 
         /// <summary>
-        /// Generates a new unique key for a LocalizationInfo.
+        /// Generates a new unique key for a LocalizationInfo and updates
+        /// the info object.
         /// Will re-use previous keys with the same text and existing key.
         /// </summary>
         /// <param name="info"></param>
         private void CreateNewKeyByKey(LocalizationInfo info)
         {
+            //Keep the base key to make it obvious that the key was duplicated.
             string newKey = KeyGen.Create(info.DefaultText, prefix: "__" + info.LocalizationKey);
 
             List<LocalizationInfo> generatedInfos;
             info.LocalizationKey = newKey;
 
-            info.OldLocalizationKey = info.LocalizationKey;
-            info.LocalizationKey = newKey;
-
-            if (RegeneratedKeys.TryGetValue(newKey, out generatedInfos!))
-            {
-                generatedInfos.Add(info);
-            }
-            else
+            if (!RegeneratedKeys.TryGetValue(newKey, out generatedInfos!))
             {
                 RegeneratedKeys.Add(newKey, new List<LocalizationInfo>() { info });
             }
 
-            //TODO: Update the Json
-
-            throw new NotImplementedException();
+            info.ReplaceKey(newKey);
         }
 
         /// <summary>

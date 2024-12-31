@@ -117,6 +117,17 @@ namespace CardSurvival_Localization
                 chineseLocalization = new();
             }
 
+
+            HashSet<string> simpCnKeys = chineseLocalization
+                .Select(x => x.Chinese)
+                .Distinct()
+                .ToHashSet();
+
+            //TODO: Make this a command line argument.
+            localizationKeyExtrator.FixDuplicateKeys(simpCnKeys);
+            
+
+
             string errorFileName = Path.Combine(localizationFolder, "SimpEn_Errors.txt");
             string errorText = GetErrorsAndWarnings(localizationKeyExtrator, out int keysWithDifferentTextCount);
 
@@ -312,6 +323,12 @@ namespace CardSurvival_Localization
             }
         }
 
+        /// <summary>
+        /// Parses a Simp*.csv localization file.  For example, SimpCn.csv
+        /// </summary>
+        /// <param name="fileSystem"></param>
+        /// <param name="simpSourceFile"></param>
+        /// <returns></returns>
         private List<CsLocalizationEntry> ParseSimpFile(IFileSystem fileSystem, string simpSourceFile)
         {
             if (!fileSystem.File.Exists(simpSourceFile)) return new List<CsLocalizationEntry>();
