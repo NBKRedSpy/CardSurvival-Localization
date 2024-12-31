@@ -141,7 +141,7 @@ namespace CardSurvival_Localization
         }
 
         /// <summary>
-        /// Writes out the TranslationData.tsv, combining the localization sources.
+        /// Writes out the TranslationData.csv, combining the localization sources.
         /// </summary>
         /// <param name="fileSystem"></param>
         /// <param name="localizationKeyExtrator"></param>
@@ -153,7 +153,7 @@ namespace CardSurvival_Localization
             List<CombinedLocalizationInfo> combinedLocalization = GetCombinedLocalization(localizationKeyExtrator,
                             englishLocalization, chineseLocalization);
 
-            string localizationFilePath = Path.Combine(localizationFolder, "TranslationData.tsv");
+            string localizationFilePath = Path.Combine(localizationFolder, "TranslationData.csv");
 
             //Get the full join data for each key.
 
@@ -218,14 +218,19 @@ namespace CardSurvival_Localization
 
                     foreach (var flattened in flattenedInfo)
                     {
+                        string jsonText = flattened.json.Replace("\n", "\\n");  //Escape the new lines.
+
+                        //Follow the game rules.  Default the Chinese text to the SimpCn.txt data, and fallback to the json DefaultText.
+                        string chineseText = string.IsNullOrEmpty(flattened.cn_chinese) ? jsonText : flattened.cn_chinese;
+
                         csvWriter.WriteFields(
                             flattened.Key,
                             "",
-                            "",
+                            chineseText,
                             flattened.isDuplicate ? "x" : "",
                             flattened.IsCardKey ? "" : "x",
                             flattened.IsGameKey ? "x" : "",
-                            flattened.json.Replace("\n", "\\n"), //Escape the new lines.
+                            jsonText,
                             flattened.en_english,
                             flattened.en_chinese,
                             flattened.cn_english,

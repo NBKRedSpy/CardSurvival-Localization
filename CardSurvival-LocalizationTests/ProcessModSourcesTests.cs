@@ -32,7 +32,7 @@ namespace CardSurvival_LocalizationTests
 
             new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.csv";
             Assert.True(fs.FileExists(engPath));
 
             string actual = fs.File.ReadAllText(engPath);
@@ -59,7 +59,7 @@ namespace CardSurvival_LocalizationTests
 
             new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.csv";
             Assert.True(fs.FileExists(engPath));
 
             string actual = fs.File.ReadAllText(engPath);
@@ -87,7 +87,7 @@ namespace CardSurvival_LocalizationTests
 
             new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.csv";
             Assert.True(fs.FileExists(engPath));
 
             string actual = fs.File.ReadAllText(engPath);
@@ -115,7 +115,7 @@ namespace CardSurvival_LocalizationTests
 
             new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.csv";
             Assert.True(fs.FileExists(engPath));
 
             string actual = fs.File.ReadAllText(engPath);
@@ -146,7 +146,7 @@ namespace CardSurvival_LocalizationTests
 
             new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.csv";
             Assert.True(fs.FileExists(engPath));
 
             string actual = fs.File.ReadAllText(engPath);
@@ -174,7 +174,7 @@ namespace CardSurvival_LocalizationTests
 
             new ModProcessor().ProcessMod("X:\\test", fs, UnicodeEscapeMode.AutoDetect);
 
-            const string engPath = "x:\\test\\Localization\\TranslationData.tsv";
+            const string engPath = "x:\\test\\Localization\\TranslationData.csv";
             Assert.True(fs.FileExists(engPath));
 
             string actual = fs.File.ReadAllText(engPath);
