@@ -54,12 +54,16 @@ namespace CardSurvival_Localization
                 .Where(x => String.Equals(Path.GetFileName(x), "ModInfo.json", StringComparison.OrdinalIgnoreCase) == false)
                 .ToArray();
 
-            LocalizationKeyExtrator localizationKeyExtrator = new();
+            LocalizationKeyExtractor localizationKeyExtrator = new(fileSystem);
+
+
+            //Debug
+            int i = 0;
 
             foreach (string file in files)
             {
                 //debug
-                //if (i++ >= 100) break;
+                if (i++ >= 100) break;
 
                 Console.Write($"\r{Path.GetFileName(file)}                                  \r");
 
@@ -159,7 +163,7 @@ namespace CardSurvival_Localization
         /// <param name="localizationFolder"></param>
         /// <param name="englishLocalization"></param>
         /// <param name="chineseLocalization"></param>
-        private void WriteCombinedPsv(IFileSystem fileSystem, LocalizationKeyExtrator localizationKeyExtrator, string localizationFolder, List<CsLocalizationEntry> englishLocalization, List<CsLocalizationEntry> chineseLocalization)
+        private void WriteCombinedPsv(IFileSystem fileSystem, LocalizationKeyExtractor localizationKeyExtrator, string localizationFolder, List<CsLocalizationEntry> englishLocalization, List<CsLocalizationEntry> chineseLocalization)
         {
             List<CombinedLocalizationInfo> combinedLocalization = GetCombinedLocalization(localizationKeyExtrator,
                             englishLocalization, chineseLocalization);
@@ -266,7 +270,7 @@ namespace CardSurvival_Localization
         /// <param name="englishLocalization"></param>
         /// <param name="chineseLocalization"></param>
         /// <returns></returns>The combined data.
-        private List<CombinedLocalizationInfo> GetCombinedLocalization(LocalizationKeyExtrator localizationKeyExtractor,
+        private List<CombinedLocalizationInfo> GetCombinedLocalization(LocalizationKeyExtractor localizationKeyExtractor,
             List<CsLocalizationEntry> englishLocalization, List<CsLocalizationEntry> chineseLocalization)
         {
             Dictionary<string, CombinedLocalizationInfo> dataLookup = new Dictionary<string, CombinedLocalizationInfo>();
@@ -450,7 +454,7 @@ namespace CardSurvival_Localization
             return isEscaped;
         }
 
-        private string GetErrorsAndWarnings(LocalizationKeyExtrator localizationKeyExtractor, out int keysWithDifferentTextCount)
+        private string GetErrorsAndWarnings(LocalizationKeyExtractor localizationKeyExtractor, out int keysWithDifferentTextCount)
         {
 
             //Duplicate text entries

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CardSurvival_Localization
 {
-    internal static class Utilities
+    public static class Utilities
     {
         [return: NotNull]
         public static T ThrowIfNull<T>(T value, string name = "")

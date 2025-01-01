@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
@@ -47,23 +48,20 @@ namespace CardSurvival_Localization
         /// </summary>
         /// <param name="newKey"></param>
         /// <exception cref="ArgumentException"></exception>
-        public void ReplaceKey(string newKey)
+        public void ReplaceKeyInFile(IFileSystem fileSystem, string newKey)
         {
             if (string.IsNullOrEmpty(JsonPath))
             {
                 throw new ArgumentException("The json path is not set", nameof(JsonPath));  
             }
 
-            OldLocalizationKey = LocalizationKey;
-            LocalizationKey = newKey;
-
-            JObject doc = JObject.Parse(JsonPath);
-            JToken? localizationKeyToken = doc.SelectToken(JsonPath, true);
+            JObject doc = JObject.Parse(fileSystem.File.ReadAllText(FileName));
+            JToken? localizationKeyToken = doc.SelectToken(JsonPath + ".LocalizationKey", true);
             ArgumentNullException.ThrowIfNull(localizationKeyToken);
 
-            ((JProperty)localizationKeyToken).Value = newKey;
+            ((JValue)localizationKeyToken).Value = newKey;
             string newJson = JsonConvert.SerializeObject(doc, Formatting.Indented);
-            File.WriteAllText(JsonPath, newJson);
+            File.WriteAllText(FileName, newJson);
         }
     }
 }

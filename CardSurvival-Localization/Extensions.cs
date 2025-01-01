@@ -22,5 +22,21 @@ namespace CardSurvival_Localization
             }
         }
 
+        public static bool TryAddNew<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key,
+                   Func<TKey, TValue> createNew, out TValue value) where TKey : notnull
+        {
+            if (dictionary.TryGetValue(key, out TValue? lookupValue))
+            {
+                value = lookupValue;
+                return false;
+            }
+            else
+            {
+                value = createNew(key);
+                dictionary.Add(key, value);
+                return true;
+            }
+        }
+
     }
 }

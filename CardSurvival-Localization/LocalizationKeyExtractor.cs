@@ -10,11 +10,16 @@ using static CardSurvival_Localization.Utilities;
 using System.Text.Json;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics.Eventing.Reader;
+using System.IO.Abstractions;
+using System.Runtime.InteropServices;
+
 
 namespace CardSurvival_Localization
 {
-    internal class LocalizationKeyExtrator
+    internal class LocalizationKeyExtractor
     {
+
+        public IFileSystem FileSystem { get; set; }
 
         /// <summary>
         /// The list of the new key for any Localization Keys that were re-generated.
@@ -38,6 +43,11 @@ namespace CardSurvival_Localization
         ///     Value: The created entry.
         /// </summary>
         public Dictionary<string, List<LocalizationInfo>> GeneratedKeys { get; private set; } = new();
+
+        public LocalizationKeyExtractor(IFileSystem fileSystem)
+        {
+            FileSystem = fileSystem;
+        }
 
 
         /// <summary>
@@ -120,9 +130,23 @@ namespace CardSurvival_Localization
                 .SelectMany(x=> x.Value)
                 .ToList();
 
-            foreach (var localizationInfo in duplicateKeysList)
+            foreach (LocalizationInfo? info in duplicateKeysList)
             {
-                CreateNewKeyByKey(localizationInfo);
+                CreateNewKeyByKey(info);
+
+
+                //Remove the entire key/list entry since all of the items will be replaced in this loop.
+                LocalizationKeys.Remove(info.OldLocalizationKey);
+
+                List<LocalizationInfo> list;
+
+                LocalizationKeys.TryAddNew(info.LocalizationKey, (key) =>
+                {
+                    var newList = new List<LocalizationInfo>();
+                    return newList;
+                }, out list);
+
+                list.Add(info);
 
             }
         }
@@ -136,17 +160,25 @@ namespace CardSurvival_Localization
         private void CreateNewKeyByKey(LocalizationInfo info)
         {
             //Keep the base key to make it obvious that the key was duplicated.
-            string newKey = KeyGen.Create(info.DefaultText, prefix: "__" + info.LocalizationKey);
+            string newKey = KeyGen.Create(info.DefaultText, prefix: info.LocalizationKey + "__");
 
             List<LocalizationInfo> generatedInfos;
+            info.OldLocalizationKey = info.LocalizationKey;
             info.LocalizationKey = newKey;
 
-            if (!RegeneratedKeys.TryGetValue(newKey, out generatedInfos!))
+            if (RegeneratedKeys.TryGetValue(newKey, out generatedInfos!))
+            {
+                generatedInfos.Add(info);
+                
+            }
+            else
             {
                 RegeneratedKeys.Add(newKey, new List<LocalizationInfo>() { info });
             }
 
-            info.ReplaceKey(newKey);
+            info.ReplaceKeyInFile(FileSystem, newKey);
+
+
         }
 
         /// <summary>
