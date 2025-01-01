@@ -58,12 +58,12 @@ namespace CardSurvival_Localization
 
 
             //Debug
-            int i = 0;
+            //int i = 0;
 
             foreach (string file in files)
             {
                 //debug
-                if (i++ >= 100) break;
+                //if (i++ >= 100) break;
 
                 Console.Write($"\r{Path.GetFileName(file)}                                  \r");
 
