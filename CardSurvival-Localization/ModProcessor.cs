@@ -57,17 +57,23 @@ namespace CardSurvival_Localization
             LocalizationKeyExtractor localizationKeyExtrator = new(fileSystem);
 
 
-            //Debug
+            //DEBUG:
             //int i = 0;
 
             foreach (string file in files)
             {
-                //debug
+                //DEBUG:
                 //if (i++ >= 100) break;
 
                 Console.Write($"\r{Path.GetFileName(file)}                                  \r");
 
                 string jsonSource = fileSystem.File.ReadAllText(file);
+
+                //DEBUG:
+                if (!jsonSource.Contains("Cod_Exp_SawMill_ExplorationResults[0].Action.ActionName"))
+                {
+                    continue;
+                }
 
                 JObject jsonDoc = JObject.Parse(jsonSource);
 
@@ -122,10 +128,13 @@ namespace CardSurvival_Localization
             }
 
 
+            Console.WriteLine("Fixing Duplicate Keys");
+
             HashSet<string> simpCnKeys = chineseLocalization
-                .Select(x => x.Chinese)
+                .Select(x => x.Key)
                 .Distinct()
-                .ToHashSet();
+                .ToHashSet(); 
+
 
             //TODO: Make this a command line argument.
             localizationKeyExtrator.FixDuplicateKeys(simpCnKeys);
@@ -344,7 +353,6 @@ namespace CardSurvival_Localization
 
             });
 
-
             List<CsLocalizationEntry> records = csvReader.GetRecords<CsLocalizationEntry>()
                 .ToList();
 
@@ -456,6 +464,9 @@ namespace CardSurvival_Localization
 
         private string GetErrorsAndWarnings(LocalizationKeyExtractor localizationKeyExtractor, out int keysWithDifferentTextCount)
         {
+
+            //TODO: 
+            //Change the duplicate check to after the SimpCn-Chinese inclusion.
 
             //Duplicate text entries
             List<KeyValuePair<string, List<LocalizationInfo>>> multiDefinedInfo = localizationKeyExtractor.LocalizationKeys.Where(x => x.Value.Count > 1)

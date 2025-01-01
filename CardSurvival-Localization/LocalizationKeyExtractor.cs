@@ -125,36 +125,36 @@ namespace CardSurvival_Localization
         /// <param name="excludeKeys">The keys to not de-dupe</param>
         public void FixDuplicateKeys(HashSet<string> excludeKeys)
         {
-             var duplicateKeysList = LocalizationKeys
+
+            //TODO:  This is creating new keys even though the key is defined in the SimpCn and the Default Text should be ignored.
+            //Cod_Exp_SawMill_ExplorationResults[0].Action.ActionName,,找到通往丛林外围的路,,,x,,,,,Exp_Sawmill_ExplorationResults_25,找到通往丛林外围的路
+            //Cod_Exp_SawMill_ExplorationResults[0].Action.ActionName__T - 4 + rWTD0wOza4yI2Utp1En5Bzong =,,Exp_Sawmill_ExplorationResults_25,N,,,,Exp_Sawmill_ExplorationResults_25,,,,
+            //Cod_Exp_SawMill_ExplorationResults[0].Action.ActionName__T - vK1ygvbYnScoRsORd + AJH5GQJLk =,,Exp_Sawmill_ExplorationResults_125,N,,,,Exp_Sawmill_ExplorationResults_125,,,,
+
+
+
+            var duplicateKeys = LocalizationKeys
                 .Where(x => x.Value.Count > 1 && !excludeKeys.Contains(x.Key))
-                .SelectMany(x=> x.Value)
                 .ToList();
 
-            foreach (LocalizationInfo? info in duplicateKeysList)
+            foreach (KeyValuePair<string, List<LocalizationInfo>> localizationInfos 
+                in duplicateKeys)
             {
-                CreateNewKeyByKey(info);
+                //Remove from the localization lookup
+                LocalizationKeys.Remove(localizationInfos.Key);
 
-
-                //Remove the entire key/list entry since all of the items will be replaced in this loop.
-                LocalizationKeys.Remove(info.OldLocalizationKey);
-
-                List<LocalizationInfo> list;
-
-                LocalizationKeys.TryAddNew(info.LocalizationKey, (key) =>
+                foreach (LocalizationInfo info in localizationInfos.Value)
                 {
-                    var newList = new List<LocalizationInfo>();
-                    return newList;
-                }, out list);
-
-                list.Add(info);
-
+                    CreateNewKeyByKey(info);
+                    LocalizationKeys.Add(info.LocalizationKey, new List<LocalizationInfo> { info });
+                }
             }
         }
 
         /// <summary>
-        /// Generates a new unique key for a LocalizationInfo and updates
-        /// the info object.
-        /// Will re-use previous keys with the same text and existing key.
+        /// Generates a new unique key for a LocalizationInfo, updates the json file and adds it
+        /// to the RegeneratedKeys list
+        /// Will try to re-use previous keys with the same text and existing key.
         /// </summary>
         /// <param name="info"></param>
         private void CreateNewKeyByKey(LocalizationInfo info)

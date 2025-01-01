@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CsvHelper;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -62,6 +63,11 @@ namespace CardSurvival_Localization
             ((JValue)localizationKeyToken).Value = newKey;
             string newJson = JsonConvert.SerializeObject(doc, Formatting.Indented);
             File.WriteAllText(FileName, newJson);
+        }
+
+        public override string ToString()
+        {
+            return $"'{LocalizationKey}' '{DefaultText}'";
         }
     }
 }
