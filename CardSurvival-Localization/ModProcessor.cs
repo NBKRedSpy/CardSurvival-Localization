@@ -213,6 +213,11 @@ namespace CardSurvival_Localization
 
             string localizationFilePath = Path.Combine(localizationFolder, "TranslationData-Full.csv");
 
+            WriteTranslationDataFile(fileSystem, flattenedInfo, localizationFilePath);
+        }
+
+        private static void WriteTranslationDataFile(IFileSystem fileSystem, List<object> flattenedInfo, string localizationFilePath)
+        {
             using (TextWriter outputWriter = new StreamWriter(fileSystem.FileStream.New(localizationFilePath, FileMode.Create)))
             {
                 //Using Pipe format since spreadsheet programs like Google Sheets gets caught up on unicode comma like characters.
