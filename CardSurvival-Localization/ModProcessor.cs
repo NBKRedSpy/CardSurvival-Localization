@@ -177,8 +177,6 @@ namespace CardSurvival_Localization
             List<CombinedLocalizationInfo> combinedLocalization = GetCombinedLocalization(localizationKeyExtrator,
                             englishLocalization, chineseLocalization);
 
-            string localizationFilePath = Path.Combine(localizationFolder, "TranslationData.csv");
-
             //Get the full join data for each key.
 
             //TODO:  Simplify this.  Try changing to an object with multiple SelectMany with a downstream projection.
@@ -187,7 +185,7 @@ namespace CardSurvival_Localization
                 {
                     item,
                     item.Key,
-                    json = json?.DefaultText ?? ""
+                    json = json?.EscapedJson ?? ""
                 })
                 .SelectMany(x => x.item.EnglishData.DefaultIfEmpty(new CsLocalizationEntry()), (item, english) => new
                 {
@@ -212,6 +210,8 @@ namespace CardSurvival_Localization
                 })
                 .OrderBy(x => x.Key)
                 .ToList();
+
+            string localizationFilePath = Path.Combine(localizationFolder, "TranslationData-Full.csv");
 
             using (TextWriter outputWriter = new StreamWriter(fileSystem.FileStream.New(localizationFilePath, FileMode.Create)))
             {
@@ -243,10 +243,8 @@ namespace CardSurvival_Localization
 
                     foreach (var flattened in flattenedInfo)
                     {
-                        string jsonText = flattened.json.Replace("\n", "\\n");  //Escape the new lines.
-
                         //Follow the game rules.  Default the Chinese text to the SimpCn.txt data, and fallback to the json DefaultText.
-                        string chineseText = string.IsNullOrEmpty(flattened.cn_chinese) ? jsonText : flattened.cn_chinese;
+                        string chineseText = string.IsNullOrEmpty(flattened.cn_chinese) ? flattened.json : flattened.cn_chinese;
 
                         csvWriter.WriteFields(
                             flattened.Key,
@@ -256,7 +254,7 @@ namespace CardSurvival_Localization
                             flattened.isDuplicate ? "x" : "",
                             flattened.IsCardKey ? "" : "x",
                             flattened.IsGameKey ? "x" : "",
-                            jsonText,
+                            flattened.json,
                             flattened.en_english,
                             flattened.en_chinese,
                             flattened.cn_english,
@@ -295,7 +293,6 @@ namespace CardSurvival_Localization
 
 
             //SimpEn.csv (English data)
-
 
             AddSimpData(true, englishLocalization, dataLookup);
             AddSimpData(false, chineseLocalization, dataLookup);
