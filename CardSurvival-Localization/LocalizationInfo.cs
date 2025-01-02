@@ -21,7 +21,7 @@ namespace CardSurvival_Localization
         public string DefaultText { get; set; } = "";
         public string LocalizationKey { get; set; } = "";
 
-        public string EscapedJson => JsonPath.Replace("\n", "\\n");
+        public string EscapedJson => DefaultText.Replace("\n", "\\n");
 
         /// <summary>
         /// True if true, then a new key was generated for this entry.

@@ -123,7 +123,7 @@ namespace CardSurvival_Localization
         /// The DefaultText member is used.  Therefore it works fine for the Chinese mode, but not the translated English mode.
         /// </remarks>
         /// <param name="excludeKeys">The keys to not de-dupe</param>
-        public void FixDuplicateKeys(HashSet<string> excludeKeys)
+        public void FixDuplicateKeys(HashSet<string> excludeKeys, Action<string>? progress = null)
         {
 
             //TODO:  This is creating new keys even though the key is defined in the SimpCn and the Default Text should be ignored.
@@ -137,9 +137,16 @@ namespace CardSurvival_Localization
                 .Where(x => x.Value.Count > 1 && !excludeKeys.Contains(x.Key))
                 .ToList();
 
-            foreach (KeyValuePair<string, List<LocalizationInfo>> localizationInfos 
+            bool useProgress = progress is not null;
+
+            foreach (KeyValuePair<string, List<LocalizationInfo>> localizationInfos
                 in duplicateKeys)
             {
+                
+
+                if (useProgress) progress!(localizationInfos.Key);
+
+
                 //Remove from the localization lookup
                 LocalizationKeys.Remove(localizationInfos.Key);
 

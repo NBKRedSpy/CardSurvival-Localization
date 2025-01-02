@@ -69,11 +69,11 @@ namespace CardSurvival_Localization
 
                 string jsonSource = fileSystem.File.ReadAllText(file);
 
-                //DEBUG:
-                if (!jsonSource.Contains("Cod_Exp_SawMill_ExplorationResults[0].Action.ActionName"))
-                {
-                    continue;
-                }
+                ////DEBUG:
+                //if (!jsonSource.Contains("CardTag_AbandonedVehicles_InGameName"))
+                //{
+                //    continue;
+                //}
 
                 JObject jsonDoc = JObject.Parse(jsonSource);
 
@@ -128,18 +128,24 @@ namespace CardSurvival_Localization
             }
 
 
-            Console.WriteLine("Fixing Duplicate Keys");
+            Console.WriteLine("Fixing Duplicate Keys using SimpCn.csv info.");
 
             HashSet<string> simpCnKeys = chineseLocalization
                 .Select(x => x.Key)
                 .Distinct()
-                .ToHashSet(); 
+                .ToHashSet();
 
+
+            string clearLineText = $"\r{new string(' ', Console.BufferWidth)}\r";
 
             //TODO: Make this a command line argument.
-            localizationKeyExtrator.FixDuplicateKeys(simpCnKeys);
-            
+            localizationKeyExtrator.FixDuplicateKeys(simpCnKeys, x => {
+                Console.Write(clearLineText);
+                Console.Write($"\t{x}");
+                }
+            );
 
+            Console.WriteLine(clearLineText);
 
             string errorFileName = Path.Combine(localizationFolder, "SimpEn_Errors.txt");
             string errorText = GetErrorsAndWarnings(localizationKeyExtrator, out int keysWithDifferentTextCount);
@@ -180,7 +186,7 @@ namespace CardSurvival_Localization
             //Get the full join data for each key.
 
             //TODO:  Simplify this.  Try changing to an object with multiple SelectMany with a downstream projection.
-            var flattenedInfo = combinedLocalization
+            List<TranslationDataItem> flattenedInfo = combinedLocalization
                 .SelectMany(x => x.Json.DefaultIfEmpty(), (item, json) => new
                 {
                     item,
@@ -195,28 +201,35 @@ namespace CardSurvival_Localization
                     en_english = english.English,
                     en_chinese = english.Chinese
                 })
-                .SelectMany(x => x.item.ChineseData.DefaultIfEmpty(new CsLocalizationEntry()), (item, chinese) => new
-                {
+                .SelectMany(x => x.item.ChineseData.DefaultIfEmpty(new CsLocalizationEntry()), (item, chinese) => new TranslationDataItem(
                     item.item,
-                    isDuplicate = item.item.EnglishData.Count > 1 || item.item.ChineseData.Count > 1 || item.item.Json.Count > 1,
+                    item.item.EnglishData.Count > 1 || item.item.ChineseData.Count > 1 || item.item.Json.Count > 1,
                     item.Key,
                     item.json,
                     item.en_english,
                     item.en_chinese,
-                    IsCardKey = localizationKeyExtrator.LocalizationKeys.ContainsKey(item.Key),    //True if the key is from a card (newly generated or not)
-                    IsGameKey = GamesLocalizationKeys.Contains(item.Key),   //True if it is a default game key.
-                    cn_english = chinese.English,
-                    cn_chinese = chinese.Chinese
-                })
+                    localizationKeyExtrator.LocalizationKeys.ContainsKey(item.Key),    //True if the key is from a card (newly generated or not)
+                    GamesLocalizationKeys.Contains(item.Key),   //True if it is a default game key.
+                    chinese.English,
+                    chinese.Chinese
+                ))
                 .OrderBy(x => x.Key)
                 .ToList();
 
-            string localizationFilePath = Path.Combine(localizationFolder, "TranslationData-Full.csv");
+            WriteTranslationDataFile(fileSystem, flattenedInfo, Path.Combine(localizationFolder, "TranslationData-Full.csv"));
 
-            WriteTranslationDataFile(fileSystem, flattenedInfo, localizationFilePath);
+            //The version that ignores duplicates if the computed Chinese text is the same.
+            var distinctFlatData = flattenedInfo.DistinctBy(x => (x.Key, x.ComputedChinese))
+                .OrderBy(x => x.Key)
+                .ToList();
+
+            WriteTranslationDataFile(fileSystem, distinctFlatData, Path.Combine(localizationFolder, "TranslationData-Distinct.csv"));
+
+
+
         }
 
-        private static void WriteTranslationDataFile(IFileSystem fileSystem, List<object> flattenedInfo, string localizationFilePath)
+        private static void WriteTranslationDataFile(IFileSystem fileSystem, List<TranslationDataItem> flattenedInfo, string localizationFilePath)
         {
             using (TextWriter outputWriter = new StreamWriter(fileSystem.FileStream.New(localizationFilePath, FileMode.Create)))
             {
@@ -248,22 +261,20 @@ namespace CardSurvival_Localization
 
                     foreach (var flattened in flattenedInfo)
                     {
-                        //Follow the game rules.  Default the Chinese text to the SimpCn.txt data, and fallback to the json DefaultText.
-                        string chineseText = string.IsNullOrEmpty(flattened.cn_chinese) ? flattened.json : flattened.cn_chinese;
 
                         csvWriter.WriteFields(
                             flattened.Key,
                             "",
-                            chineseText,
-                            flattened.cn_chinese == "" ? "N" : "",
-                            flattened.isDuplicate ? "x" : "",
+                            flattened.ComputedChinese,
+                            flattened.Cn_Chinese == "" ? "N" : "",
+                            flattened.IsDuplicate ? "x" : "",
                             flattened.IsCardKey ? "" : "x",
                             flattened.IsGameKey ? "x" : "",
-                            flattened.json,
-                            flattened.en_english,
-                            flattened.en_chinese,
-                            flattened.cn_english,
-                            flattened.cn_chinese
+                            flattened.Json,
+                            flattened.En_English,
+                            flattened.En_chinese,
+                            flattened.Cn_English,
+                            flattened.Cn_Chinese
                         );
 
                         csvWriter.NextRecord();
@@ -524,5 +535,42 @@ namespace CardSurvival_Localization
 
             return sb.ToString();
         }
+    }
+
+    internal class TranslationDataItem
+    {
+
+        public CombinedLocalizationInfo Item;
+        public bool IsDuplicate;
+        public string Key;
+        public string Json;
+        public string En_English;
+        public string En_chinese;
+        public bool IsCardKey;
+        public bool IsGameKey;
+        public string Cn_English;
+        public string Cn_Chinese;
+        public string ComputedChinese => string.IsNullOrEmpty(Cn_Chinese) ? Json : Cn_Chinese;
+
+        public TranslationDataItem()
+        {
+                
+        }
+
+        public TranslationDataItem(CombinedLocalizationInfo item, bool isDuplicate, string key, string json, string en_English, string en_chinese, bool isCardKey, bool isGameKey, string cn_English, string cn_Chinese)
+        {
+            Item = item;
+            IsDuplicate = isDuplicate;
+            Key = key;
+            Json = json;
+            En_English = en_English;
+            En_chinese = en_chinese;
+            IsCardKey = isCardKey;
+            IsGameKey = isGameKey;
+            Cn_English = cn_English;
+            Cn_Chinese = cn_Chinese;
+        }
+
+
     }
 }
